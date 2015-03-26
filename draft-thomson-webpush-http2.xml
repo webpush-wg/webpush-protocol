@@ -1,0 +1,924 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+
+<rfc category="std" ipr="trust200902" docName="draft-thomson-webpush-http2-latest">
+  <front>
+    <title abbrev="HTTP Web Push">
+      Generic Event Delivery Using HTTP Push
+    </title>
+
+    <author initials="M." surname="Thomson" fullname="Martin Thomson">
+      <organization>Mozilla</organization>
+      <address>
+        <postal>
+          <street>331 E Evelyn Street</street>
+          <city>Mountain View</city>
+          <region>CA</region>
+          <code>94041</code>
+          <country>US</country>
+        </postal>
+        <email>martin.thomson@gmail.com</email>
+      </address>
+    </author>
+
+    <date year="2015"/>
+    <area>RAI</area>
+    <workgroup>WEBPUSH</workgroup>
+    <keyword>Internet-Draft</keyword>
+    <keyword>HTTP</keyword>
+    <keyword>HTTP2</keyword>
+    <keyword>Push</keyword>
+    <keyword>WebPush</keyword>
+
+    <abstract>
+      <t>
+        A simple protocol for the delivery of realtime events to user agents is
+        described.  This scheme uses HTTP/2 server push.
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t>
+        Mobile computing devices are increasingly relied upon for a great many
+        applications.  Mobile devices typically have limited power reserves, so
+        finding more efficient ways to serve application requirements is an
+        important part of any mobile platform.
+      </t>
+
+     <t>
+        One significant contributor to power usage mobile devices is the radio.
+        Radio communications consumes a significant portion of the energy budget
+        on a wirelessly connected mobile device.
+      </t>
+      <t>
+        Many applications require continuous access to network communications so
+        that real-time events - such as incoming calls or messages - can be
+        conveyed (or "pushed") to the user in a timely fashion.  Uncoordinated
+        use of persistent connections or sessions from multiple applications can
+        contribute to unnecessary use of the device radio, since each
+        independent session independently incurs overheads.  In particular, keep
+        alive traffic used to ensure that middleboxes do not prematurely time
+        out sessions, can result in significant waste.  Maintenance traffic
+        tends to dominate over the long term, since events are relatively rare.
+      </t>
+
+      <t>
+        Consolidating all real-time events into a single session ensures more
+        efficient use of network and radio resources.  A single service
+        consolidates all events, distributing those events to applications as
+        they arrive.  This requires just one session, avoiding duplicated
+        overhead costs.
+      </t>
+      <t>
+        The <xref target="API">W3C Web Push API</xref> describes an API that enables
+        the use of a consolidated push service from web applications.  This
+        expands on that work by describing a protocol that can be used to:
+        <list style="symbols">
+          <t>
+            request the delivery of a push message to a user agent,
+          </t>
+          <t>
+            register a new user agent,
+          </t>
+          <t>
+            create new push message delivery subscriptions, and
+          </t>
+          <t>
+            monitor for new push messages.
+          </t>
+        </list>
+      </t>
+      <t>
+        Requesting the delivery of events is particularly important for the Web
+        Push API.  The registration, management and monitoring functions are
+        currently fulfilled by proprietary protocols; these are adequate, but do
+        not offer any of the advantages that standardization affords.
+      </t>
+      <t>
+        The monitoring function described in this document is intended to be
+        replaceable, enabling the use of monitoring schemes that are better
+        optimized for the network environment and the user agent.  For instance,
+        using notification systems like the <xref target="TS.3GPP.23.040">3GPP
+        Short Message Service (SMS)</xref> can take advantage of the native
+        paging capabilities of a cellular network, avoiding the ongoing
+        maintainence cost of a persistent TCP connection.
+      </t>
+
+      <t>
+        This document intentionally does not describe how a push service is
+        discovered.  Discovery of push services is left for future efforts, if
+        it turns out to be necessary at all.  User agents are expected to be
+        configured with a URL for a push service.
+      </t>
+      <t>
+        Similarly, discovery of support for and negotiation of use of
+        alternative monitoring schemes is left to documents that extend this
+        basic protocol.
+      </t>
+
+      <section anchor="terminology" title="Conventions and Terminology">
+        <t>
+          In cases where normative language needs to be emphasized, this
+          document falls back on established shorthands for expressing
+          interoperability requirements on implementations: the capitalized
+          words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these is
+          described in <xref target="RFC2119"/>.
+        </t>
+
+        <t>
+          This document defines the following terms:
+          <list style="hanging">
+            <t hangText="application:">
+              Both the sender and ultimate consumer of push messages.  Many
+              applications have components that are run on a user agent and
+              other components that run on servers.
+            </t>
+            <t hangText="application server:">
+              The component of an application that runs on a server and requests
+              the delivery of a push message.
+            </t>
+            <t hangText="push message:">
+              A message, sent from an application server to a user agent via a
+              push service.
+            </t>
+            <t hangText="push service:">
+              A service that delivers push messages to user agents.
+            </t>
+            <t hangText="registration:">
+              A session that is established between the user agent and the push
+              service.  A registation has any number of associated
+              subscriptions.
+            </t>
+            <t hangText="subscription:">
+              A message delivery context that is established between the user
+              agent and the push service and shared with applications.  All push
+              messages are associated with a subscription.
+            </t>
+            <t hangText="user agent:">
+              A device and software that is the recipient of push messages.
+            </t>
+          </list>
+        </t>
+
+        <t>
+          Examples in this document use the <xref target="RFC7230">HTTP/1.1
+          message format</xref>.  Many of the exchanges can be completed using
+          HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format
+          from <xref target="I-D.ietf-httpbis-http2"/> is used.
+        </t>
+      </section>
+    </section>
+
+    <section title="Overview">
+      <t>
+        A general model for push services includes three basic actors: a user
+        agent, a push service, and an application (server).
+      </t>
+      <figure>
+          <artwork><![CDATA[
+ +-------+           +--------------+       +-------------+
+ |  UA   |           | Push Service |       | Application |
+ +-------+           +--------------+       +-------------+
+     |                      |                      |
+     |      Register        |                      |
+     |--------------------->|                      |
+     |       Monitor        |                      |
+     |<====================>|                      |
+     |      Subscribe       |                      |
+     |--------------------->|                      |
+     |           Provide Subscription              |
+     |-------------------------------------------->|
+     |                      |                      |
+     :                      :                      :
+     |                      |     Push Message     |
+     |    Push Message      |<---------------------|
+     |<---------------------|                      |
+     |                      |                      |
+]]></artwork>
+      </figure>
+      <t>
+        At the very beginning of the process, the user agent creates a
+        registration resource at the push service.  The registration is the
+        basis of all future interactions between the user agent and push
+        service.  The registration aggregates push messages that the user agent
+        receives from all subscriptions.
+      </t>
+      <t>
+        The registration resource describes how the user agent is expected to
+        monitor for incoming push messages.  This document describes one such
+        mechanism, though more efficient means of monitoring could be defined.
+      </t>
+      <t>
+        The registration resource also describes how the user agent might create
+        a subscription.  A new subscription is created by the user agent and
+        then distributed by to an application server.
+      </t>
+      <t>
+        It is expected that a different subscription will be provided to each
+        application; however, there are no inherent cardinality constraints in
+        the protocol.  Multiple subscriptions might be created for the same
+        application, or multiple applications could use the same subscription.
+        Note however that sharing subscriptions can have security and privacy
+        implications.
+      </t>
+      <t>
+        Application servers use subscriptions to deliver push messages to
+        user agents, via the push service.
+      </t>
+      <t>
+        Both registrations and subscriptions have a limited lifetime.  They can
+        also be terminated by either push service or user agent at any time.
+        User agents and application servers need to be prepared to handle
+        changes in registrations and subscriptions; the protocol described here
+        supports any number of either resource concurrently with minimal
+        overhead.
+      </t>
+
+      <section anchor="resources" title="HTTP Resources">
+        <t>
+          This protocol uses <xref target="RFC7230">HTTP resources</xref> and
+          <xref target="RFC5988">link relations</xref>.  The following resources
+          are defined:
+          <list style="hanging">
+            <t hangText="push service:">
+              This resource is used in <xref
+              target="register">Registration</xref>.  It is configured into user
+              agents.
+            </t>
+            <t hangText="registration:">
+              A link relation of type "urn:ietf:params:push:reg" refers to a
+              registration resource.  This resource is used by a user agent in
+              requesting the delivery of push messages.  A process for
+              monitoring for messages using this resource is described in <xref
+              target="monitor"/>.
+            </t>
+            <t hangText="subscribe:">
+              A link relation of type "urn:ietf:params:push:sub" refers to a
+              resource where a user agent can create new subscriptions.
+              Creating a subscription is described in <xref
+              target="subscribe"/>.
+            </t>
+            <t hangText="subscription:">
+              A link relation of type "urn:ietf:params:push" refers to a
+              subscription resource.  Subscription resources are used to deliver
+              push messages.  An application server <xref target="send">sends
+              push messages</xref> and a user agent <xref
+              target="monitor">receives push messages</xref> using this
+              resource.
+            </t>
+          </list>
+        </t>
+      </section>
+    </section>
+
+    <section anchor="register" title="Registration">
+      <t>
+        A user agent that wishes to establish a new or replacement registration
+        sends an HTTP POST request to its configured push service resource.
+      </t>
+      <t>
+        A request to create a registration contains no entity body.  A future
+        specification MAY define a format and semantics for the entity body on
+        this request.
+      </t>
+      <t>
+        The push service creates a new registration and subscribe resource in
+        response to this request.  URIs for these resources are included in Link
+        header fields in the response.  The push server includes the
+        "registration" link relation in a Location header field.
+      </t>
+
+      <figure>
+        <preamble>
+          For example, the following request requests the creation of a new
+          registration:
+        </preamble>
+        <artwork type="inline"><![CDATA[
+POST /register HTTP/1.1
+Host: push.example.net
+
+]]></artwork>
+      </figure>
+      <figure>
+        <preamble>
+          The following response might be generated in response to this request:
+        </preamble>
+        <artwork type="inline"><![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:47 GMT
+Link: </monitor/1G_GIPMorg_n-IrQvqZr6g>;
+        rel="urn:ietf:params:push:reg"
+Link: </subscribe/1G_GIPMorg_n-IrQvqZr6g>;
+        rel="urn:ietf:params:push:sub"
+Location: https://push.example.net/monitor/1G_GIPMorg_n-IrQvqZr6g
+Cache-Control: max-age=8640000, private
+
+]]></artwork>
+      </figure>
+
+      <t>
+        The push server SHOULD provide a URI for the associated "subscribe"
+        resource and any known expiration information in response to requests to
+        the "registration" resource.
+      </t>
+    </section>
+
+    <section anchor="subscribe" title="Subscribing">
+      <t>
+        A user agent sends a POST request to the "subscribe" resource to create
+        a new subscription.
+      </t>
+      <figure>
+        <artwork type="inline"><![CDATA[
+POST /subscribe/1G_GIPMorg_n-IrQvqZr6g HTTP/1.1
+Host: push.example.net
+
+]]></artwork>
+      </figure>
+      <t>
+        A response with a 201 (Created) status code includes a URI for the subscription in
+        the Location header field.
+      </t>
+      <figure>
+        <artwork type="inline"><![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:52 GMT
+Link: </p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
+        rel="urn:ietf:params:push"
+Location: https://push.example.net/p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+Cache-Control: max-age:864000, private
+
+]]></artwork>
+      </figure>
+    </section>
+
+    <section anchor="send" title="Requesting Push Message Delivery">
+      <t>
+        A push subscription is an <xref target="RFC7230">HTTP resource</xref>.
+      </t>
+      <t>
+        An application server requests the delivery of a push message by sending
+        an HTTP PUT request to this resource, including the push message in the
+        body of the request.
+      </t>
+      <figure>
+        <artwork type="inline"><![CDATA[
+PUT /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx HTTP/1.1
+Host: push.example.net
+Content-Type: text/plain;charset=utf8
+Content-Length: 15
+
+Hello, World!
+]]></artwork>
+      </figure>
+      <figure>
+        <preamble>
+          A simple 200 response is sufficient to indicate that the push message
+          was accepted.  This does not indicate that the message was delivered
+          to the user agent.
+        </preamble>
+        <artwork type="inline"><![CDATA[
+HTTP/1.1 200 OK
+Date: Thu, 11 Dec 2014 23:56:55 GMT
+Cache-Control: max-age=600
+
+]]></artwork>
+      </figure>
+      <t>
+        A push service MAY generate a 413 (Payload Too Large) status code in
+        response to PUT requests that include an entity body that is too large.
+        Push services MUST NOT generate a 413 status code in responses to an
+        entity body that is 4k (4096 bytes) or less in size.
+      </t>
+      <t>
+        A push service that does not store messages can stream the payload of
+        push messages to the user agent.  Flow control SHOULD be used to limit
+        the state commitment for delivery of large messages.
+      </t>
+    </section>
+
+    <section anchor="monitor" title="Receiving Push Messages">
+      <t>
+        A user agent requests the delivery of new push messages by making a GET
+        request to the "registration" resource.  The push service does not
+        respond to this request, it instead uses <xref
+        target="I-D.ietf-httpbis-http2">HTTP/2 server push</xref> to send the
+        contents of push messages as they are sent by application servers.
+      </t>
+      <t>
+        Each push message is pushed in response to a synthesized GET request.
+        The GET request is made to the same "subscription" URI that is used by
+        the application server to send the message.  The response body is the
+        entity body from the most recent PUT request sent to the subscription
+        resource.
+      </t>
+
+      <figure>
+        <preamble>
+          The following example request is made over HTTP/2.
+        </preamble>
+        <artwork><![CDATA[
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :method        = GET
+  :path          = /monitor/1G_GIPMorg_n-IrQvqZr6g
+  :authority     = push.example.net
+]]></artwork>
+      </figure>
+
+      <figure>
+        <preamble>
+          The push service permits the request to remain outstanding.  When a
+          push message is sent by an application server, a server push is
+          associated with the initial request.  The response includes the push
+          message.
+        </preamble>
+        <artwork><![CDATA[
+PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+  :method        = GET
+  :path          = /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+  :authority     = push.example.net
+
+HEADERS      [stream 4] +END_HEADERS
+  :status        = 200
+  date           = Thu, 11 Dec 2014 23:56:55 GMT
+  last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+  cache-control  = private
+  content-type   = text/plain;charset=utf8
+  content-length = 15
+
+DATA         [stream 4] +END_STREAM
+  Hello World!\r\n
+]]></artwork>
+      </figure>
+
+      <t>
+        A user agent might receive a PUSH_PROMISE for a resource for which they
+        have no active subscription.  The resulting unwanted push message can be
+        ignored, or the corresponding stream can be reset (using RST_STREAM) to
+        avoid expending bandwidth.
+      </t>
+
+      <t>
+        A user agent can request the contents of the "registration" resource
+        immediately by including a <xref target="RFC7240">Prefer header
+        field</xref> with a "wait" parameter set to "0".  The push server SHOULD
+        return a link reference to the "registration" resource and expiration
+        information in response to this request.  This request also triggers the
+        delivery of all push messages that the push service has stored but not
+        yet delivered.  The server MUST generate a server push for all stored
+        messages that have not yet been delivered.
+      </t>
+      <t>
+        A user agent can request the last push message for a "subscription"
+        resource by sending GET requests to its URI.  A 200 (OK) status response
+        contains the last push message sent to the subscription.  A 204 (No
+        Content) status code indicates that no messages are presently available.
+      </t>
+    </section>
+
+    <section anchor="operational" title="Operational Considerations">
+      <t>
+        A push service is likely to have to maintain a very large number of open
+        TCP connections.  Effective management of those connections can depend
+        on being able to move connections between server instances.
+      </t>
+
+      <section anchor="load" title="Load Management">
+        <t>
+          A user agent MUST support the 307 (Temporary Redirect) status code
+          <xref target="RFC7231"/>, which can be used by a push service to
+          redistribute load at the time that a new registration is requested.
+        </t>
+        <t>
+          A server that wishes to redistribute load can do so using alternative
+          services <xref target="I-D.ietf-httpbis-alt-svc"/>.  Alternative
+          services allows for redistribution of load whilst maintaining the same
+          URIs for various resources.  User agents can ensure a graceful
+          transition by using the GOAWAY frame once it has established a
+          replacement connection.
+        </t>
+      </section>
+
+      <section anchor="storage" title="Push Message Expiration">
+        <t>
+          Push services typically store messages for some time to allow for
+          limited recovery from transient faults.  If a push message is stored,
+          but not delivered, the push service can indicate the probable duration
+          of storage by including expiration information in the response to the
+          push request.
+        </t>
+        <t>
+          A push service is not obligated to store messages indefinitely.  If a
+          user agent is not actively monitoring for push messages, those
+          messages can be lost or overridden by newer messages on the same
+          subscription.
+        </t>
+        <t>
+          Push messages that were stored and not delivered to a user agent are
+          delivered when the user agent recommences monitoring.  Stored push
+          messages SHOULD include a Last-Modified header field (see Section 2.2
+          of <xref target="RFC7232"/>) indicating when delivery was requested by
+          an application server.
+        </t>
+        <t>
+          A GET request to a "subscription" resource that has expired messages
+          results in a 204 (No Content) status response, equivalent to if no
+          push message were ever sent.
+        </t>
+        <t>
+          Push services might need to limit the size and number of stored push
+          messages to avoid overloading.  In addition to using the 413 (Payload
+          Too Large) status code for too large push messages, a push service MAY
+          expire push messages prior to any advertised expiration time.
+        </t>
+      </section>
+
+      <section anchor="delete" title="Registration and Subscription Expiration">
+        <t>
+          In some cases, it may be necessary to terminate registrations or
+          subscriptions so that they can be refreshed.
+        </t>
+        <t>
+          A push service might choose to set a fixed expiration time.  If a
+          resource has a known expiration time, expiration information is
+          included in responses to requests that create the resource, or in
+          requests that retrieve a representation of the resource.
+        </t>
+        <t>
+          Expiration is indicated using either the Expires header field, or by
+          setting a "max-age" parameter on a Cache-Control header field (see
+          <xref target="RFC7234"/>).  The Cache-Control header field MUST also
+          include the "private" directive.
+        </t>
+        <t>
+          A push service can invalidate a registration or subscription at any
+          time.  If a user agent has an outstanding request to the
+          "registration" resource (see <xref target="monitor"/>), this can be
+          signaled by returning a 400-series status code, such as 410 (Gone).  A
+          push service uses server push to indicate that a subscription has
+          expired; a pushed 400-series status code for the subscription resource
+          signals the termination of a subscription.
+        </t>
+        <t>
+          A user agent can request that a registration or subscription be
+          removed by sending a DELETE request to the corresponding URI.
+          Removing a registration causes all associated subscriptions to be
+          removed.  Requests to delete a subscription MUST be authenticated; the
+          URI for subscriptions will be known by multiple entities, most of whom
+          will not be authorized to remove the subscription.
+        </t>
+        <t>
+          A push service MUST send a 400-series status code, such as 404 (Not
+          Found) or 410 (Gone) if an application server atttempts to send a push
+          message to a removed or expired subscription.
+        </t>
+      </section>
+
+      <section title="Implications for Application Reliability">
+        <t>
+          An application developer might find it tempting to create alternative
+          mechanisms for message delivery in case the push service fails to
+          deliver a critical message.  Setting up a polling mechanism or a
+          backup messaging channel in order to compensate for these shortcomings
+          negates almost all of the advantages a push service provides.
+        </t>
+        <t>
+          Applications are encouraged to instead provide a means to detect
+          situations where push messages were not delivered and recover
+          gracefully.  For instance, an application server might include a
+          sequence number in push messages; a gap in the sequence can then be
+          used to trigger some form of state resynchronization.  For instance,
+          the missing messages might be requested from the application server
+          directly.  Push service failures are expected to be rare, therefore
+          performance optimization of any recovery mechanism might be
+          unnecessary.
+        </t>
+      </section>
+    </section>
+
+    <section anchor="security" title="Security Considerations">
+      <t>
+        This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>; this
+        includes any communications between user agent and push service, plus
+        communications between the application and the push service.  Thus, all
+        URIs use the "https" scheme.  This provides confidentiality and
+        integrity protection for registrations and push messages from external
+        parties.
+      </t>
+
+      <section title="Confidentiality from Push Service Access">
+        <t>
+          The protection afforded by TLS does not protect content from the push
+          service.  Without additional safeguards, a push service is able to see
+          and modify the content of the messages.
+        </t>
+        <t>
+          Applications are able to provide additional confidentiality, integrity
+          or authentication mechanisms within the push message itself.  The
+          application server sending the push message and the application on the
+          user agent that receives it are frequently just different instances of
+          the same application, so no standardized protocol is needed to
+          establish a proper security context.  The process of providing the
+          application server with subscription information provides a convenient
+          medium for key agreement.
+        </t>
+        <t>
+          The Web Push API codifies this practice by requiring that each push
+          subscription created by the browser be bound to a browser generated
+          encryption key.  Pushed messages are authenticated and decrypted by
+          the browser before delivery to applications.  This scheme ensures that
+          the push service is unable to examine the contents of push messages.
+        </t>
+        <t>
+          The public key for a subscription ensures that applications using that
+          subscription can identify messages from unknown sources and discard
+          them.  This depends on the public key only being disclosed to entities
+          that are authorized to send messages on the channel.  The push server
+          does not require access to this public key.
+        </t>
+     </section>
+
+     <section title="Privacy Considerations">
+       <t>
+         Push message confidentiality does not ensure that the identity of who
+         is communicating and when they are communicating is protected.
+         However, the amount of information that is exposed can be limited.
+       </t>
+       <t>
+         Subscription URIs MUST NOT provide any basis to correlate
+         communications for a given user agent.  It MUST NOT be possible to
+         correlate any two subscription URIs based solely on the content of the
+         subscription URIs.  This allows a user agent to control correlation
+         across different applications, or over time.
+       </t>
+       <t>
+         In particular, user and device information MUST NOT be exposed through
+         the subscription URI.
+       </t>
+       <t>
+         In addition, subscription URIs established by the same user agent MUST
+         NOT include any information that allows them to be correlated with the
+         associated registration or the user agent.  The push service is the
+         only entity that needs to be able to correlate subscriptions with a
+         registration.
+         <list style="hanging">
+           <t hangText="Note:">
+             This need not be perfect as long as the resulting anonymity set
+             (see <xref target="RFC6973"/>, Section 6.1.1) is sufficiently
+             large.  A subscription URI necessarily identifies a push service or
+             a single server instance.  It is also possible that traffic
+             analysis could be used to correlate subscriptions.
+           </t>
+         </list>
+       </t>
+       <t>
+         A user agent MUST be able to create new registrations and subscriptions
+         with new identifiers at any time.
+       </t>
+     </section>
+
+     <section title="Authorization">
+       <t>
+         This protocol does not define how a push service establishes whether a
+         user agent is permitted to create a registration or subscription, or
+         whether push messages can be delivered to the user agent.  A push
+         service MAY choose to authorize request based on any HTTP-compatible
+         authorization method available, of which there are numerous options.
+         The authorization process and any associated credentials are expected
+         to be configured in the user agent along with the URI for the "push
+         service".
+       </t>
+
+       <t>
+         Authorization for sending push messages is managed using capability
+         URLs (see <xref target="CAP-URI"/>).  A capability URL grants access to
+         a resource based solely on knowledge of the URL.  Capability URLs are
+         used for their "easy onward sharing" and "easy client API" properties.
+         These make it possible to avoid relying on relationships between push
+         services and application servers, with the protocols necessary to build
+         and support those relationships.
+       </t>
+       <t>
+         A subscription URI therefore acts as a bearer token: knowledge of the
+         URI implies authorization to send push messages.  Subscription URIs
+         MUST be extremely difficult to guess.  Encoding a large amount of
+         random entropy (at least 120 bits) in the path component ensures that
+         it is difficult to successfully guess a valid subscription URI.
+       </t>
+     </section>
+
+     <section title="Denial of Service Considerations">
+       <t>
+         Discarding unwanted messages at the user agent based on message
+         authentication doesn't protect against a denial of service attack on
+         the user agent.  Even a relatively small volume of push messages can
+         cause battery-powered devices to exhaust power reserves.  Limiting the
+         number of entities with access to push channels limits the number of
+         entities that can generate value push requests of the push server.
+       </t>
+       <t>
+         An application can limit where push messages can originate by limiting
+         the distribution of subscription URIs to authorized entities.  Ensuring
+         that subscription URIs are hard to guess ensures that only applications
+         servers that have been given a subscription URI can use it.
+       </t>
+       <t>
+         A malicious application with a valid subscription use the greater
+         resources of a push service to mount a denial of service attack on a
+         user agent.  Push service SHOULD limit the rate at which push messages
+         are sent to individual user agents.  A push service or user agent MAY
+         <xref target="delete">terminate subscriptions</xref> that receives too
+         many push messages.
+       </t>
+       <t>
+         End-to-end confidentiality mechanisms, such as those in <xref
+         target="API"/>, prevent an entity with a registration URI from learning
+         the contents of push messages.  In both cases, push messages that are
+         not successfully authenticated will not be delivered by the API, but
+         this can present a denial of service risk.
+       </t>
+       <t>
+         Conversely, a push service is also able to deny service to user agents.
+         Intentional failure to deliver messages is difficult to distinguish
+         from faults, which might occur due to transient network errors,
+         interruptions in user agent availability, or genuine service outages.
+       </t>
+     </section>
+
+     <section title="Logging Risks">
+       <t>
+         Server request logs can reveal registration and subscription URIs.
+         Acquiring a registration URI permits the creation of new subscriptions,
+         as well as potentially enabling the receipt of messages.  Acquiring a
+         subscription URI permits the sending of push messages.  Logging could
+         also reveal relationships between different subscription URIs for the
+         same registration, or between different registrations for the same
+         user agent.
+       </t>
+       <t>
+         Limitations on log retention and strong access control mechanisms can
+         ensure that URIs are not learned by unauthorized entities.
+       </t>
+     </section>
+
+    </section>
+
+    <section title="IANA Considerations">
+      <t>
+        This document registers three URNs for use in identifying link relation
+        types.  These are added to a new "Web Push Identifiers" registry
+        according to the procedures in Section 4 of <xref target="RFC3553"/>;
+        the corresponding "push" sub-namespace is entered in the "IETF URN
+        Sub-namespace for Registered Protocol Parameter Identifiers" registry.
+      </t>
+      <t>
+        The "Web Push Identifiers" registry operates under the <xref
+        target="RFC5226">IETF Review policy</xref>.
+        <list style="hanging">
+          <t hangText="Registry name:">Web Push Identifiers</t>
+          <t hangText="URN Prefix:">urn:ietf:params:push</t>
+          <t hangText="Specification:">(this document)</t>
+          <t hangText="Respository:">[Editor/IANA note: please include a link to
+          the final registry location.]</t>
+          <t hangText="Index value:">Values in this registry are URNs or URN
+          prefixes that start with the prefix <spanx
+          style="verb">urn:ietf:params:push</spanx>.  Each is registered
+          independently.</t>
+        </list>
+      </t>
+      <t>
+        New registrations in the "Web Push Identifiers" are encouraged to
+        include the following information:
+        <list style="hanging">
+          <t hangText="URN:">A complete URN or URN prefix.</t>
+          <t hangText="Description:">A summary description.</t>
+          <t hangText="Specification:">A reference to a specification describing
+          the semantics of the URN or URN prefix.</t>
+          <t hangText="Contact:">Email for the person or group making the
+          registration.</t>
+          <t hangText="Index value:">As described in <xref target="RFC3553"/>,
+          URN prefixes that are registered include a description of how the URN
+          is constructed.  This is not applicable for specific URNs.</t>
+        </list>
+      </t>
+      <t>
+        Three values are entered as the initial content of the "Web Push
+        Identifiers" registry.
+      </t>
+      <t>
+        <list style="hanging">
+          <t hangText="URN:">urn:ietf:params:push</t>
+          <t hangText="Description:">This link relation type is used to identify
+          a web push subscription.</t>
+          <t hangText="Specification:">(this document)</t>
+          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
+          Web Push WG (webpush@ietf.org)</t>
+        </list>
+      </t>
+      <t>
+        <list style="hanging">
+          <t hangText="URN:">urn:ietf:params:push:reg</t>
+          <t hangText="Description:">This link relation type is used to identify
+          a web push registration.</t>
+          <t hangText="Specification:">(this document)</t>
+          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
+          Web Push WG (webpush@ietf.org)</t>
+        </list>
+      </t>
+      <t>
+        <list style="hanging">
+          <t hangText="URN:">urn:ietf:params:push:sub</t>
+          <t hangText="Description:">This link relation type is used to identify
+          a resource that can be used to create new web push subscriptions.</t>
+          <t hangText="Specification:">(this document)</t>
+          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
+          Web Push WG (webpush@ietf.org)</t>
+        </list>
+      </t>
+    </section>
+
+    <section anchor="ack" title="Acknowledgements">
+      <t>
+        Significant technical input to this document has been provided by Costin
+        Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and many
+        others.
+      </t>
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references title="Normative References">
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3553.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7231.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7232.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7234.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7240.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-httpbis-http2.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-httpbis-alt-svc.xml"?>
+
+      <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
+        <front>
+          <title>Good Practices for Capability URLs</title>
+          <author initials="J." surname="Tennison" fullname="Jeni Tennison"/>
+          <date month="February" year="2014"/>
+        </front>
+        <seriesInfo name="FPWD" value="capability-urls"/>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      <reference anchor="API" target="https://w3c.github.io/push-api/">
+        <front>
+          <title>Web Push API</title>
+          <author initials="B." surname="Sullivan" fullname="Bryan Sullivan"/>
+          <author initials="E." surname="Fullea" fullname="Eduardo Fullea"/>
+          <author initials="M." surname="van Ouwerkerk" fullname="Michael van Ouwerkerk"/>
+          <date month="February" year="2015" />
+        </front>
+        <seriesInfo name="ED" value="push-api" />
+      </reference>
+
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6973.xml"?>
+
+      <reference anchor="TS.3GPP.23.040">
+        <front>
+          <title>Technical realization of the Short Message Service (SMS)</title>
+          <author><organization>3GPP</organization></author>
+          <date month="October" year="2014"/>
+        </front>
+
+        <seriesInfo name="3GPP TS" value="23.040 12.2.0"/>
+        <format type="HTML" target="http://www.3gpp.org/ftp/Specs/html-info/23040.htm"/>
+      </reference>
+    </references>
+
+    <!--
+        <section title="Change Log">
+        <t>[[The RFC Editor is requested to remove this section at publication.]]</t>
+        <t>Changes since -0-1:
+        <list style="symbols">
+        <t>Document created.</t>
+        </list>
+        </t>
+        </section>
+    -->
+  </back>
+</rfc>
