@@ -1,0 +1,1018 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Generic Event Delivery Using HTTP Push </title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+      a.info {
+          /* This is the key. */
+          position: relative;
+          z-index: 24;
+          text-decoration: none;
+      }
+      a.info:hover {
+          z-index: 25;
+          color: #FFF; background-color: #900;
+      }
+      a.info span { display: none; }
+      a.info:hover span.info {
+          /* The span will display just on :hover state. */
+          display: block;
+          position: absolute;
+          font-size: smaller;
+          top: 2em; left: -5em; width: 15em;
+          padding: 2px; border: 1px solid #333;
+          color: #900; background-color: #EEE;
+          text-align: left;
+      }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  max-width: 55em;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+  <style type="text/css">
+@viewport {
+  zoom: 1.0;
+  width: extend-to-zoom;
+}
+
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+
+body {
+  font: 11pt cambria, helvetica, arial, sans-serif;
+  font-size-adjust: 0.5;
+  line-height: 130%;
+  margin: 1em auto;
+  max-width: 700px;
+}
+
+.title, .filename, h1, h2, h3, h4 {
+  font-family: candara, helvetica, arial, sans-serif;
+  font-size-adjust: 0.5;
+}
+.title { font-size: 150%; }
+h1 { font-size: 130%; }
+h2 { font-size: 120%; }
+h3, h4 { font-size: 110%; }
+ul.toc >li { font-size: 95%; }
+ul.toc >li >ul, .figure, caption { font-size: 90%; }
+
+table {
+  margin-left: 0em;
+}
+table.header {
+  width: 100%;
+}
+
+table.header td {
+  background-color: inherit;
+  color: black;
+}
+
+samp, tt, code, pre {
+  font: 11pt consolas, monospace;
+  font-size-adjust: none;
+}
+
+pre.text, pre.text2 {
+  width: 90%;
+}
+
+dt {
+  float: left; clear: left;
+  margin: 0.5em 0.5em 0 0;
+}
+dt:first-child {
+  margin-top: 0;
+}
+dd {
+  margin: 0.5em 0 0 2em;
+}
+dd p, dd ul {
+  margin-top: 0; margin-bottom: 0;
+}
+dd *+p {
+  margin-top: 0.5em;
+}
+
+ol, ul {
+  padding: 0;
+  margin: 0.5em 0 0.5em 2em;
+}
+ul.toc, ul.toc ul { 
+  margin: 0 0 0 1.5em;
+}
+ul.toc a:first-child { 
+  display: inline-block; 
+  min-width: 1.2em;
+}  </style>
+
+  <link href="#rfc.toc" rel="Contents"/>
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Conventions and Terminology"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 Overview"/>
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 HTTP Resources"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 Registration"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 Subscribing"/>
+<link href="#rfc.section.5" rel="Chapter" title="5 Requesting Push Message Delivery"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 Receiving Push Messages"/>
+<link href="#rfc.section.7" rel="Chapter" title="7 Operational Considerations"/>
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Load Management"/>
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Push Message Expiration"/>
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Registration and Subscription Expiration"/>
+<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Implications for Application Reliability"/>
+<link href="#rfc.section.8" rel="Chapter" title="8 Security Considerations"/>
+<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Confidentiality from Push Service Access"/>
+<link href="#rfc.section.8.2" rel="Chapter" title="8.2 Privacy Considerations"/>
+<link href="#rfc.section.8.3" rel="Chapter" title="8.3 Authorization"/>
+<link href="#rfc.section.8.4" rel="Chapter" title="8.4 Denial of Service Considerations"/>
+<link href="#rfc.section.8.5" rel="Chapter" title="8.5 Logging Risks"/>
+<link href="#rfc.section.9" rel="Chapter" title="9 IANA Considerations"/>
+<link href="#rfc.section.10" rel="Chapter" title="10 Acknowledgements"/>
+<link href="#rfc.references" rel="Chapter" title="11 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="11.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="11.2 Informative References"/>
+<link href="#rfc.authors" rel="Chapter"/>
+
+
+  <meta name="generator" content="xml2rfc version 2.4.10 - http://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Thomson, M." />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-thomson-webpush-http2-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-3-26" />
+  <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
+  <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+  <td class="left">WEBPUSH</td>
+  <td class="right">M. Thomson</td>
+</tr>
+<tr>
+  <td class="left">Internet-Draft</td>
+  <td class="right">Mozilla</td>
+</tr>
+<tr>
+  <td class="left">Intended status: Standards Track</td>
+  <td class="right">March 26, 2015</td>
+</tr>
+<tr>
+  <td class="left">Expires: September 27, 2015</td>
+  <td class="right"></td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Generic Event Delivery Using HTTP Push <br />
+  <span class="filename">draft-thomson-webpush-http2-latest</span></p>
+  
+  <h1 id="rfc.abstract">
+  <a href="#rfc.abstract">Abstract</a>
+</h1>
+<p>A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  </p>
+<h1 id="rfc.status">
+  <a href="#rfc.status">Status of This Memo</a>
+</h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on September 27, 2015.</p>
+<h1 id="rfc.copyrightnotice">
+  <a href="#rfc.copyrightnotice">Copyright Notice</a>
+</h1>
+<p>Copyright (c) 2015 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Conventions and Terminology</a></li>
+</ul><li>2.   <a href="#rfc.section.2">Overview</a></li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">HTTP Resources</a></li>
+</ul><li>3.   <a href="#rfc.section.3">Registration</a></li>
+<li>4.   <a href="#rfc.section.4">Subscribing</a></li>
+<li>5.   <a href="#rfc.section.5">Requesting Push Message Delivery</a></li>
+<li>6.   <a href="#rfc.section.6">Receiving Push Messages</a></li>
+<li>7.   <a href="#rfc.section.7">Operational Considerations</a></li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Load Management</a></li>
+<li>7.2.   <a href="#rfc.section.7.2">Push Message Expiration</a></li>
+<li>7.3.   <a href="#rfc.section.7.3">Registration and Subscription Expiration</a></li>
+<li>7.4.   <a href="#rfc.section.7.4">Implications for Application Reliability</a></li>
+</ul><li>8.   <a href="#rfc.section.8">Security Considerations</a></li>
+<ul><li>8.1.   <a href="#rfc.section.8.1">Confidentiality from Push Service Access</a></li>
+<li>8.2.   <a href="#rfc.section.8.2">Privacy Considerations</a></li>
+<li>8.3.   <a href="#rfc.section.8.3">Authorization</a></li>
+<li>8.4.   <a href="#rfc.section.8.4">Denial of Service Considerations</a></li>
+<li>8.5.   <a href="#rfc.section.8.5">Logging Risks</a></li>
+</ul><li>9.   <a href="#rfc.section.9">IANA Considerations</a></li>
+<li>10.   <a href="#rfc.section.10">Acknowledgements</a></li>
+<li>11.   <a href="#rfc.references">References</a></li>
+<ul><li>11.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>11.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li><a href="#rfc.authors">Author's Address</a></li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
+<p id="rfc.section.1.p.1">Mobile computing devices are increasingly relied upon for a great many applications.  Mobile devices typically have limited power reserves, so finding more efficient ways to serve application requirements is an important part of any mobile platform.  </p>
+<p id="rfc.section.1.p.2">One significant contributor to power usage mobile devices is the radio.  Radio communications consumes a significant portion of the energy budget on a wirelessly connected mobile device.  </p>
+<p id="rfc.section.1.p.3">Many applications require continuous access to network communications so that real-time events - such as incoming calls or messages - can be conveyed (or "pushed") to the user in a timely fashion.  Uncoordinated use of persistent connections or sessions from multiple applications can contribute to unnecessary use of the device radio, since each independent session independently incurs overheads.  In particular, keep alive traffic used to ensure that middleboxes do not prematurely time out sessions, can result in significant waste.  Maintenance traffic tends to dominate over the long term, since events are relatively rare.  </p>
+<p id="rfc.section.1.p.4">Consolidating all real-time events into a single session ensures more efficient use of network and radio resources.  A single service consolidates all events, distributing those events to applications as they arrive.  This requires just one session, avoiding duplicated overhead costs.  </p>
+<p id="rfc.section.1.p.5">The <a href="#API">W3C Web Push API</a> <cite title="NONE">[API]</cite> describes an API that enables the use of a consolidated push service from web applications.  This expands on that work by describing a protocol that can be used to: </p>
+
+<ul>
+  <li>request the delivery of a push message to a user agent, </li>
+  <li>register a new user agent, </li>
+  <li>create new push message delivery subscriptions, and </li>
+  <li>monitor for new push messages.  </li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.1.p.6">Requesting the delivery of events is particularly important for the Web Push API.  The registration, management and monitoring functions are currently fulfilled by proprietary protocols; these are adequate, but do not offer any of the advantages that standardization affords.  </p>
+<p id="rfc.section.1.p.7">The monitoring function described in this document is intended to be replaceable, enabling the use of monitoring schemes that are better optimized for the network environment and the user agent.  For instance, using notification systems like the <a href="#TS.3GPP.23.040">3GPP Short Message Service (SMS)</a> <cite title="NONE">[TS.3GPP.23.040]</cite> can take advantage of the native paging capabilities of a cellular network, avoiding the ongoing maintainence cost of a persistent TCP connection.  </p>
+<p id="rfc.section.1.p.8">This document intentionally does not describe how a push service is discovered.  Discovery of push services is left for future efforts, if it turns out to be necessary at all.  User agents are expected to be configured with a URL for a push service.  </p>
+<p id="rfc.section.1.p.9">Similarly, discovery of support for and negotiation of use of alternative monitoring schemes is left to documents that extend this basic protocol.  </p>
+<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Conventions and Terminology</a></h1>
+<p id="rfc.section.1.1.p.1">In cases where normative language needs to be emphasized, this document falls back on established shorthands for expressing interoperability requirements on implementations: the capitalized words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these is described in <a href="#RFC2119">[RFC2119]</a>.  </p>
+<p id="rfc.section.1.1.p.2">This document defines the following terms: </p>
+
+<dl>
+  <dt>application:</dt>
+  <dd style="margin-left: 8">Both the sender and ultimate consumer of push messages.  Many applications have components that are run on a user agent and other components that run on servers.  </dd>
+  <dt>application server:</dt>
+  <dd style="margin-left: 8">The component of an application that runs on a server and requests the delivery of a push message.  </dd>
+  <dt>push message:</dt>
+  <dd style="margin-left: 8">A message, sent from an application server to a user agent via a push service.  </dd>
+  <dt>push service:</dt>
+  <dd style="margin-left: 8">A service that delivers push messages to user agents.  </dd>
+  <dt>registration:</dt>
+  <dd style="margin-left: 8">A session that is established between the user agent and the push service.  A registation has any number of associated subscriptions.  </dd>
+  <dt>subscription:</dt>
+  <dd style="margin-left: 8">A message delivery context that is established between the user agent and the push service and shared with applications.  All push messages are associated with a subscription.  </dd>
+  <dt>user agent:</dt>
+  <dd style="margin-left: 8">A device and software that is the recipient of push messages.  </dd>
+</dl>
+
+<p> </p>
+<p id="rfc.section.1.1.p.3">Examples in this document use the <a href="#RFC7230">HTTP/1.1 message format</a> <cite title="NONE">[RFC7230]</cite>.  Many of the exchanges can be completed using HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format from <a href="#I-D.ietf-httpbis-http2">[I-D.ietf-httpbis-http2]</a> is used.  </p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> Overview</h1>
+<p id="rfc.section.2.p.1">A general model for push services includes three basic actors: a user agent, a push service, and an application (server).  </p>
+<pre>
+ +-------+           +--------------+       +-------------+
+ |  UA   |           | Push Service |       | Application |
+ +-------+           +--------------+       +-------------+
+     |                      |                      |
+     |      Register        |                      |
+     |---------------------&gt;|                      |
+     |       Monitor        |                      |
+     |&lt;====================&gt;|                      |
+     |      Subscribe       |                      |
+     |---------------------&gt;|                      |
+     |           Provide Subscription              |
+     |--------------------------------------------&gt;|
+     |                      |                      |
+     :                      :                      :
+     |                      |     Push Message     |
+     |    Push Message      |&lt;---------------------|
+     |&lt;---------------------|                      |
+     |                      |                      |
+</pre>
+<p id="rfc.section.2.p.2">At the very beginning of the process, the user agent creates a registration resource at the push service.  The registration is the basis of all future interactions between the user agent and push service.  The registration aggregates push messages that the user agent receives from all subscriptions.  </p>
+<p id="rfc.section.2.p.3">The registration resource describes how the user agent is expected to monitor for incoming push messages.  This document describes one such mechanism, though more efficient means of monitoring could be defined.  </p>
+<p id="rfc.section.2.p.4">The registration resource also describes how the user agent might create a subscription.  A new subscription is created by the user agent and then distributed by to an application server.  </p>
+<p id="rfc.section.2.p.5">It is expected that a different subscription will be provided to each application; however, there are no inherent cardinality constraints in the protocol.  Multiple subscriptions might be created for the same application, or multiple applications could use the same subscription.  Note however that sharing subscriptions can have security and privacy implications.  </p>
+<p id="rfc.section.2.p.6">Application servers use subscriptions to deliver push messages to user agents, via the push service.  </p>
+<p id="rfc.section.2.p.7">Both registrations and subscriptions have a limited lifetime.  They can also be terminated by either push service or user agent at any time.  User agents and application servers need to be prepared to handle changes in registrations and subscriptions; the protocol described here supports any number of either resource concurrently with minimal overhead.  </p>
+<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#resources" id="resources">HTTP Resources</a></h1>
+<p id="rfc.section.2.1.p.1">This protocol uses <a href="#RFC7230">HTTP resources</a> <cite title="NONE">[RFC7230]</cite> and <a href="#RFC5988">link relations</a> <cite title="NONE">[RFC5988]</cite>.  The following resources are defined: </p>
+
+<dl>
+  <dt>push service:</dt>
+  <dd style="margin-left: 8">This resource is used in <a href="#register">Registration</a> <cite title="NONE">[register]</cite>.  It is configured into user agents.  </dd>
+  <dt>registration:</dt>
+  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:reg" refers to a registration resource.  This resource is used by a user agent in requesting the delivery of push messages.  A process for monitoring for messages using this resource is described in <a href="#monitor">Section 6</a>.  </dd>
+  <dt>subscribe:</dt>
+  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:sub" refers to a resource where a user agent can create new subscriptions.  Creating a subscription is described in <a href="#subscribe">Section 4</a>.  </dd>
+  <dt>subscription:</dt>
+  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push" refers to a subscription resource.  Subscription resources are used to deliver push messages.  An application server <a href="#send">sends push messages</a> <cite title="NONE">[send]</cite> and a user agent <a href="#monitor">receives push messages</a> <cite title="NONE">[monitor]</cite> using this resource.  </dd>
+</dl>
+
+<p> </p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#register" id="register">Registration</a></h1>
+<p id="rfc.section.3.p.1">A user agent that wishes to establish a new or replacement registration sends an HTTP POST request to its configured push service resource.  </p>
+<p id="rfc.section.3.p.2">A request to create a registration contains no entity body.  A future specification MAY define a format and semantics for the entity body on this request.  </p>
+<p id="rfc.section.3.p.3">The push service creates a new registration and subscribe resource in response to this request.  URIs for these resources are included in Link header fields in the response.  The push server includes the "registration" link relation in a Location header field.  </p>
+<p>For example, the following request requests the creation of a new registration: </p>
+<pre>
+POST /register HTTP/1.1
+Host: push.example.net
+
+</pre>
+<p>The following response might be generated in response to this request: </p>
+<pre>
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:47 GMT
+Link: &lt;/monitor/1G_GIPMorg_n-IrQvqZr6g&gt;;
+        rel="urn:ietf:params:push:reg"
+Link: &lt;/subscribe/1G_GIPMorg_n-IrQvqZr6g&gt;;
+        rel="urn:ietf:params:push:sub"
+Location: https://push.example.net/monitor/1G_GIPMorg_n-IrQvqZr6g
+Cache-Control: max-age=8640000, private
+
+</pre>
+<p id="rfc.section.3.p.4">The push server SHOULD provide a URI for the associated "subscribe" resource and any known expiration information in response to requests to the "registration" resource.  </p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#subscribe" id="subscribe">Subscribing</a></h1>
+<p id="rfc.section.4.p.1">A user agent sends a POST request to the "subscribe" resource to create a new subscription.  </p>
+<pre>
+POST /subscribe/1G_GIPMorg_n-IrQvqZr6g HTTP/1.1
+Host: push.example.net
+
+</pre>
+<p id="rfc.section.4.p.2">A response with a 201 (Created) status code includes a URI for the subscription in the Location header field.  </p>
+<pre>
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:52 GMT
+Link: &lt;/p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx&gt;;
+        rel="urn:ietf:params:push"
+Location: https://push.example.net/p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+Cache-Control: max-age:864000, private
+
+</pre>
+<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#send" id="send">Requesting Push Message Delivery</a></h1>
+<p id="rfc.section.5.p.1">A push subscription is an <a href="#RFC7230">HTTP resource</a> <cite title="NONE">[RFC7230]</cite>.  </p>
+<p id="rfc.section.5.p.2">An application server requests the delivery of a push message by sending an HTTP PUT request to this resource, including the push message in the body of the request.  </p>
+<pre>
+PUT /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx HTTP/1.1
+Host: push.example.net
+Content-Type: text/plain;charset=utf8
+Content-Length: 15
+
+Hello, World!
+</pre>
+<p>A simple 200 response is sufficient to indicate that the push message was accepted.  This does not indicate that the message was delivered to the user agent.  </p>
+<pre>
+HTTP/1.1 200 OK
+Date: Thu, 11 Dec 2014 23:56:55 GMT
+Cache-Control: max-age=600
+
+</pre>
+<p id="rfc.section.5.p.3">A push service MAY generate a 413 (Payload Too Large) status code in response to PUT requests that include an entity body that is too large.  Push services MUST NOT generate a 413 status code in responses to an entity body that is 4k (4096 bytes) or less in size.  </p>
+<p id="rfc.section.5.p.4">A push service that does not store messages can stream the payload of push messages to the user agent.  Flow control SHOULD be used to limit the state commitment for delivery of large messages.  </p>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor" id="monitor">Receiving Push Messages</a></h1>
+<p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to the "registration" resource.  The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send the contents of push messages as they are sent by application servers.  </p>
+<p id="rfc.section.6.p.2">Each push message is pushed in response to a synthesized GET request.  The GET request is made to the same "subscription" URI that is used by the application server to send the message.  The response body is the entity body from the most recent PUT request sent to the subscription resource.  </p>
+<p>The following example request is made over HTTP/2.  </p>
+<pre>
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :method        = GET
+  :path          = /monitor/1G_GIPMorg_n-IrQvqZr6g
+  :authority     = push.example.net
+</pre>
+<p>The push service permits the request to remain outstanding.  When a push message is sent by an application server, a server push is associated with the initial request.  The response includes the push message.  </p>
+<pre>
+PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+  :method        = GET
+  :path          = /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+  :authority     = push.example.net
+
+HEADERS      [stream 4] +END_HEADERS
+  :status        = 200
+  date           = Thu, 11 Dec 2014 23:56:55 GMT
+  last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+  cache-control  = private
+  content-type   = text/plain;charset=utf8
+  content-length = 15
+
+DATA         [stream 4] +END_STREAM
+  Hello World!\r\n
+</pre>
+<p id="rfc.section.6.p.3">A user agent might receive a PUSH_PROMISE for a resource for which they have no active subscription.  The resulting unwanted push message can be ignored, or the corresponding stream can be reset (using RST_STREAM) to avoid expending bandwidth.  </p>
+<p id="rfc.section.6.p.4">A user agent can request the contents of the "registration" resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  The push server SHOULD return a link reference to the "registration" resource and expiration information in response to this request.  This request also triggers the delivery of all push messages that the push service has stored but not yet delivered.  The server MUST generate a server push for all stored messages that have not yet been delivered.  </p>
+<p id="rfc.section.6.p.5">A user agent can request the last push message for a "subscription" resource by sending GET requests to its URI.  A 200 (OK) status response contains the last push message sent to the subscription.  A 204 (No Content) status code indicates that no messages are presently available.  </p>
+<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#operational" id="operational">Operational Considerations</a></h1>
+<p id="rfc.section.7.p.1">A push service is likely to have to maintain a very large number of open TCP connections.  Effective management of those connections can depend on being able to move connections between server instances.  </p>
+<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#load" id="load">Load Management</a></h1>
+<p id="rfc.section.7.1.p.1">A user agent MUST support the 307 (Temporary Redirect) status code <a href="#RFC7231">[RFC7231]</a>, which can be used by a push service to redistribute load at the time that a new registration is requested.  </p>
+<p id="rfc.section.7.1.p.2">A server that wishes to redistribute load can do so using alternative services <a href="#I-D.ietf-httpbis-alt-svc">[I-D.ietf-httpbis-alt-svc]</a>.  Alternative services allows for redistribution of load whilst maintaining the same URIs for various resources.  User agents can ensure a graceful transition by using the GOAWAY frame once it has established a replacement connection.  </p>
+<h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#storage" id="storage">Push Message Expiration</a></h1>
+<p id="rfc.section.7.2.p.1">Push services typically store messages for some time to allow for limited recovery from transient faults.  If a push message is stored, but not delivered, the push service can indicate the probable duration of storage by including expiration information in the response to the push request.  </p>
+<p id="rfc.section.7.2.p.2">A push service is not obligated to store messages indefinitely.  If a user agent is not actively monitoring for push messages, those messages can be lost or overridden by newer messages on the same subscription.  </p>
+<p id="rfc.section.7.2.p.3">Push messages that were stored and not delivered to a user agent are delivered when the user agent recommences monitoring.  Stored push messages SHOULD include a Last-Modified header field (see Section 2.2 of <a href="#RFC7232">[RFC7232]</a>) indicating when delivery was requested by an application server.  </p>
+<p id="rfc.section.7.2.p.4">A GET request to a "subscription" resource that has expired messages results in a 204 (No Content) status response, equivalent to if no push message were ever sent.  </p>
+<p id="rfc.section.7.2.p.5">Push services might need to limit the size and number of stored push messages to avoid overloading.  In addition to using the 413 (Payload Too Large) status code for too large push messages, a push service MAY expire push messages prior to any advertised expiration time.  </p>
+<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#delete" id="delete">Registration and Subscription Expiration</a></h1>
+<p id="rfc.section.7.3.p.1">In some cases, it may be necessary to terminate registrations or subscriptions so that they can be refreshed.  </p>
+<p id="rfc.section.7.3.p.2">A push service might choose to set a fixed expiration time.  If a resource has a known expiration time, expiration information is included in responses to requests that create the resource, or in requests that retrieve a representation of the resource.  </p>
+<p id="rfc.section.7.3.p.3">Expiration is indicated using either the Expires header field, or by setting a "max-age" parameter on a Cache-Control header field (see <a href="#RFC7234">[RFC7234]</a>).  The Cache-Control header field MUST also include the "private" directive.  </p>
+<p id="rfc.section.7.3.p.4">A push service can invalidate a registration or subscription at any time.  If a user agent has an outstanding request to the "registration" resource (see <a href="#monitor">Section 6</a>), this can be signaled by returning a 400-series status code, such as 410 (Gone).  A push service uses server push to indicate that a subscription has expired; a pushed 400-series status code for the subscription resource signals the termination of a subscription.  </p>
+<p id="rfc.section.7.3.p.5">A user agent can request that a registration or subscription be removed by sending a DELETE request to the corresponding URI.  Removing a registration causes all associated subscriptions to be removed.  Requests to delete a subscription MUST be authenticated; the URI for subscriptions will be known by multiple entities, most of whom will not be authorized to remove the subscription.  </p>
+<p id="rfc.section.7.3.p.6">A push service MUST send a 400-series status code, such as 404 (Not Found) or 410 (Gone) if an application server atttempts to send a push message to a removed or expired subscription.  </p>
+<h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Implications for Application Reliability</h1>
+<p id="rfc.section.7.4.p.1">An application developer might find it tempting to create alternative mechanisms for message delivery in case the push service fails to deliver a critical message.  Setting up a polling mechanism or a backup messaging channel in order to compensate for these shortcomings negates almost all of the advantages a push service provides.  </p>
+<p id="rfc.section.7.4.p.2">Applications are encouraged to instead provide a means to detect situations where push messages were not delivered and recover gracefully.  For instance, an application server might include a sequence number in push messages; a gap in the sequence can then be used to trigger some form of state resynchronization.  For instance, the missing messages might be requested from the application server directly.  Push service failures are expected to be rare, therefore performance optimization of any recovery mechanism might be unnecessary.  </p>
+<h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
+<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite>; this includes any communications between user agent and push service, plus communications between the application and the push service.  Thus, all URIs use the "https" scheme.  This provides confidentiality and integrity protection for registrations and push messages from external parties.  </p>
+<h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> Confidentiality from Push Service Access</h1>
+<p id="rfc.section.8.1.p.1">The protection afforded by TLS does not protect content from the push service.  Without additional safeguards, a push service is able to see and modify the content of the messages.  </p>
+<p id="rfc.section.8.1.p.2">Applications are able to provide additional confidentiality, integrity or authentication mechanisms within the push message itself.  The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context.  The process of providing the application server with subscription information provides a convenient medium for key agreement.  </p>
+<p id="rfc.section.8.1.p.3">The Web Push API codifies this practice by requiring that each push subscription created by the browser be bound to a browser generated encryption key.  Pushed messages are authenticated and decrypted by the browser before delivery to applications.  This scheme ensures that the push service is unable to examine the contents of push messages.  </p>
+<p id="rfc.section.8.1.p.4">The public key for a subscription ensures that applications using that subscription can identify messages from unknown sources and discard them.  This depends on the public key only being disclosed to entities that are authorized to send messages on the channel.  The push server does not require access to this public key.  </p>
+<h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> Privacy Considerations</h1>
+<p id="rfc.section.8.2.p.1">Push message confidentiality does not ensure that the identity of who is communicating and when they are communicating is protected.  However, the amount of information that is exposed can be limited.  </p>
+<p id="rfc.section.8.2.p.2">Subscription URIs MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two subscription URIs based solely on the content of the subscription URIs.  This allows a user agent to control correlation across different applications, or over time.  </p>
+<p id="rfc.section.8.2.p.3">In particular, user and device information MUST NOT be exposed through the subscription URI.  </p>
+<p id="rfc.section.8.2.p.4">In addition, subscription URIs established by the same user agent MUST NOT include any information that allows them to be correlated with the associated registration or the user agent.  The push service is the only entity that needs to be able to correlate subscriptions with a registration.  </p>
+
+<dl>
+  <dt>Note:</dt>
+  <dd style="margin-left: 8">This need not be perfect as long as the resulting anonymity set (see <a href="#RFC6973">[RFC6973]</a>, Section 6.1.1) is sufficiently large.  A subscription URI necessarily identifies a push service or a single server instance.  It is also possible that traffic analysis could be used to correlate subscriptions.  </dd>
+</dl>
+
+<p> </p>
+<p id="rfc.section.8.2.p.5">A user agent MUST be able to create new registrations and subscriptions with new identifiers at any time.  </p>
+<h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> Authorization</h1>
+<p id="rfc.section.8.3.p.1">This protocol does not define how a push service establishes whether a user agent is permitted to create a registration or subscription, or whether push messages can be delivered to the user agent.  A push service MAY choose to authorize request based on any HTTP-compatible authorization method available, of which there are numerous options.  The authorization process and any associated credentials are expected to be configured in the user agent along with the URI for the "push service".  </p>
+<p id="rfc.section.8.3.p.2">Authorization for sending push messages is managed using capability URLs (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  Capability URLs are used for their "easy onward sharing" and "easy client API" properties.  These make it possible to avoid relying on relationships between push services and application servers, with the protocols necessary to build and support those relationships.  </p>
+<p id="rfc.section.8.3.p.3">A subscription URI therefore acts as a bearer token: knowledge of the URI implies authorization to send push messages.  Subscription URIs MUST be extremely difficult to guess.  Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid subscription URI.  </p>
+<h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> Denial of Service Considerations</h1>
+<p id="rfc.section.8.4.p.1">Discarding unwanted messages at the user agent based on message authentication doesn't protect against a denial of service attack on the user agent.  Even a relatively small volume of push messages can cause battery-powered devices to exhaust power reserves.  Limiting the number of entities with access to push channels limits the number of entities that can generate value push requests of the push server.  </p>
+<p id="rfc.section.8.4.p.2">An application can limit where push messages can originate by limiting the distribution of subscription URIs to authorized entities.  Ensuring that subscription URIs are hard to guess ensures that only applications servers that have been given a subscription URI can use it.  </p>
+<p id="rfc.section.8.4.p.3">A malicious application with a valid subscription use the greater resources of a push service to mount a denial of service attack on a user agent.  Push service SHOULD limit the rate at which push messages are sent to individual user agents.  A push service or user agent MAY <a href="#delete">terminate subscriptions</a> <cite title="NONE">[delete]</cite> that receives too many push messages.  </p>
+<p id="rfc.section.8.4.p.4">End-to-end confidentiality mechanisms, such as those in <a href="#API">[API]</a>, prevent an entity with a registration URI from learning the contents of push messages.  In both cases, push messages that are not successfully authenticated will not be delivered by the API, but this can present a denial of service risk.  </p>
+<p id="rfc.section.8.4.p.5">Conversely, a push service is also able to deny service to user agents.  Intentional failure to deliver messages is difficult to distinguish from faults, which might occur due to transient network errors, interruptions in user agent availability, or genuine service outages.  </p>
+<h1 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a> Logging Risks</h1>
+<p id="rfc.section.8.5.p.1">Server request logs can reveal registration and subscription URIs.  Acquiring a registration URI permits the creation of new subscriptions, as well as potentially enabling the receipt of messages.  Acquiring a subscription URI permits the sending of push messages.  Logging could also reveal relationships between different subscription URIs for the same registration, or between different registrations for the same user agent.  </p>
+<p id="rfc.section.8.5.p.2">Limitations on log retention and strong access control mechanisms can ensure that URIs are not learned by unauthorized entities.  </p>
+<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> IANA Considerations</h1>
+<p id="rfc.section.9.p.1">This document registers three URNs for use in identifying link relation types.  These are added to a new "Web Push Identifiers" registry according to the procedures in Section 4 of <a href="#RFC3553">[RFC3553]</a>; the corresponding "push" sub-namespace is entered in the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry.  </p>
+<p id="rfc.section.9.p.2">The "Web Push Identifiers" registry operates under the <a href="#RFC5226">IETF Review policy</a> <cite title="NONE">[RFC5226]</cite>.  </p>
+
+<dl>
+  <dt>Registry name:</dt>
+  <dd style="margin-left: 8">Web Push Identifiers</dd>
+  <dt>URN Prefix:</dt>
+  <dd style="margin-left: 8">urn:ietf:params:push</dd>
+  <dt>Specification:</dt>
+  <dd style="margin-left: 8">(this document)</dd>
+  <dt>Respository:</dt>
+  <dd style="margin-left: 8">[Editor/IANA note: please include a link to the final registry location.]</dd>
+  <dt>Index value:</dt>
+  <dd style="margin-left: 8">Values in this registry are URNs or URN prefixes that start with the prefix <samp>urn:ietf:params:push</samp>.  Each is registered independently.</dd>
+</dl>
+
+<p> </p>
+<p id="rfc.section.9.p.3">New registrations in the "Web Push Identifiers" are encouraged to include the following information: </p>
+
+<dl>
+  <dt>URN:</dt>
+  <dd style="margin-left: 8">A complete URN or URN prefix.</dd>
+  <dt>Description:</dt>
+  <dd style="margin-left: 8">A summary description.</dd>
+  <dt>Specification:</dt>
+  <dd style="margin-left: 8">A reference to a specification describing the semantics of the URN or URN prefix.</dd>
+  <dt>Contact:</dt>
+  <dd style="margin-left: 8">Email for the person or group making the registration.</dd>
+  <dt>Index value:</dt>
+  <dd style="margin-left: 8">As described in <a href="#RFC3553">[RFC3553]</a>, URN prefixes that are registered include a description of how the URN is constructed.  This is not applicable for specific URNs.</dd>
+</dl>
+
+<p> </p>
+<p id="rfc.section.9.p.4">Three values are entered as the initial content of the "Web Push Identifiers" registry.  </p>
+<p/>
+
+<dl>
+  <dt>URN:</dt>
+  <dd style="margin-left: 8">urn:ietf:params:push</dd>
+  <dt>Description:</dt>
+  <dd style="margin-left: 8">This link relation type is used to identify a web push subscription.</dd>
+  <dt>Specification:</dt>
+  <dd style="margin-left: 8">(this document)</dd>
+  <dt>Contact:</dt>
+  <dd style="margin-left: 8">Martin Thomson (martin.thomson@gmail) or the Web Push WG (webpush@ietf.org)</dd>
+</dl>
+
+<p> </p>
+<p/>
+
+<dl>
+  <dt>URN:</dt>
+  <dd style="margin-left: 8">urn:ietf:params:push:reg</dd>
+  <dt>Description:</dt>
+  <dd style="margin-left: 8">This link relation type is used to identify a web push registration.</dd>
+  <dt>Specification:</dt>
+  <dd style="margin-left: 8">(this document)</dd>
+  <dt>Contact:</dt>
+  <dd style="margin-left: 8">Martin Thomson (martin.thomson@gmail) or the Web Push WG (webpush@ietf.org)</dd>
+</dl>
+
+<p> </p>
+<p/>
+
+<dl>
+  <dt>URN:</dt>
+  <dd style="margin-left: 8">urn:ietf:params:push:sub</dd>
+  <dt>Description:</dt>
+  <dd style="margin-left: 8">This link relation type is used to identify a resource that can be used to create new web push subscriptions.</dd>
+  <dt>Specification:</dt>
+  <dd style="margin-left: 8">(this document)</dd>
+  <dt>Contact:</dt>
+  <dd style="margin-left: 8">Martin Thomson (martin.thomson@gmail) or the Web Push WG (webpush@ietf.org)</dd>
+</dl>
+
+<p> </p>
+<h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#ack" id="ack">Acknowledgements</a></h1>
+<p id="rfc.section.10.p.1">Significant technical input to this document has been provided by Costin Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and many others.  </p>
+<h1 id="rfc.references"><a href="#rfc.references">11.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">11.1.</a> Normative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="CAP-URI">[CAP-URI]</b>
+      </td>
+      <td class="top"><a>Tennison, J.</a>, "<a href="http://www.w3.org/TR/capability-urls/">Good Practices for Capability URLs</a>", FPWD capability-urls, February 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-httpbis-alt-svc">[I-D.ietf-httpbis-alt-svc]</b>
+      </td>
+      <td class="top"><a>Nottingham, M.</a>, <a>McManus, P.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-06">HTTP Alternative Services</a>", Internet-Draft draft-ietf-httpbis-alt-svc-06, February 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-httpbis-http2">[I-D.ietf-httpbis-http2]</b>
+      </td>
+      <td class="top"><a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-http2-17">Hypertext Transfer Protocol version 2</a>", Internet-Draft draft-ietf-httpbis-http2-17, February 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2119">[RFC2119]</b>
+      </td>
+      <td class="top"><a href="mailto:sob@harvard.edu" title="Harvard University">Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, March 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2818">[RFC2818]</b>
+      </td>
+      <td class="top"><a>Rescorla, E.</a>, "<a href="http://tools.ietf.org/html/rfc2818">HTTP Over TLS</a>", RFC 2818, May 2000.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3553">[RFC3553]</b>
+      </td>
+      <td class="top"><a>Mealling, M.</a>, <a>Masinter, L.</a>, <a>Hardie, T.</a> and <a>G. Klyne</a>, "<a href="http://tools.ietf.org/html/rfc3553">An IETF URN Sub-namespace for Registered Protocol Parameters</a>", BCP 73, RFC 3553, June 2003.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5226">[RFC5226]</b>
+      </td>
+      <td class="top"><a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 5226, May 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5988">[RFC5988]</b>
+      </td>
+      <td class="top"><a>Nottingham, M.</a>, "<a href="http://tools.ietf.org/html/rfc5988">Web Linking</a>", RFC 5988, October 2010.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7230">[RFC7230]</b>
+      </td>
+      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7231">[RFC7231]</b>
+      </td>
+      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7231">Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</a>", RFC 7231, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7232">[RFC7232]</b>
+      </td>
+      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7232">Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests</a>", RFC 7232, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7234">[RFC7234]</b>
+      </td>
+      <td class="top"><a>Fielding, R.</a>, <a>Nottingham, M.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7234">Hypertext Transfer Protocol (HTTP/1.1): Caching</a>", RFC 7234, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7240">[RFC7240]</b>
+      </td>
+      <td class="top"><a>Snell, J.</a>, "<a href="http://tools.ietf.org/html/rfc7240">Prefer Header for HTTP</a>", RFC 7240, June 2014.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">11.2.</a> Informative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="API">[API]</b>
+      </td>
+      <td class="top"><a>Sullivan, B.</a>, <a>Fullea, E.</a> and <a>M. van Ouwerkerk</a>, "<a href="https://w3c.github.io/push-api/">Web Push API</a>", ED push-api, February 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6973">[RFC6973]</b>
+      </td>
+      <td class="top"><a>Cooper, A.</a>, <a>Tschofenig, H.</a>, <a>Aboba, B.</a>, <a>Peterson, J.</a>, <a>Morris, J.</a>, <a>Hansen, M.</a> and <a>R. Smith</a>, "<a href="http://tools.ietf.org/html/rfc6973">Privacy Considerations for Internet Protocols</a>", RFC 6973, July 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="TS.3GPP.23.040">[TS.3GPP.23.040]</b>
+      </td>
+      <td class="top"><a>3GPP</a>, "<a>Technical realization of the Short Message Service (SMS)</a>", 3GPP TS 23.040 12.2.0, October 2014.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.authors">
+  <a href="#rfc.authors">Author's Address</a>
+</h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Martin Thomson</span> 
+	  <span class="n hidden">
+		<span class="family-name">Thomson</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Mozilla</span>
+	<span class="adr">
+	  <span class="vcardline">331 E Evelyn Street</span>
+
+	  <span class="vcardline">
+		<span class="locality">Mountain View</span>,  
+		<span class="region">CA</span> 
+		<span class="code">94041</span>
+	  </span>
+	  <span class="country-name vcardline">US</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:martin.thomson@gmail.com">martin.thomson@gmail.com</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
