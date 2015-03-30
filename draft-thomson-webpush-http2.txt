@@ -4,8 +4,10 @@
 
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                          March 26, 2015
-Expires: September 27, 2015
+Intended status: Standards Track                             E. Damaggio
+Expires: October 1, 2015                                       B. Raymor
+                                                               Microsoft
+                                                          March 30, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -31,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 27, 2015.
+   This Internet-Draft will expire on October 1, 2015.
 
 Copyright Notice
 
@@ -51,9 +53,7 @@ Copyright Notice
 
 
 
-
-
-Thomson                Expires September 27, 2015               [Page 1]
+Thomson, et al.          Expires October 1, 2015                [Page 1]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -84,7 +84,7 @@ Table of Contents
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  16
      11.2.  Informative References . . . . . . . . . . . . . . . . .  17
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  17
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson                Expires September 27, 2015               [Page 2]
+Thomson, et al.          Expires October 1, 2015                [Page 2]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 3]
+Thomson, et al.          Expires October 1, 2015                [Page 3]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 4]
+Thomson, et al.          Expires October 1, 2015                [Page 4]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 5]
+Thomson, et al.          Expires October 1, 2015                [Page 5]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 6]
+Thomson, et al.          Expires October 1, 2015                [Page 6]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 7]
+Thomson, et al.          Expires October 1, 2015                [Page 7]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 8]
+Thomson, et al.          Expires October 1, 2015                [Page 8]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015               [Page 9]
+Thomson, et al.          Expires October 1, 2015                [Page 9]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 10]
+Thomson, et al.          Expires October 1, 2015               [Page 10]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 11]
+Thomson, et al.          Expires October 1, 2015               [Page 11]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 12]
+Thomson, et al.          Expires October 1, 2015               [Page 12]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 13]
+Thomson, et al.          Expires October 1, 2015               [Page 13]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 14]
+Thomson, et al.          Expires October 1, 2015               [Page 14]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 15]
+Thomson, et al.          Expires October 1, 2015               [Page 15]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-Thomson                Expires September 27, 2015              [Page 16]
+Thomson, et al.          Expires October 1, 2015               [Page 16]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -939,7 +939,7 @@ Internet-Draft                HTTP Web Push                   March 2015
               3GPP, "Technical realization of the Short Message Service
               (SMS)", 3GPP TS 23.040 12.2.0, October 2014.
 
-Author's Address
+Authors' Addresses
 
 
 
@@ -949,7 +949,7 @@ Author's Address
 
 
 
-Thomson                Expires September 27, 2015              [Page 17]
+Thomson, et al.          Expires October 1, 2015               [Page 17]
 
 Internet-Draft                HTTP Web Push                   March 2015
 
@@ -963,6 +963,22 @@ Internet-Draft                HTTP Web Push                   March 2015
    Email: martin.thomson@gmail.com
 
 
+   Elio Damaggio
+   Microsoft
+   One Microsoft Way
+   Redmond, WA  98052
+   US
+
+   Email: elioda@microsoft.com
+
+
+   Brian Raymor
+   Microsoft
+   One Microsoft Way
+   Redmond, WA  98052
+   US
+
+   Email: brian.raymor@microsoft.com
 
 
 
@@ -989,20 +1005,4 @@ Internet-Draft                HTTP Web Push                   March 2015
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Thomson                Expires September 27, 2015              [Page 18]
+Thomson, et al.          Expires October 1, 2015               [Page 18]
