@@ -30,6 +30,34 @@
       </address>
     </author>
 
+    <author initials="E." surname="Damaggio" fullname="Elio Damaggio">
+      <organization>Microsoft</organization>
+      <address>
+        <postal>
+          <street>One Microsoft Way</street>
+          <city>Redmond</city>
+          <region>WA</region>
+          <code>98052</code>
+          <country>US</country>
+        </postal>
+        <email>elioda@microsoft.com</email>
+      </address>
+    </author>
+    
+    <author initials="B." surname="Raymor" fullname="Brian Raymor">
+      <organization>Microsoft</organization>
+      <address>
+        <postal>
+          <street>One Microsoft Way</street>
+          <city>Redmond</city>
+          <region>WA</region>
+          <code>98052</code>
+          <country>US</country>
+        </postal>
+        <email>brian.raymor@microsoft.com</email>
+      </address>
+    </author>
+    
     <date year="2015"/>
     <area>RAI</area>
     <workgroup>WEBPUSH</workgroup>
