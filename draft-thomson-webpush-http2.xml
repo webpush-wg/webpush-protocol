@@ -78,35 +78,83 @@
   <middle>
     <section anchor="intro" title="Introduction">
       <t>
-        Mobile computing devices are increasingly relied upon for a great many
-        applications.  Mobile devices typically have limited power reserves, so
-        finding more efficient ways to serve application requirements is an
-        important part of any mobile platform.
-      </t>
-
-     <t>
-        One significant contributor to power usage mobile devices is the radio.
-        Radio communications consumes a significant portion of the energy budget
-        on a wirelessly connected mobile device.
+        Many applications on mobile and embedded devices require continuous
+        access to network communications so that real-time events - such as
+        incoming calls or messages - can be conveyed (or "pushed") to the user
+        in a timely fashion.
       </t>
       <t>
-        Many applications require continuous access to network communications so
-        that real-time events - such as incoming calls or messages - can be
-        conveyed (or "pushed") to the user in a timely fashion.  Uncoordinated
-        use of persistent connections or sessions from multiple applications can
-        contribute to unnecessary use of the device radio, since each
-        independent session independently incurs overheads.  In particular, keep
-        alive traffic used to ensure that middleboxes do not prematurely time
-        out sessions, can result in significant waste.  Maintenance traffic
-        tends to dominate over the long term, since events are relatively rare.
+        Mobile and embedded devices typically have limited power reserves, so
+        finding more efficient ways to serve application requirements greatly
+        benefits the application ecosystem.  One significant contributor to
+        power usage is the radio. Radio communications consume a significant
+        portion of the energy budget on a wirelessly connected device.
       </t>
-
+      <t>
+        Uncoordinated use of persistent connections or sessions from multiple
+        applications can contribute to unnecessary use of the device radio, 
+        since each independent session independently incurs overheads.  In
+        particular, keep alive traffic used to ensure that middleboxes do not
+        prematurely time out sessions, can result in significant waste.
+        Maintenance traffic tends to dominate over the long term, since events
+        are relatively rare.
+      </t>
       <t>
         Consolidating all real-time events into a single session ensures more
         efficient use of network and radio resources.  A single service
         consolidates all events, distributing those events to applications as
         they arrive.  This requires just one session, avoiding duplicated
         overhead costs.
+      </t>
+      <t>
+        A push server that does not support reliable delivery over intermittent
+        network connections or failing applications on devices, forces the
+        device to acknowledge receipt directly to the application server,
+        incurring additional power drain in order to establish (usually secure)
+        connections to the individual application servers.
+      </t>
+      <t>
+        While reliability is not required for messages that expire in few
+        seconds (e.g. an incoming call) or collapsible ones (e.g. the current
+        number of unread emails), it is more important when messages contain
+        information that is longer lasting, e.g. a command to update a
+        configuration value, or the acknowledgement of a financial transaction
+        or workflow step. In particular, in the case of power-constrained
+        devices, it is preferable to transmit the actual information in the
+        “pushed” message reliably, instead of forcing them to reconnect
+        periodically to get the current state.
+      </t>
+      <t>
+        An open standard to "push" messages to embedded and mobile devices:
+        <list style="symbols">
+          <t>
+            Simplifies deployment of "push" features across a variety of mobile
+            and embedded device platforms
+          </t>
+          <t>
+            Creates an ecosystem of services (e.g. consolidation services) and
+            development tools enabling efficient "push"
+          </t>
+          <t>
+            Technically enables consolidating real-time events into a single
+            session which is impossible when each "push" implementation is built
+            in isolation
+          </t>
+        </list>
+      </t>
+      <t>
+        There are two primary scenarios under consideration:
+        <list style="symbols">
+          <t>
+            Web applications in a mobile user agent and
+          </t>
+          <t>
+            Embedded devices receiving push messages from cloud services through
+            an intermediate “field gateway”, i.e. a reasonably powerful device
+            (capable of secure HTTP/2 communications), which acts as a local
+            agent.
+          </t>
+        </list>
       </t>
       <t>
         The <xref target="API">W3C Web Push API</xref> describes an API that enables
@@ -134,6 +182,19 @@
         not offer any of the advantages that standardization affords.
       </t>
       <t>
+        In the embedded field gateway scenario, small (possibly much less
+        capable devices) connect to a field gateway to receive push messages.
+        This protocol does not detail the device-to-field gateway connection,
+        instead it details how the field-gateway can efficiently receive push
+        messages on behalf of many devices.
+      </t>
+      <t>
+        This document intentionally does not describe how a push service is
+        discovered.  Discovery of push services is left for future efforts, if
+        it turns out to be necessary at all.  User agents are expected to be
+        configured with a URL for a push service.
+      </t>
+      <t>
         The monitoring function described in this document is intended to be
         replaceable, enabling the use of monitoring schemes that are better
         optimized for the network environment and the user agent.  For instance,
@@ -142,17 +203,9 @@
         paging capabilities of a cellular network, avoiding the ongoing
         maintainence cost of a persistent TCP connection.
       </t>
-
       <t>
-        This document intentionally does not describe how a push service is
-        discovered.  Discovery of push services is left for future efforts, if
-        it turns out to be necessary at all.  User agents are expected to be
-        configured with a URL for a push service.
-      </t>
-      <t>
-        Similarly, discovery of support for and negotiation of use of
-        alternative monitoring schemes is left to documents that extend this
-        basic protocol.
+        Discovery and negotiation for alternative monitoring schemes is left to
+        documents that extend this basic protocol.
       </t>
 
       <section anchor="terminology" title="Conventions and Terminology">
