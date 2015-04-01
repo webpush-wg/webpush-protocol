@@ -10,7 +10,7 @@
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
 
-<rfc category="std" ipr="trust200902" docName="draft-thomson-webpush-http2-latest">
+<rfc category="std" ipr="trust200902" docName="draft-thomson-webpush-protocol-latest">
   <front>
     <title abbrev="HTTP Web Push">
       Generic Event Delivery Using HTTP Push
