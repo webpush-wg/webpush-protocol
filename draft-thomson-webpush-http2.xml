@@ -43,7 +43,7 @@
         <email>elioda@microsoft.com</email>
       </address>
     </author>
-    
+
     <author initials="B." surname="Raymor" fullname="Brian Raymor">
       <organization>Microsoft</organization>
       <address>
@@ -57,7 +57,7 @@
         <email>brian.raymor@microsoft.com</email>
       </address>
     </author>
-    
+
     <date year="2015"/>
     <area>RAI</area>
     <workgroup>WEBPUSH</workgroup>
