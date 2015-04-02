@@ -477,14 +477,24 @@ TTL = 1*DIGIT
           A push service is not obligated to account for time spent by the
           application server in sending a push message to the push service, or
           delays incurred while sending a push message to the user agent.  An
-          application server needs to account for transit delays in setting this
-          value.
+          application server needs to account for transit delays in selecting a
+          TTL header field value.
         </t>
         <t>
           Absence of the TTL header field is interpreted as equivalent to a zero
           value.  Push messages with a zero TTL indicate that storage is not
           needed and that the message can be dropped if the user agent isn't
-          immediately available to receive the message.
+          immediately available to receive the message.  Push messages with a
+          zero TTL can be delivered very efficiently.
+          <!-- But we need to determine if they can be acknowledged.  Decoupling
+               of delivery and acknowledgment makes this tricky. -->
+        </t>
+        <t>
+          A push service MAY choose to retain a push message for a shorter
+          duration than that requested.  It indicates this by including a TTL
+          header field in the response that includes the actual TTL.  This TTL
+          value MUST be less than or equal to the value provided by the
+          application server.
         </t>
       </section>
     </section>
@@ -593,26 +603,25 @@ DATA         [stream 4] +END_STREAM
 
       <section anchor="storage" title="Push Message Expiration">
         <t>
-          Push services typically store messages for some time to allow for
-          limited recovery from transient faults.  If a push message is stored,
-          but not delivered, the push service can indicate the probable duration
-          of storage by including expiration information in the response to the
-          push request.
+          Storage of push messages based on the TTL header field comprises a
+          potentially significant amount of storage for a push service.  A push
+          service is not obligated to store messages indefinitely.  A push
+          service is able to indicate how long it intends to retain a message to
+          an application server using the TTL header field (see <xref
+          target="ttl"/>).
         </t>
         <t>
-          A push service is not obligated to store messages indefinitely.  If a
-          user agent is not actively monitoring for push messages, those
-          messages can be lost or overridden by newer messages on the same
-          subscription.
+          A user agent that does not actively monitor for push messages will not
+          receive messages that expire during that interval.
         </t>
         <t>
-          Push messages that were stored and not delivered to a user agent are
+          Push messages that are stored and not delivered to a user agent are
           delivered when the user agent recommences monitoring.  Stored push
           messages SHOULD include a Last-Modified header field (see Section 2.2
           of <xref target="RFC7232"/>) indicating when delivery was requested by
           an application server.
         </t>
-        <t>
+        <t><!-- TODO remove when we split subscriptions -->
           A GET request to a "subscription" resource that has expired messages
           results in a 204 (No Content) status response, equivalent to if no
           push message were ever sent.
@@ -621,7 +630,10 @@ DATA         [stream 4] +END_STREAM
           Push services might need to limit the size and number of stored push
           messages to avoid overloading.  In addition to using the 413 (Payload
           Too Large) status code for too large push messages, a push service MAY
-          expire push messages prior to any advertised expiration time.
+          expire push messages prior to any advertised expiration time.  A push
+          service can reduce the impact push message retention by reducing the
+          time-to-live of push messages. <!-- TODO note the need to advertise a
+          lower bound on this reduction when we get to TTL guarantees -->
         </t>
       </section>
 
