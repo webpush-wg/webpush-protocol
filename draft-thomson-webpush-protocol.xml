@@ -434,6 +434,59 @@ Cache-Control: max-age=600
         push messages to the user agent.  Flow control SHOULD be used to limit
         the state commitment for delivery of large messages.
       </t>
+
+      <section anchor="ttl" title="Push Message Time-To-Live">
+        <t>
+          A push service can increase the reliability of push message delivery
+          considerably by storing push messages for a period.  User agents are
+          often only intermittendly connected, and so benefit from having short
+          term message storage at the push service.
+        </t>
+        <t>
+          Delaying delivery might also be used to batch communication with the
+          user agent, thereby conserving radio resources.
+        </t>
+        <t>
+          Some push messages are not useful once a certain period of time
+          elapses.  Delivery of messages after they have ceased to be relevant
+          is wasteful.  For example, if the message contains a call
+          notification, receiving the message after the caller is of no value;
+          the application at the user agent is forced to suppress the message so
+          that it does not generate a useless alert.
+        </t>
+        <t>
+          An application server can use the TTL header field to limit the time
+          that a push message is retained by a push service.  The TTL header
+          field contains a value in seconds that describes how long a push
+          message is retained by the push service.
+        </t>
+        <figure>
+          <artwork type="abnf"><![CDATA[
+TTL = 1*DIGIT
+          ]]></artwork>
+        </figure>
+        <t>
+          Once the TTL period elapses, the push service SHOULD remove the push
+          message and cease any attempt to deliver it to the user agent.  A push
+          service might retain values for a short duration after the TTL period
+          to account for time accounting errors in processing.  For instance,
+          distributing a push message within a server cluster might accrue
+          errors due to clock variation, or processing and transit delays.
+        </t>
+        <t>
+          A push service is not obligated to account for time spent by the
+          application server in sending a push message to the push service, or
+          delays incurred while sending a push message to the user agent.  An
+          application server needs to account for transit delays in setting this
+          value.
+        </t>
+        <t>
+          Absence of the TTL header field is interpreted as equivalent to a zero
+          value.  Push messages with a zero TTL indicate that storage is not
+          needed and that the message can be dropped if the user agent isn't
+          immediately available to receive the message.
+        </t>
+      </section>
     </section>
 
     <section anchor="monitor" title="Receiving Push Messages">
