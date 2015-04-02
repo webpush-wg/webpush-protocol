@@ -437,7 +437,7 @@ Cache-Control: max-age=600
 
       <section anchor="ttl" title="Push Message Time-To-Live">
         <t>
-          A push service can increase the reliability of push message delivery
+          A push service can improve the reliability of push message delivery
           considerably by storing push messages for a period.  User agents are
           often only intermittendly connected, and so benefit from having short
           term message storage at the push service.
@@ -449,10 +449,10 @@ Cache-Control: max-age=600
         <t>
           Some push messages are not useful once a certain period of time
           elapses.  Delivery of messages after they have ceased to be relevant
-          is wasteful.  For example, if the message contains a call
-          notification, receiving the message after the caller is of no value;
-          the application at the user agent is forced to suppress the message so
-          that it does not generate a useless alert.
+          is wasteful.  For example, if the push message contains a call
+          notification, receiving a message after the caller has abandoned the
+          call is of no value; the application at the user agent is forced to
+          suppress the message so that it does not generate a useless alert.
         </t>
         <t>
           An application server can use the TTL header field to limit the time
@@ -466,7 +466,7 @@ TTL = 1*DIGIT
           ]]></artwork>
         </figure>
         <t>
-          Once the TTL period elapses, the push service SHOULD remove the push
+          Once the TTL period elapses, the push service MUST remove the push
           message and cease any attempt to deliver it to the user agent.  A push
           service might retain values for a short duration after the TTL period
           to account for time accounting errors in processing.  For instance,
