@@ -867,8 +867,45 @@ DATA         [stream 4] +END_STREAM
 
     </section>
 
-    <section title="IANA Considerations">
-      <section title="Link Relation URNs">
+    <section anchor="iana" title="IANA Considerations">
+      <t>
+        This protocol defines new HTTP header fields in <xref
+        target="iana.header.fields"/>.  New link relation types are identified
+        using the URNs defined in <xref target="iana.urns"/>.
+      </t>
+
+      <section anchor="iana.header.fields" title="Header Field Registrations">
+        <t>
+          HTTP header fields are registered within the "Message Headers"
+          registry maintained at <eref
+          target="https://www.iana.org/assignments/message-headers/"/>.
+        </t>
+        <t>
+          This document defines the following HTTP header fields, so their
+          associated registry entries shall be added according to the permanent
+          registrations below (see <xref target="BCP90"/>):
+        </t>
+        <texttable align="left" suppress-title="true"
+                   anchor="iana.header.registration.table">
+          <ttcol>Header Field Name</ttcol>
+          <ttcol>Protocol</ttcol>
+          <ttcol>Status</ttcol>
+          <ttcol>Reference</ttcol>
+
+          <c>TTL</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="ttl"/>
+          </c>
+        </texttable>
+        <t>
+          The change controller is: "IETF (iesg@ietf.org) - Internet
+          Engineering Task Force".
+        </t>
+      </section>
+
+      <section anchor="iana.urns" title="Link Relation URNs">
         <t>
           This document registers three URNs for use in identifying link
           relation types.  These are added to a new "Web Push Identifiers"
