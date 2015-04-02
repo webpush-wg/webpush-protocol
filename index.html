@@ -460,6 +460,7 @@ ul.toc a:first-child {
 <link href="#rfc.section.3" rel="Chapter" title="3 Registration"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Subscribing"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Requesting Push Message Delivery"/>
+<link href="#rfc.section.5.1" rel="Chapter" title="5.1 Push Message Time-To-Live"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 Receiving Push Messages"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Operational Considerations"/>
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Load Management"/>
@@ -473,6 +474,8 @@ ul.toc a:first-child {
 <link href="#rfc.section.8.4" rel="Chapter" title="8.4 Denial of Service Considerations"/>
 <link href="#rfc.section.8.5" rel="Chapter" title="8.5 Logging Risks"/>
 <link href="#rfc.section.9" rel="Chapter" title="9 IANA Considerations"/>
+<link href="#rfc.section.9.1" rel="Chapter" title="9.1 Header Field Registrations"/>
+<link href="#rfc.section.9.2" rel="Chapter" title="9.2 Link Relation URNs"/>
 <link href="#rfc.section.10" rel="Chapter" title="10 Acknowledgements"/>
 <link href="#rfc.references" rel="Chapter" title="11 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="11.1 Normative References"/>
@@ -557,7 +560,8 @@ ul.toc a:first-child {
 </ul><li>3.   <a href="#rfc.section.3">Registration</a></li>
 <li>4.   <a href="#rfc.section.4">Subscribing</a></li>
 <li>5.   <a href="#rfc.section.5">Requesting Push Message Delivery</a></li>
-<li>6.   <a href="#rfc.section.6">Receiving Push Messages</a></li>
+<ul><li>5.1.   <a href="#rfc.section.5.1">Push Message Time-To-Live</a></li>
+</ul><li>6.   <a href="#rfc.section.6">Receiving Push Messages</a></li>
 <li>7.   <a href="#rfc.section.7">Operational Considerations</a></li>
 <ul><li>7.1.   <a href="#rfc.section.7.1">Load Management</a></li>
 <li>7.2.   <a href="#rfc.section.7.2">Push Message Expiration</a></li>
@@ -570,7 +574,9 @@ ul.toc a:first-child {
 <li>8.4.   <a href="#rfc.section.8.4">Denial of Service Considerations</a></li>
 <li>8.5.   <a href="#rfc.section.8.5">Logging Risks</a></li>
 </ul><li>9.   <a href="#rfc.section.9">IANA Considerations</a></li>
-<li>10.   <a href="#rfc.section.10">Acknowledgements</a></li>
+<ul><li>9.1.   <a href="#rfc.section.9.1">Header Field Registrations</a></li>
+<li>9.2.   <a href="#rfc.section.9.2">Link Relation URNs</a></li>
+</ul><li>10.   <a href="#rfc.section.10">Acknowledgements</a></li>
 <li>11.   <a href="#rfc.references">References</a></li>
 <ul><li>11.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>11.2.   <a href="#rfc.references.2">Informative References</a></li>
@@ -724,6 +730,18 @@ Cache-Control: max-age=600
 </pre>
 <p id="rfc.section.5.p.3">A push service MAY generate a 413 (Payload Too Large) status code in response to PUT requests that include an entity body that is too large.  Push services MUST NOT generate a 413 status code in responses to an entity body that is 4k (4096 bytes) or less in size.  </p>
 <p id="rfc.section.5.p.4">A push service that does not store messages can stream the payload of push messages to the user agent.  Flow control SHOULD be used to limit the state commitment for delivery of large messages.  </p>
+<h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#ttl" id="ttl">Push Message Time-To-Live</a></h1>
+<p id="rfc.section.5.1.p.1">A push service can improve the reliability of push message delivery considerably by storing push messages for a period.  User agents are often only intermittendly connected, and so benefit from having short term message storage at the push service.  </p>
+<p id="rfc.section.5.1.p.2">Delaying delivery might also be used to batch communication with the user agent, thereby conserving radio resources.  </p>
+<p id="rfc.section.5.1.p.3">Some push messages are not useful once a certain period of time elapses.  Delivery of messages after they have ceased to be relevant is wasteful.  For example, if the push message contains a call notification, receiving a message after the caller has abandoned the call is of no value; the application at the user agent is forced to suppress the message so that it does not generate a useless alert.  </p>
+<p id="rfc.section.5.1.p.4">An application server can use the TTL header field to limit the time that a push message is retained by a push service.  The TTL header field contains a value in seconds that describes how long a push message is retained by the push service.  </p>
+<pre>
+TTL = 1*DIGIT
+          </pre>
+<p id="rfc.section.5.1.p.5">Once the TTL period elapses, the push service MUST remove the push message and cease any attempt to deliver it to the user agent.  A push service might retain values for a short duration after the TTL period to account for time accounting errors in processing.  For instance, distributing a push message within a server cluster might accrue errors due to clock variation, or processing and transit delays.  </p>
+<p id="rfc.section.5.1.p.6">A push service is not obligated to account for time spent by the application server in sending a push message to the push service, or delays incurred while sending a push message to the user agent.  An application server needs to account for transit delays in selecting a TTL header field value.  </p>
+<p id="rfc.section.5.1.p.7">Absence of the TTL header field is interpreted as equivalent to a zero value.  Push messages with a zero TTL indicate that storage is not needed and that the message can be dropped if the user agent isn't immediately available to receive the message.  Push messages with a zero TTL can be delivered very efficiently.  </p>
+<p id="rfc.section.5.1.p.8">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor" id="monitor">Receiving Push Messages</a></h1>
 <p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to the "registration" resource.  The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.6.p.2">Each push message is pushed in response to a synthesized GET request.  The GET request is made to the same "subscription" URI that is used by the application server to send the message.  The response body is the entity body from the most recent PUT request sent to the subscription resource.  </p>
@@ -761,11 +779,11 @@ DATA         [stream 4] +END_STREAM
 <p id="rfc.section.7.1.p.1">A user agent MUST support the 307 (Temporary Redirect) status code <a href="#RFC7231">[RFC7231]</a>, which can be used by a push service to redistribute load at the time that a new registration is requested.  </p>
 <p id="rfc.section.7.1.p.2">A server that wishes to redistribute load can do so using alternative services <a href="#I-D.ietf-httpbis-alt-svc">[I-D.ietf-httpbis-alt-svc]</a>.  Alternative services allows for redistribution of load whilst maintaining the same URIs for various resources.  User agents can ensure a graceful transition by using the GOAWAY frame once it has established a replacement connection.  </p>
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#storage" id="storage">Push Message Expiration</a></h1>
-<p id="rfc.section.7.2.p.1">Push services typically store messages for some time to allow for limited recovery from transient faults.  If a push message is stored, but not delivered, the push service can indicate the probable duration of storage by including expiration information in the response to the push request.  </p>
-<p id="rfc.section.7.2.p.2">A push service is not obligated to store messages indefinitely.  If a user agent is not actively monitoring for push messages, those messages can be lost or overridden by newer messages on the same subscription.  </p>
-<p id="rfc.section.7.2.p.3">Push messages that were stored and not delivered to a user agent are delivered when the user agent recommences monitoring.  Stored push messages SHOULD include a Last-Modified header field (see Section 2.2 of <a href="#RFC7232">[RFC7232]</a>) indicating when delivery was requested by an application server.  </p>
+<p id="rfc.section.7.2.p.1">Storage of push messages based on the TTL header field comprises a potentially significant amount of storage for a push service.  A push service is not obligated to store messages indefinitely.  A push service is able to indicate how long it intends to retain a message to an application server using the TTL header field (see <a href="#ttl">Section 5.1</a>).  </p>
+<p id="rfc.section.7.2.p.2">A user agent that does not actively monitor for push messages will not receive messages that expire during that interval.  </p>
+<p id="rfc.section.7.2.p.3">Push messages that are stored and not delivered to a user agent are delivered when the user agent recommences monitoring.  Stored push messages SHOULD include a Last-Modified header field (see Section 2.2 of <a href="#RFC7232">[RFC7232]</a>) indicating when delivery was requested by an application server.  </p>
 <p id="rfc.section.7.2.p.4">A GET request to a "subscription" resource that has expired messages results in a 204 (No Content) status response, equivalent to if no push message were ever sent.  </p>
-<p id="rfc.section.7.2.p.5">Push services might need to limit the size and number of stored push messages to avoid overloading.  In addition to using the 413 (Payload Too Large) status code for too large push messages, a push service MAY expire push messages prior to any advertised expiration time.  </p>
+<p id="rfc.section.7.2.p.5">Push services might need to limit the size and number of stored push messages to avoid overloading.  In addition to using the 413 (Payload Too Large) status code for too large push messages, a push service MAY expire push messages prior to any advertised expiration time.  A push service can reduce the impact push message retention by reducing the time-to-live of push messages.  </p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#delete" id="delete">Registration and Subscription Expiration</a></h1>
 <p id="rfc.section.7.3.p.1">In some cases, it may be necessary to terminate registrations or subscriptions so that they can be refreshed.  </p>
 <p id="rfc.section.7.3.p.2">A push service might choose to set a fixed expiration time.  If a resource has a known expiration time, expiration information is included in responses to requests that create the resource, or in requests that retrieve a representation of the resource.  </p>
@@ -809,9 +827,35 @@ DATA         [stream 4] +END_STREAM
 <h1 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a> Logging Risks</h1>
 <p id="rfc.section.8.5.p.1">Server request logs can reveal registration and subscription URIs.  Acquiring a registration URI permits the creation of new subscriptions, as well as potentially enabling the receipt of messages.  Acquiring a subscription URI permits the sending of push messages.  Logging could also reveal relationships between different subscription URIs for the same registration, or between different registrations for the same user agent.  </p>
 <p id="rfc.section.8.5.p.2">Limitations on log retention and strong access control mechanisms can ensure that URIs are not learned by unauthorized entities.  </p>
-<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> IANA Considerations</h1>
-<p id="rfc.section.9.p.1">This document registers three URNs for use in identifying link relation types.  These are added to a new "Web Push Identifiers" registry according to the procedures in Section 4 of <a href="#RFC3553">[RFC3553]</a>; the corresponding "push" sub-namespace is entered in the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry.  </p>
-<p id="rfc.section.9.p.2">The "Web Push Identifiers" registry operates under the <a href="#RFC5226">IETF Review policy</a> <cite title="NONE">[RFC5226]</cite>.  </p>
+<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
+<p id="rfc.section.9.p.1">This protocol defines new HTTP header fields in <a href="#iana.header.fields">Section 9.1</a>.  New link relation types are identified using the URNs defined in <a href="#iana.urns">Section 9.2</a>.  </p>
+<h1 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a> <a href="#iana.header.fields" id="iana.header.fields">Header Field Registrations</a></h1>
+<p id="rfc.section.9.1.p.1">HTTP header fields are registered within the "Message Headers" registry maintained at <a href="https://www.iana.org/assignments/message-headers/">https://www.iana.org/assignments/message-headers/</a>.  </p>
+<p id="rfc.section.9.1.p.2">This document defines the following HTTP header fields, so their associated registry entries shall be added according to the permanent registrations below (see <a href="#RFC3864">[RFC3864]</a>): </p>
+<div id="rfc.table.1"/>
+<div id="iana.header.registration.table"/>
+<table cellpadding="3" cellspacing="0" class="tt full left">
+  <thead>
+    <tr>
+      <th class="left">Header Field Name</th>
+      <th class="left">Protocol</th>
+      <th class="left">Status</th>
+      <th class="left">Reference</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">TTL</td>
+      <td class="left">http</td>
+      <td class="left">standard</td>
+      <td class="left"><a href="#ttl">Section 5.1</a> </td>
+    </tr>
+  </tbody>
+</table>
+<p id="rfc.section.9.1.p.3">The change controller is: "IETF (iesg@ietf.org) - Internet Engineering Task Force".  </p>
+<h1 id="rfc.section.9.2"><a href="#rfc.section.9.2">9.2.</a> <a href="#iana.urns" id="iana.urns">Link Relation URNs</a></h1>
+<p id="rfc.section.9.2.p.1">This document registers three URNs for use in identifying link relation types.  These are added to a new "Web Push Identifiers" registry according to the procedures in Section 4 of <a href="#RFC3553">[RFC3553]</a>; the corresponding "push" sub-namespace is entered in the "IETF URN Sub-namespace for Registered Protocol Parameter Identifiers" registry.  </p>
+<p id="rfc.section.9.2.p.2">The "Web Push Identifiers" registry operates under the <a href="#RFC5226">IETF Review policy</a> <cite title="NONE">[RFC5226]</cite>.  </p>
 
 <dl>
   <dt>Registry name:</dt>
@@ -827,7 +871,7 @@ DATA         [stream 4] +END_STREAM
 </dl>
 
 <p> </p>
-<p id="rfc.section.9.p.3">New registrations in the "Web Push Identifiers" are encouraged to include the following information: </p>
+<p id="rfc.section.9.2.p.3">New registrations in the "Web Push Identifiers" are encouraged to include the following information: </p>
 
 <dl>
   <dt>URN:</dt>
@@ -843,7 +887,7 @@ DATA         [stream 4] +END_STREAM
 </dl>
 
 <p> </p>
-<p id="rfc.section.9.p.4">Three values are entered as the initial content of the "Web Push Identifiers" registry.  </p>
+<p id="rfc.section.9.2.p.4">Three values are entered as the initial content of the "Web Push Identifiers" registry.  </p>
 <p/>
 
 <dl>
@@ -854,7 +898,7 @@ DATA         [stream 4] +END_STREAM
   <dt>Specification:</dt>
   <dd style="margin-left: 8">(this document)</dd>
   <dt>Contact:</dt>
-  <dd style="margin-left: 8">Martin Thomson (martin.thomson@gmail) or the Web Push WG (webpush@ietf.org)</dd>
+  <dd style="margin-left: 8">The Web Push WG (webpush@ietf.org)</dd>
 </dl>
 
 <p> </p>
@@ -868,7 +912,7 @@ DATA         [stream 4] +END_STREAM
   <dt>Specification:</dt>
   <dd style="margin-left: 8">(this document)</dd>
   <dt>Contact:</dt>
-  <dd style="margin-left: 8">Martin Thomson (martin.thomson@gmail) or the Web Push WG (webpush@ietf.org)</dd>
+  <dd style="margin-left: 8">The Web Push WG (webpush@ietf.org)</dd>
 </dl>
 
 <p> </p>
@@ -882,7 +926,7 @@ DATA         [stream 4] +END_STREAM
   <dt>Specification:</dt>
   <dd style="margin-left: 8">(this document)</dd>
   <dt>Contact:</dt>
-  <dd style="margin-left: 8">Martin Thomson (martin.thomson@gmail) or the Web Push WG (webpush@ietf.org)</dd>
+  <dd style="margin-left: 8">The Web Push WG (webpush@ietf.org)</dd>
 </dl>
 
 <p> </p>
@@ -927,6 +971,12 @@ DATA         [stream 4] +END_STREAM
         <b id="RFC3553">[RFC3553]</b>
       </td>
       <td class="top"><a>Mealling, M.</a>, <a>Masinter, L.</a>, <a>Hardie, T.</a> and <a>G. Klyne</a>, "<a href="http://tools.ietf.org/html/rfc3553">An IETF URN Sub-namespace for Registered Protocol Parameters</a>", BCP 73, RFC 3553, June 2003.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3864">[RFC3864]</b>
+      </td>
+      <td class="top"><a>Klyne, G.</a>, <a>Nottingham, M.</a> and <a>J. Mogul</a>, "<a href="http://tools.ietf.org/html/rfc3864">Registration Procedures for Message Header Fields</a>", BCP 90, RFC 3864, September 2004.</td>
     </tr>
     <tr>
       <td class="reference">

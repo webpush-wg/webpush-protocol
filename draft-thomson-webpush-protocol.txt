@@ -61,30 +61,34 @@ Internet-Draft                HTTP Web Push                   April 2015
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   3
+     1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   4
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.1.  HTTP Resources  . . . . . . . . . . . . . . . . . . . . .   6
    3.  Registration  . . . . . . . . . . . . . . . . . . . . . . . .   6
    4.  Subscribing . . . . . . . . . . . . . . . . . . . . . . . . .   7
    5.  Requesting Push Message Delivery  . . . . . . . . . . . . . .   7
-   6.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .   8
-   7.  Operational Considerations  . . . . . . . . . . . . . . . . .   9
-     7.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  10
-     7.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  10
-     7.3.  Registration and Subscription Expiration  . . . . . . . .  10
-     7.4.  Implications for Application Reliability  . . . . . . . .  11
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
-     8.1.  Confidentiality from Push Service Access  . . . . . . . .  12
-     8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  12
-     8.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  13
-     8.4.  Denial of Service Considerations  . . . . . . . . . . . .  13
-     8.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  14
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
-   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  16
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  17
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
+     5.1.  Push Message Time-To-Live . . . . . . . . . . . . . . . .   8
+   6.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .   9
+   7.  Operational Considerations  . . . . . . . . . . . . . . . . .  10
+     7.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  11
+     7.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  11
+     7.3.  Registration and Subscription Expiration  . . . . . . . .  11
+     7.4.  Implications for Application Reliability  . . . . . . . .  12
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
+     8.1.  Confidentiality from Push Service Access  . . . . . . . .  13
+     8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  13
+     8.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  14
+     8.4.  Denial of Service Considerations  . . . . . . . . . . . .  14
+     8.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  15
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+     9.1.  Header Field Registrations  . . . . . . . . . . . . . . .  16
+     9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  16
+   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  17
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  18
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  19
+     11.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -102,10 +106,6 @@ Table of Contents
    be conveyed (or "pushed") to the user in a timely fashion.
    Uncoordinated use of persistent connections or sessions from multiple
    applications can contribute to unnecessary use of the device radio,
-   since each independent session independently incurs overheads.  In
-   particular, keep alive traffic used to ensure that middleboxes do not
-   prematurely time out sessions, can result in significant waste.
-
 
 
 
@@ -114,6 +114,9 @@ Thomson, et al.          Expires October 4, 2015                [Page 2]
 Internet-Draft                HTTP Web Push                   April 2015
 
 
+   since each independent session independently incurs overheads.  In
+   particular, keep alive traffic used to ensure that middleboxes do not
+   prematurely time out sessions, can result in significant waste.
    Maintenance traffic tends to dominate over the long term, since
    events are relatively rare.
 
@@ -157,11 +160,8 @@ Internet-Draft                HTTP Web Push                   April 2015
    alternative monitoring schemes is left to documents that extend this
    basic protocol.
 
-1.1.  Conventions and Terminology
 
-   In cases where normative language needs to be emphasized, this
-   document falls back on established shorthands for expressing
-   interoperability requirements on implementations: the capitalized
+
 
 
 
@@ -170,6 +170,11 @@ Thomson, et al.          Expires October 4, 2015                [Page 3]
 Internet-Draft                HTTP Web Push                   April 2015
 
 
+1.1.  Conventions and Terminology
+
+   In cases where normative language needs to be emphasized, this
+   document falls back on established shorthands for expressing
+   interoperability requirements on implementations: the capitalized
    words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these
    is described in [RFC2119].
 
@@ -207,11 +212,6 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    A general model for push services includes three basic actors: a user
    agent, a push service, and an application (server).
-
-
-
-
-
 
 
 
@@ -419,6 +419,63 @@ Internet-Draft                HTTP Web Push                   April 2015
    push messages to the user agent.  Flow control SHOULD be used to
    limit the state commitment for delivery of large messages.
 
+5.1.  Push Message Time-To-Live
+
+   A push service can improve the reliability of push message delivery
+   considerably by storing push messages for a period.  User agents are
+   often only intermittendly connected, and so benefit from having short
+   term message storage at the push service.
+
+   Delaying delivery might also be used to batch communication with the
+   user agent, thereby conserving radio resources.
+
+   Some push messages are not useful once a certain period of time
+   elapses.  Delivery of messages after they have ceased to be relevant
+   is wasteful.  For example, if the push message contains a call
+   notification, receiving a message after the caller has abandoned the
+   call is of no value; the application at the user agent is forced to
+   suppress the message so that it does not generate a useless alert.
+
+   An application server can use the TTL header field to limit the time
+   that a push message is retained by a push service.  The TTL header
+   field contains a value in seconds that describes how long a push
+   message is retained by the push service.
+
+   TTL = 1*DIGIT
+
+
+
+Thomson, et al.          Expires October 4, 2015                [Page 8]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
+   Once the TTL period elapses, the push service MUST remove the push
+   message and cease any attempt to deliver it to the user agent.  A
+   push service might retain values for a short duration after the TTL
+   period to account for time accounting errors in processing.  For
+   instance, distributing a push message within a server cluster might
+   accrue errors due to clock variation, or processing and transit
+   delays.
+
+   A push service is not obligated to account for time spent by the
+   application server in sending a push message to the push service, or
+   delays incurred while sending a push message to the user agent.  An
+   application server needs to account for transit delays in selecting a
+   TTL header field value.
+
+   Absence of the TTL header field is interpreted as equivalent to a
+   zero value.  Push messages with a zero TTL indicate that storage is
+   not needed and that the message can be dropped if the user agent
+   isn't immediately available to receive the message.  Push messages
+   with a zero TTL can be delivered very efficiently.
+
+   A push service MAY choose to retain a push message for a shorter
+   duration than that requested.  It indicates this by including a TTL
+   header field in the response that includes the actual TTL.  This TTL
+   value MUST be less than or equal to the value provided by the
+   application server.
+
 6.  Receiving Push Messages
 
    A user agent requests the delivery of new push messages by making a
@@ -444,8 +501,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-
-Thomson, et al.          Expires October 4, 2015                [Page 8]
+Thomson, et al.          Expires October 4, 2015                [Page 9]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -501,7 +557,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 4, 2015                [Page 9]
+Thomson, et al.          Expires October 4, 2015               [Page 10]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -520,18 +576,17 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 7.2.  Push Message Expiration
 
-   Push services typically store messages for some time to allow for
-   limited recovery from transient faults.  If a push message is stored,
-   but not delivered, the push service can indicate the probable
-   duration of storage by including expiration information in the
-   response to the push request.
+   Storage of push messages based on the TTL header field comprises a
+   potentially significant amount of storage for a push service.  A push
+   service is not obligated to store messages indefinitely.  A push
+   service is able to indicate how long it intends to retain a message
+   to an application server using the TTL header field (see
+   Section 5.1).
 
-   A push service is not obligated to store messages indefinitely.  If a
-   user agent is not actively monitoring for push messages, those
-   messages can be lost or overridden by newer messages on the same
-   subscription.
+   A user agent that does not actively monitor for push messages will
+   not receive messages that expire during that interval.
 
-   Push messages that were stored and not delivered to a user agent are
+   Push messages that are stored and not delivered to a user agent are
    delivered when the user agent recommences monitoring.  Stored push
    messages SHOULD include a Last-Modified header field (see Section 2.2
    of [RFC7232]) indicating when delivery was requested by an
@@ -544,7 +599,9 @@ Internet-Draft                HTTP Web Push                   April 2015
    Push services might need to limit the size and number of stored push
    messages to avoid overloading.  In addition to using the 413 (Payload
    Too Large) status code for too large push messages, a push service
-   MAY expire push messages prior to any advertised expiration time.
+   MAY expire push messages prior to any advertised expiration time.  A
+   push service can reduce the impact push message retention by reducing
+   the time-to-live of push messages.
 
 7.3.  Registration and Subscription Expiration
 
@@ -556,8 +613,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-
-Thomson, et al.          Expires October 4, 2015               [Page 10]
+Thomson, et al.          Expires October 4, 2015               [Page 11]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -613,7 +669,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 4, 2015               [Page 11]
+Thomson, et al.          Expires October 4, 2015               [Page 12]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -669,7 +725,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 4, 2015               [Page 12]
+Thomson, et al.          Expires October 4, 2015               [Page 13]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -725,7 +781,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 4, 2015               [Page 13]
+Thomson, et al.          Expires October 4, 2015               [Page 14]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -774,18 +830,41 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 9.  IANA Considerations
 
-   This document registers three URNs for use in identifying link
-   relation types.  These are added to a new "Web Push Identifiers"
-   registry according to the procedures in Section 4 of [RFC3553]; the
+   This protocol defines new HTTP header fields in Section 9.1.  New
+   link relation types are identified using the URNs defined in
+   Section 9.2.
 
 
 
 
-Thomson, et al.          Expires October 4, 2015               [Page 14]
+Thomson, et al.          Expires October 4, 2015               [Page 15]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
 
+9.1.  Header Field Registrations
+
+   HTTP header fields are registered within the "Message Headers"
+   registry maintained at [1].
+
+   This document defines the following HTTP header fields, so their
+   associated registry entries shall be added according to the permanent
+   registrations below (see [RFC3864]):
+
+   +-------------------+----------+----------+--------------+
+   | Header Field Name | Protocol | Status   | Reference    |
+   +-------------------+----------+----------+--------------+
+   | TTL               | http     | standard | Section 5.1  |
+   +-------------------+----------+----------+--------------+
+
+   The change controller is: "IETF (iesg@ietf.org) - Internet
+   Engineering Task Force".
+
+9.2.  Link Relation URNs
+
+   This document registers three URNs for use in identifying link
+   relation types.  These are added to a new "Web Push Identifiers"
+   registry according to the procedures in Section 4 of [RFC3553]; the
    corresponding "push" sub-namespace is entered in the "IETF URN Sub-
    namespace for Registered Protocol Parameter Identifiers" registry.
 
@@ -812,6 +891,13 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Description:  A summary description.
 
+
+
+Thomson, et al.          Expires October 4, 2015               [Page 16]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    Specification:  A reference to a specification describing the
       semantics of the URN or URN prefix.
 
@@ -831,16 +917,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Specification:  (this document)
 
-   Contact:  Martin Thomson (martin.thomson@gmail) or the Web Push WG
-      (webpush@ietf.org)
-
-
-
-
-Thomson, et al.          Expires October 4, 2015               [Page 15]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
+   Contact:  The Web Push WG (webpush@ietf.org)
 
    URN:  urn:ietf:params:push:reg
 
@@ -849,8 +926,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Specification:  (this document)
 
-   Contact:  Martin Thomson (martin.thomson@gmail) or the Web Push WG
-      (webpush@ietf.org)
+   Contact:  The Web Push WG (webpush@ietf.org)
 
    URN:  urn:ietf:params:push:sub
 
@@ -859,14 +935,24 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Specification:  (this document)
 
-   Contact:  Martin Thomson (martin.thomson@gmail) or the Web Push WG
-      (webpush@ietf.org)
+   Contact:  The Web Push WG (webpush@ietf.org)
 
 10.  Acknowledgements
 
    Significant technical input to this document has been provided by
    Costin Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and
    many others.
+
+
+
+
+
+
+
+Thomson, et al.          Expires October 4, 2015               [Page 17]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 11.  References
 
@@ -891,16 +977,13 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
-
-
-Thomson, et al.          Expires October 4, 2015               [Page 16]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    [RFC3553]  Mealling, M., Masinter, L., Hardie, T., and G. Klyne, "An
               IETF URN Sub-namespace for Registered Protocol
               Parameters", BCP 73, RFC 3553, June 2003.
+
+   [RFC3864]  Klyne, G., Nottingham, M., and J. Mogul, "Registration
+              Procedures for Message Header Fields", BCP 90, RFC 3864,
+              September 2004.
 
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
@@ -917,6 +1000,15 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    [RFC7232]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Conditional Requests", RFC 7232, June 2014.
+
+
+
+
+
+Thomson, et al.          Expires October 4, 2015               [Page 18]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    [RFC7234]  Fielding, R., Nottingham, M., and J. Reschke, "Hypertext
               Transfer Protocol (HTTP/1.1): Caching", RFC 7234, June
@@ -939,20 +1031,11 @@ Internet-Draft                HTTP Web Push                   April 2015
               3GPP, "Technical realization of the Short Message Service
               (SMS)", 3GPP TS 23.040 12.2.0, October 2014.
 
+11.3.  URIs
+
+   [1] https://www.iana.org/assignments/message-headers/
+
 Authors' Addresses
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires October 4, 2015               [Page 17]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
    Martin Thomson
    Mozilla
@@ -970,6 +1053,17 @@ Internet-Draft                HTTP Web Push                   April 2015
    US
 
    Email: elioda@microsoft.com
+
+
+
+
+
+
+
+
+Thomson, et al.          Expires October 4, 2015               [Page 19]
+
+Internet-Draft                HTTP Web Push                   April 2015
 
 
    Brian Raymor
@@ -1005,4 +1099,22 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 4, 2015               [Page 18]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thomson, et al.          Expires October 4, 2015               [Page 20]
