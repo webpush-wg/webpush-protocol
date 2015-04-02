@@ -868,77 +868,78 @@ DATA         [stream 4] +END_STREAM
     </section>
 
     <section title="IANA Considerations">
-      <t>
-        This document registers three URNs for use in identifying link relation
-        types.  These are added to a new "Web Push Identifiers" registry
-        according to the procedures in Section 4 of <xref target="RFC3553"/>;
-        the corresponding "push" sub-namespace is entered in the "IETF URN
-        Sub-namespace for Registered Protocol Parameter Identifiers" registry.
-      </t>
-      <t>
-        The "Web Push Identifiers" registry operates under the <xref
-        target="RFC5226">IETF Review policy</xref>.
-        <list style="hanging">
-          <t hangText="Registry name:">Web Push Identifiers</t>
-          <t hangText="URN Prefix:">urn:ietf:params:push</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Respository:">[Editor/IANA note: please include a link to
-          the final registry location.]</t>
-          <t hangText="Index value:">Values in this registry are URNs or URN
-          prefixes that start with the prefix <spanx
-          style="verb">urn:ietf:params:push</spanx>.  Each is registered
-          independently.</t>
-        </list>
-      </t>
-      <t>
-        New registrations in the "Web Push Identifiers" are encouraged to
-        include the following information:
-        <list style="hanging">
-          <t hangText="URN:">A complete URN or URN prefix.</t>
-          <t hangText="Description:">A summary description.</t>
-          <t hangText="Specification:">A reference to a specification describing
-          the semantics of the URN or URN prefix.</t>
-          <t hangText="Contact:">Email for the person or group making the
-          registration.</t>
-          <t hangText="Index value:">As described in <xref target="RFC3553"/>,
-          URN prefixes that are registered include a description of how the URN
-          is constructed.  This is not applicable for specific URNs.</t>
-        </list>
-      </t>
-      <t>
-        Three values are entered as the initial content of the "Web Push
-        Identifiers" registry.
-      </t>
-      <t>
-        <list style="hanging">
-          <t hangText="URN:">urn:ietf:params:push</t>
-          <t hangText="Description:">This link relation type is used to identify
-          a web push subscription.</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
-          Web Push WG (webpush@ietf.org)</t>
-        </list>
-      </t>
-      <t>
-        <list style="hanging">
-          <t hangText="URN:">urn:ietf:params:push:reg</t>
-          <t hangText="Description:">This link relation type is used to identify
-          a web push registration.</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
-          Web Push WG (webpush@ietf.org)</t>
-        </list>
-      </t>
-      <t>
-        <list style="hanging">
-          <t hangText="URN:">urn:ietf:params:push:sub</t>
-          <t hangText="Description:">This link relation type is used to identify
-          a resource that can be used to create new web push subscriptions.</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
-          Web Push WG (webpush@ietf.org)</t>
-        </list>
-      </t>
+      <section title="Link Relation URNs">
+        <t>
+          This document registers three URNs for use in identifying link
+          relation types.  These are added to a new "Web Push Identifiers"
+          registry according to the procedures in Section 4 of <xref
+          target="RFC3553"/>; the corresponding "push" sub-namespace is entered
+          in the "IETF URN Sub-namespace for Registered Protocol Parameter
+          Identifiers" registry.
+        </t>
+        <t>
+          The "Web Push Identifiers" registry operates under the <xref
+          target="RFC5226">IETF Review policy</xref>.
+          <list style="hanging">
+            <t hangText="Registry name:">Web Push Identifiers</t>
+            <t hangText="URN Prefix:">urn:ietf:params:push</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Respository:">[Editor/IANA note: please include a link
+            to the final registry location.]</t>
+            <t hangText="Index value:">Values in this registry are URNs or URN
+            prefixes that start with the prefix <spanx
+            style="verb">urn:ietf:params:push</spanx>.  Each is registered
+            independently.</t>
+          </list>
+        </t>
+        <t>
+          New registrations in the "Web Push Identifiers" are encouraged to
+          include the following information:
+          <list style="hanging">
+            <t hangText="URN:">A complete URN or URN prefix.</t>
+            <t hangText="Description:">A summary description.</t>
+            <t hangText="Specification:">A reference to a specification
+            describing the semantics of the URN or URN prefix.</t>
+            <t hangText="Contact:">Email for the person or group making the
+            registration.</t>
+            <t hangText="Index value:">As described in <xref target="RFC3553"/>,
+            URN prefixes that are registered include a description of how the
+            URN is constructed.  This is not applicable for specific URNs.</t>
+          </list>
+        </t>
+        <t>
+          Three values are entered as the initial content of the "Web Push
+          Identifiers" registry.
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a web push subscription.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:reg</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a web push registration.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:sub</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a resource that can be used to create new web push
+            subscriptions.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+      </section>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
