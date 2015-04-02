@@ -434,6 +434,69 @@ Cache-Control: max-age=600
         push messages to the user agent.  Flow control SHOULD be used to limit
         the state commitment for delivery of large messages.
       </t>
+
+      <section anchor="ttl" title="Push Message Time-To-Live">
+        <t>
+          A push service can improve the reliability of push message delivery
+          considerably by storing push messages for a period.  User agents are
+          often only intermittendly connected, and so benefit from having short
+          term message storage at the push service.
+        </t>
+        <t>
+          Delaying delivery might also be used to batch communication with the
+          user agent, thereby conserving radio resources.
+        </t>
+        <t>
+          Some push messages are not useful once a certain period of time
+          elapses.  Delivery of messages after they have ceased to be relevant
+          is wasteful.  For example, if the push message contains a call
+          notification, receiving a message after the caller has abandoned the
+          call is of no value; the application at the user agent is forced to
+          suppress the message so that it does not generate a useless alert.
+        </t>
+        <t>
+          An application server can use the TTL header field to limit the time
+          that a push message is retained by a push service.  The TTL header
+          field contains a value in seconds that describes how long a push
+          message is retained by the push service.
+        </t>
+        <figure>
+          <artwork type="abnf"><![CDATA[
+TTL = 1*DIGIT
+          ]]></artwork>
+        </figure>
+        <t>
+          Once the TTL period elapses, the push service MUST remove the push
+          message and cease any attempt to deliver it to the user agent.  A push
+          service might retain values for a short duration after the TTL period
+          to account for time accounting errors in processing.  For instance,
+          distributing a push message within a server cluster might accrue
+          errors due to clock variation, or processing and transit delays.
+        </t>
+        <t>
+          A push service is not obligated to account for time spent by the
+          application server in sending a push message to the push service, or
+          delays incurred while sending a push message to the user agent.  An
+          application server needs to account for transit delays in selecting a
+          TTL header field value.
+        </t>
+        <t>
+          Absence of the TTL header field is interpreted as equivalent to a zero
+          value.  Push messages with a zero TTL indicate that storage is not
+          needed and that the message can be dropped if the user agent isn't
+          immediately available to receive the message.  Push messages with a
+          zero TTL can be delivered very efficiently.
+          <!-- But we need to determine if they can be acknowledged.  Decoupling
+               of delivery and acknowledgment makes this tricky. -->
+        </t>
+        <t>
+          A push service MAY choose to retain a push message for a shorter
+          duration than that requested.  It indicates this by including a TTL
+          header field in the response that includes the actual TTL.  This TTL
+          value MUST be less than or equal to the value provided by the
+          application server.
+        </t>
+      </section>
     </section>
 
     <section anchor="monitor" title="Receiving Push Messages">
@@ -540,26 +603,25 @@ DATA         [stream 4] +END_STREAM
 
       <section anchor="storage" title="Push Message Expiration">
         <t>
-          Push services typically store messages for some time to allow for
-          limited recovery from transient faults.  If a push message is stored,
-          but not delivered, the push service can indicate the probable duration
-          of storage by including expiration information in the response to the
-          push request.
+          Storage of push messages based on the TTL header field comprises a
+          potentially significant amount of storage for a push service.  A push
+          service is not obligated to store messages indefinitely.  A push
+          service is able to indicate how long it intends to retain a message to
+          an application server using the TTL header field (see <xref
+          target="ttl"/>).
         </t>
         <t>
-          A push service is not obligated to store messages indefinitely.  If a
-          user agent is not actively monitoring for push messages, those
-          messages can be lost or overridden by newer messages on the same
-          subscription.
+          A user agent that does not actively monitor for push messages will not
+          receive messages that expire during that interval.
         </t>
         <t>
-          Push messages that were stored and not delivered to a user agent are
+          Push messages that are stored and not delivered to a user agent are
           delivered when the user agent recommences monitoring.  Stored push
           messages SHOULD include a Last-Modified header field (see Section 2.2
           of <xref target="RFC7232"/>) indicating when delivery was requested by
           an application server.
         </t>
-        <t>
+        <t><!-- TODO remove when we split subscriptions -->
           A GET request to a "subscription" resource that has expired messages
           results in a 204 (No Content) status response, equivalent to if no
           push message were ever sent.
@@ -568,7 +630,10 @@ DATA         [stream 4] +END_STREAM
           Push services might need to limit the size and number of stored push
           messages to avoid overloading.  In addition to using the 413 (Payload
           Too Large) status code for too large push messages, a push service MAY
-          expire push messages prior to any advertised expiration time.
+          expire push messages prior to any advertised expiration time.  A push
+          service can reduce the impact push message retention by reducing the
+          time-to-live of push messages. <!-- TODO note the need to advertise a
+          lower bound on this reduction when we get to TTL guarantees -->
         </t>
       </section>
 
@@ -802,78 +867,116 @@ DATA         [stream 4] +END_STREAM
 
     </section>
 
-    <section title="IANA Considerations">
+    <section anchor="iana" title="IANA Considerations">
       <t>
-        This document registers three URNs for use in identifying link relation
-        types.  These are added to a new "Web Push Identifiers" registry
-        according to the procedures in Section 4 of <xref target="RFC3553"/>;
-        the corresponding "push" sub-namespace is entered in the "IETF URN
-        Sub-namespace for Registered Protocol Parameter Identifiers" registry.
+        This protocol defines new HTTP header fields in <xref
+        target="iana.header.fields"/>.  New link relation types are identified
+        using the URNs defined in <xref target="iana.urns"/>.
       </t>
-      <t>
-        The "Web Push Identifiers" registry operates under the <xref
-        target="RFC5226">IETF Review policy</xref>.
-        <list style="hanging">
-          <t hangText="Registry name:">Web Push Identifiers</t>
-          <t hangText="URN Prefix:">urn:ietf:params:push</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Respository:">[Editor/IANA note: please include a link to
-          the final registry location.]</t>
-          <t hangText="Index value:">Values in this registry are URNs or URN
-          prefixes that start with the prefix <spanx
-          style="verb">urn:ietf:params:push</spanx>.  Each is registered
-          independently.</t>
-        </list>
-      </t>
-      <t>
-        New registrations in the "Web Push Identifiers" are encouraged to
-        include the following information:
-        <list style="hanging">
-          <t hangText="URN:">A complete URN or URN prefix.</t>
-          <t hangText="Description:">A summary description.</t>
-          <t hangText="Specification:">A reference to a specification describing
-          the semantics of the URN or URN prefix.</t>
-          <t hangText="Contact:">Email for the person or group making the
-          registration.</t>
-          <t hangText="Index value:">As described in <xref target="RFC3553"/>,
-          URN prefixes that are registered include a description of how the URN
-          is constructed.  This is not applicable for specific URNs.</t>
-        </list>
-      </t>
-      <t>
-        Three values are entered as the initial content of the "Web Push
-        Identifiers" registry.
-      </t>
-      <t>
-        <list style="hanging">
-          <t hangText="URN:">urn:ietf:params:push</t>
-          <t hangText="Description:">This link relation type is used to identify
-          a web push subscription.</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
-          Web Push WG (webpush@ietf.org)</t>
-        </list>
-      </t>
-      <t>
-        <list style="hanging">
-          <t hangText="URN:">urn:ietf:params:push:reg</t>
-          <t hangText="Description:">This link relation type is used to identify
-          a web push registration.</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
-          Web Push WG (webpush@ietf.org)</t>
-        </list>
-      </t>
-      <t>
-        <list style="hanging">
-          <t hangText="URN:">urn:ietf:params:push:sub</t>
-          <t hangText="Description:">This link relation type is used to identify
-          a resource that can be used to create new web push subscriptions.</t>
-          <t hangText="Specification:">(this document)</t>
-          <t hangText="Contact:">Martin Thomson (martin.thomson@gmail) or the
-          Web Push WG (webpush@ietf.org)</t>
-        </list>
-      </t>
+
+      <section anchor="iana.header.fields" title="Header Field Registrations">
+        <t>
+          HTTP header fields are registered within the "Message Headers"
+          registry maintained at <eref
+          target="https://www.iana.org/assignments/message-headers/"/>.
+        </t>
+        <t>
+          This document defines the following HTTP header fields, so their
+          associated registry entries shall be added according to the permanent
+          registrations below (see <xref target="RFC3864"/>):
+        </t>
+        <texttable align="left" suppress-title="true"
+                   anchor="iana.header.registration.table">
+          <ttcol>Header Field Name</ttcol>
+          <ttcol>Protocol</ttcol>
+          <ttcol>Status</ttcol>
+          <ttcol>Reference</ttcol>
+
+          <c>TTL</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="ttl"/>
+          </c>
+        </texttable>
+        <t>
+          The change controller is: "IETF (iesg@ietf.org) - Internet
+          Engineering Task Force".
+        </t>
+      </section>
+
+      <section anchor="iana.urns" title="Link Relation URNs">
+        <t>
+          This document registers three URNs for use in identifying link
+          relation types.  These are added to a new "Web Push Identifiers"
+          registry according to the procedures in Section 4 of <xref
+          target="RFC3553"/>; the corresponding "push" sub-namespace is entered
+          in the "IETF URN Sub-namespace for Registered Protocol Parameter
+          Identifiers" registry.
+        </t>
+        <t>
+          The "Web Push Identifiers" registry operates under the <xref
+          target="RFC5226">IETF Review policy</xref>.
+          <list style="hanging">
+            <t hangText="Registry name:">Web Push Identifiers</t>
+            <t hangText="URN Prefix:">urn:ietf:params:push</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Respository:">[Editor/IANA note: please include a link
+            to the final registry location.]</t>
+            <t hangText="Index value:">Values in this registry are URNs or URN
+            prefixes that start with the prefix <spanx
+            style="verb">urn:ietf:params:push</spanx>.  Each is registered
+            independently.</t>
+          </list>
+        </t>
+        <t>
+          New registrations in the "Web Push Identifiers" are encouraged to
+          include the following information:
+          <list style="hanging">
+            <t hangText="URN:">A complete URN or URN prefix.</t>
+            <t hangText="Description:">A summary description.</t>
+            <t hangText="Specification:">A reference to a specification
+            describing the semantics of the URN or URN prefix.</t>
+            <t hangText="Contact:">Email for the person or group making the
+            registration.</t>
+            <t hangText="Index value:">As described in <xref target="RFC3553"/>,
+            URN prefixes that are registered include a description of how the
+            URN is constructed.  This is not applicable for specific URNs.</t>
+          </list>
+        </t>
+        <t>
+          Three values are entered as the initial content of the "Web Push
+          Identifiers" registry.
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a web push subscription.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:reg</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a web push registration.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:sub</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a resource that can be used to create new web push
+            subscriptions.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+      </section>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
@@ -892,6 +995,7 @@ DATA         [stream 4] +END_STREAM
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3553.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3864.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml"?>
