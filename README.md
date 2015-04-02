@@ -1,26 +1,25 @@
-# |DRAFT-TITLE|
+# Web Push Protocol
 
-This is the working area for the [IETF |WG-TITLE| Working
-Group](https://trac.tools.ietf.org/wg/|WG-NAME|/trac/wiki) draft of |DRAFT-TITLE|
+This is the working area for the proposed Web Push Protocol.  This is intended
+for the [IETF Web Push Working Group](https://tools.ietf.org/wg/webpush).
 
-* [Editor's copy](https://rtcweb-wg.github.io/security-arch/)
-* [Working Group Draft] (https://tools.ietf.org/html/|DRAFT-NAME|)
+* [Editor's copy](https://unicorn-wg.github.io/webpush-protocol/)
 
 
 ## Contributing
 
 Before submitting feedback, please familiarize yourself with our current issues
-list and review the [working group home page](|WG-HOMEPAGE|). If you're
-new to this, you may also want to read the [Tao of the
-IETF](https://www.ietf.org/tao.html).
+list and review the [working group home
+page](https://tools.ietf.org/wg/webpush). If you're new to this, you may also
+want to read the [Tao of the IETF](https://www.ietf.org/tao.html).
 
 Be aware that all contributions to the specification fall under the "NOTE WELL"
 terms outlined below.
 
 1. The best way to provide feedback (editorial or design) and ask questions is
 sending an e-mail to [our mailing
-list](https://www.ietf.org/mailman/listinfo/|WG-NAME|). This will ensure that
-the entire Working Group sees your input in a timely fashion.
+list](https://www.ietf.org/mailman/listinfo/webpush). This will ensure that the
+entire Working Group sees your input in a timely fashion.
 
 2. If you have **editorial** suggestions (i.e., those that do not change the
 meaning of the specification), you can either:
