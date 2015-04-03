@@ -518,7 +518,7 @@ DATA         [stream 4] +END_STREAM
         <t>
           A user agent MUST support the 307 (Temporary Redirect) status code
           <xref target="RFC7231"/>, which can be used by a push service to
-          redistribute load at the time that a new registration is requested.
+          redistribute load at the time that a new subscription is requested.
         </t>
         <t>
           A server that wishes to redistribute load can do so using alternative
@@ -566,10 +566,12 @@ DATA         [stream 4] +END_STREAM
         </t>
       </section>
 
-      <section anchor="delete" title="Registration and Subscription Expiration">
+      <section anchor="delete" title="Subscription Expiration">
+        <!-- Does there need to be more detail about the specific 
+             subscription-related resources (monitor, push) ?-->
         <t>
-          In some cases, it may be necessary to terminate registrations or
-          subscriptions so that they can be refreshed.
+          In some cases, it may be necessary to terminate subscriptions so that
+          they can be refreshed.
         </t>
         <t>
           A push service might choose to set a fixed expiration time.  If a
@@ -584,19 +586,18 @@ DATA         [stream 4] +END_STREAM
           include the "private" directive.
         </t>
         <t>
-          A push service can invalidate a registration or subscription at any
-          time.  If a user agent has an outstanding request to the
-          "registration" resource (see <xref target="monitor"/>), this can be
-          signaled by returning a 400-series status code, such as 410 (Gone).  A
-          push service uses server push to indicate that a subscription has
-          expired; a pushed 400-series status code for the subscription resource
-          signals the termination of a subscription.
+          A push service can invalidate a subscription at any time. If a user
+          agent has an outstanding request to the "monitor" resource (see <xref
+          target="monitor"/>), this can be signaled by returning a 400-series
+          status code, such as 410 (Gone).  A push service uses server push to
+          indicate that a subscription has expired; a pushed 400-series status
+          code for the "monitor" resource signals the termination of a
+          subscription.
         </t>
         <t>
-          A user agent can request that a registration or subscription be
+          A user agent can request that a subscription be
           removed by sending a DELETE request to the corresponding URI.
-          Removing a registration causes all associated subscriptions to be
-          removed.  Requests to delete a subscription MUST be authenticated; the
+          Requests to delete a subscription MUST be authenticated; the
           URI for subscriptions will be known by multiple entities, most of whom
           will not be authorized to remove the subscription.
         </t>
@@ -635,7 +636,7 @@ DATA         [stream 4] +END_STREAM
         includes any communications between user agent and push service, plus
         communications between the application and the push service.  Thus, all
         URIs use the "https" scheme.  This provides confidentiality and
-        integrity protection for registrations and push messages from external
+        integrity protection for subscriptions and push messages from external
         parties.
       </t>
 
@@ -656,6 +657,7 @@ DATA         [stream 4] +END_STREAM
           medium for key agreement.
         </t>
         <t>
+          <!-- Scrub references to specific API(s) -->
           The Web Push API codifies this practice by requiring that each push
           subscription created by the browser be bound to a browser generated
           encryption key.  Pushed messages are authenticated and decrypted by
@@ -678,6 +680,8 @@ DATA         [stream 4] +END_STREAM
          However, the amount of information that is exposed can be limited.
        </t>
        <t>
+         <!-- Is "Subscription URIs" adequate in this context? Is it clear that
+              this means "monitor" and "push"? -->
          Subscription URIs MUST NOT provide any basis to correlate
          communications for a given user agent.  It MUST NOT be possible to
          correlate any two subscription URIs based solely on the content of the
@@ -691,9 +695,7 @@ DATA         [stream 4] +END_STREAM
        <t>
          In addition, subscription URIs established by the same user agent MUST
          NOT include any information that allows them to be correlated with the
-         associated registration or the user agent.  The push service is the
-         only entity that needs to be able to correlate subscriptions with a
-         registration.
+         user agent.
          <list style="hanging">
            <t hangText="Note:">
              This need not be perfect as long as the resulting anonymity set
@@ -705,7 +707,7 @@ DATA         [stream 4] +END_STREAM
          </list>
        </t>
        <t>
-         A user agent MUST be able to create new registrations and subscriptions
+         A user agent MUST be able to create new subscriptions
          with new identifiers at any time.
        </t>
      </section>
@@ -713,7 +715,7 @@ DATA         [stream 4] +END_STREAM
      <section title="Authorization">
        <t>
          This protocol does not define how a push service establishes whether a
-         user agent is permitted to create a registration or subscription, or
+         user agent is permitted to create a subscription, or
          whether push messages can be delivered to the user agent.  A push
          service MAY choose to authorize request based on any HTTP-compatible
          authorization method available, of which there are numerous options.
@@ -733,10 +735,11 @@ DATA         [stream 4] +END_STREAM
        </t>
        <t>
          A subscription URI therefore acts as a bearer token: knowledge of the
-         URI implies authorization to send push messages.  Subscription URIs
-         MUST be extremely difficult to guess.  Encoding a large amount of
-         random entropy (at least 120 bits) in the path component ensures that
-         it is difficult to successfully guess a valid subscription URI.
+         URI implies authorization to either send or receive push messages.
+         Subscription URIs MUST be extremely difficult to guess.  Encoding a
+         large amount of random entropy (at least 120 bits) in the path
+         component ensures that it is difficult to successfully guess a valid
+         subscription URI.
        </t>
      </section>
 
@@ -765,7 +768,7 @@ DATA         [stream 4] +END_STREAM
        </t>
        <t>
          End-to-end confidentiality mechanisms, such as those in <xref
-         target="API"/>, prevent an entity with a registration URI from learning
+         target="API"/>, prevent an entity with a subscription URI from learning
          the contents of push messages.  In both cases, push messages that are
          not successfully authenticated will not be delivered by the API, but
          this can present a denial of service risk.
@@ -780,13 +783,11 @@ DATA         [stream 4] +END_STREAM
 
      <section title="Logging Risks">
        <t>
-         Server request logs can reveal registration and subscription URIs.
-         Acquiring a registration URI permits the creation of new subscriptions,
-         as well as potentially enabling the receipt of messages.  Acquiring a
-         subscription URI permits the sending of push messages.  Logging could
+         Server request logs can reveal subscription URIs.
+         Acquiring a "monitor" URI enables the receipt of messages.  Acquiring a
+         "push" URI permits the sending of push messages.  Logging could
          also reveal relationships between different subscription URIs for the
-         same registration, or between different registrations for the same
-         user agent.
+         same user agent.
        </t>
        <t>
          Limitations on log retention and strong access control mechanisms can
