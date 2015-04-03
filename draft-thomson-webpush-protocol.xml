@@ -183,11 +183,6 @@
             <t hangText="push service:">
               A service that delivers push messages to user agents.
             </t>
-            <t hangText="registration:">
-              A session that is established between the user agent and the push
-              service.  A registation has any number of associated
-              subscriptions.
-            </t>
             <t hangText="subscription:">
               A message delivery context that is established between the user
               agent and the push service and shared with applications.  All push
@@ -219,13 +214,12 @@
  |  UA   |           | Push Service |       | Application |
  +-------+           +--------------+       +-------------+
      |                      |                      |
-     |      Register        |                      |
+     |      Subscribe       |                      |
      |--------------------->|                      |
      |       Monitor        |                      |
      |<====================>|                      |
-     |      Subscribe       |                      |
-     |--------------------->|                      |
-     |           Provide Subscription              |
+     |                      |                      |
+     |           Provide Subscription Write Access |
      |-------------------------------------------->|
      |                      |                      |
      :                      :                      :
@@ -236,41 +230,37 @@
 ]]></artwork>
       </figure>
       <t>
-        At the very beginning of the process, the user agent creates a
-        registration resource at the push service.  The registration is the
-        basis of all future interactions between the user agent and push
-        service.  The registration aggregates push messages that the user agent
-        receives from all subscriptions.
+        At the very beginning of the process, a new subscription is created by
+        the user agent and then distributed to its application server. The
+        subscription is the basis of all future interactions between the actors.
       </t>
       <t>
-        The registration resource describes how the user agent is expected to
-        monitor for incoming push messages.  This document describes one such
-        mechanism, though more efficient means of monitoring could be defined.
+        A subscription is modeled as two resources:
+        <list style="symbols">
+          <t>
+            A "monitor" resource grants read access to a subscription. User
+            agents use monitor resources to receive incoming push messages.
+          </t>
+          <t>
+            A "push" resource grants write access to a subscription. Application
+            servers use push resources to deliver push messages to user agents,
+            via the push service.
+          </t>
+        </list>
       </t>
       <t>
-        The registration resource also describes how the user agent might create
-        a subscription.  A new subscription is created by the user agent and
-        then distributed by to an application server.
-      </t>
-      <t>
-        It is expected that a different subscription will be provided to each
+        It is expected that a unique subscription will be provided to each
         application; however, there are no inherent cardinality constraints in
         the protocol.  Multiple subscriptions might be created for the same
         application, or multiple applications could use the same subscription.
-        Note however that sharing subscriptions can have security and privacy
+        Note however that sharing subscriptions has security and privacy
         implications.
       </t>
       <t>
-        Application servers use subscriptions to deliver push messages to
-        user agents, via the push service.
-      </t>
-      <t>
-        Both registrations and subscriptions have a limited lifetime.  They can
-        also be terminated by either push service or user agent at any time.
-        User agents and application servers need to be prepared to handle
-        changes in registrations and subscriptions; the protocol described here
-        supports any number of either resource concurrently with minimal
-        overhead.
+        Subscriptions have a limited lifetime.  They can also be terminated by
+        either the push service or user agent at any time. User agents and
+        application servers must be prepared to manage changes in subscription
+        state.
       </t>
 
       <section anchor="resources" title="HTTP Resources">
@@ -281,28 +271,19 @@
           <list style="hanging">
             <t hangText="push service:">
               This resource is used in <xref
-              target="register">Registration</xref>.  It is configured into user
+              target="subscribe">Subscribing</xref>.  It is configured into user
               agents.
             </t>
-            <t hangText="registration:">
-              A link relation of type "urn:ietf:params:push:reg" refers to a
-              registration resource.  This resource is used by a user agent in
-              requesting the delivery of push messages.  A process for
-              monitoring for messages using this resource is described in <xref
-              target="monitor"/>.
-            </t>
-            <t hangText="subscribe:">
-              A link relation of type "urn:ietf:params:push:sub" refers to a
-              resource where a user agent can create new subscriptions.
-              Creating a subscription is described in <xref
-              target="subscribe"/>.
-            </t>
-            <t hangText="subscription:">
-              A link relation of type "urn:ietf:params:push" refers to a
-              subscription resource.  Subscription resources are used to deliver
-              push messages.  An application server <xref target="send">sends
-              push messages</xref> and a user agent <xref
+            <t hangText="monitor:">
+              A link relation of type "urn:ietf:params:monitor" refers to a
+              resource with read access to a subscription.  A user agent <xref
               target="monitor">receives push messages</xref> using this
+              resource.
+            </t>
+            <t hangText="push:">
+              A link relation of type "urn:ietf:params:push" refers to a
+              resource with write access to a subscription.  An application
+              server <xref target="send"> sends push messages</xref> using this
               resource.
             </t>
           </list>
