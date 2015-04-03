@@ -275,7 +275,7 @@
               agents.
             </t>
             <t hangText="monitor:">
-              A link relation of type "urn:ietf:params:monitor" refers to a
+              A link relation of type "urn:ietf:params:push:monitor" refers to a
               resource with read access to a subscription.  A user agent <xref
               target="monitor">receives push messages</xref> using this
               resource.
@@ -320,7 +320,7 @@ Host: push.example.net
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Link: </m/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
-        rel="urn:ietf:params:monitor"
+        rel="urn:ietf:params:push:monitor"
 Link: </p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
         rel="urn:ietf:params:push"
 Location: https://push.example.net/m/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
@@ -370,7 +370,7 @@ Cache-Control: max-age=600
         <t>
           A push service can improve the reliability of push message delivery
           considerably by storing push messages for a period.  User agents are
-          often only intermittendly connected, and so benefit from having short
+          often only intermittently connected, and so benefit from having short
           term message storage at the push service.
         </t>
         <t>
@@ -874,33 +874,23 @@ DATA         [stream 4] +END_STREAM
           </list>
         </t>
         <t>
-          Three values are entered as the initial content of the "Web Push
+          Two values are entered as the initial content of the "Web Push
           Identifiers" registry.
         </t>
         <t>
           <list style="hanging">
             <t hangText="URN:">urn:ietf:params:push</t>
             <t hangText="Description:">This link relation type is used to
-            identify a web push subscription.</t>
+            identify a resource for sending push messages.</t>
             <t hangText="Specification:">(this document)</t>
             <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
           </list>
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:reg</t>
+            <t hangText="URN:">urn:ietf:params:push:monitor</t>
             <t hangText="Description:">This link relation type is used to
-            identify a web push registration.</t>
-            <t hangText="Specification:">(this document)</t>
-            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
-          </list>
-        </t>
-        <t>
-          <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:sub</t>
-            <t hangText="Description:">This link relation type is used to
-            identify a resource that can be used to create new web push
-            subscriptions.</t>
+            identify a resource for receiving push messages.</t>
             <t hangText="Specification:">(this document)</t>
             <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
           </list>
