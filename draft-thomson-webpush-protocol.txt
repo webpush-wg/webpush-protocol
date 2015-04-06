@@ -321,11 +321,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    HTTP/1.1 201 Created
    Date: Thu, 11 Dec 2014 23:56:52 GMT
-   Link: </m/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
+   Link: </s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
            rel="urn:ietf:params:push:subscription
-   Link: </p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
+   Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
            rel="urn:ietf:params:push"
-   Location: https://push.example.net/m/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+   Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
    Cache-Control: max-age:864000, private
 
 
@@ -347,17 +347,17 @@ Internet-Draft                HTTP Web Push                   April 2015
    POST /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx HTTP/1.1
    Host: push.example.net
    Content-Type: text/plain;charset=utf8
-   Content-Length: 15
+   Content-Length: 36
 
-   Hello, World!
+   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
-   A simple 200 response is sufficient to indicate that the push message
-   was accepted.  This does not indicate that the message was delivered
-   to the user agent.
+   A 201 response indicates that the push message was accepted.  A URI
+   for the push message is included in the Location header field.  This
+   does not indicate that the message was delivered to the user agent.
 
-   HTTP/1.1 200 OK
+   HTTP/1.1 201 Created
    Date: Thu, 11 Dec 2014 23:56:55 GMT
-   Cache-Control: max-age=600
+   Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 
 
    A push service MAY generate a 413 (Payload Too Large) status code in
@@ -439,7 +439,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    HEADERS      [stream 7] +END_STREAM +END_HEADERS
      :method        = GET
-     :path          = /m/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+     :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
      :authority     = push.example.net
 
 
@@ -457,19 +457,19 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
      :method        = GET
-     :path          = /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+     :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
      :authority     = push.example.net
 
    HEADERS      [stream 4] +END_HEADERS
      :status        = 200
-     date           = Thu, 11 Dec 2014 23:56:55 GMT
+     date           = Thu, 11 Dec 2014 23:56:56 GMT
      last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
      cache-control  = private
      content-type   = text/plain;charset=utf8
-     content-length = 15
+     content-length = 36
 
    DATA         [stream 4] +END_STREAM
-     Hello World!\r\n
+     iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
    A user agent can request the contents of the "subscription" resource
    immediately by including a Prefer header field [RFC7240] with a
