@@ -69,12 +69,12 @@ Table of Contents
      4.1.  Push Message Time-To-Live . . . . . . . . . . . . . . . .   7
    5.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .   8
    6.  Operational Considerations  . . . . . . . . . . . . . . . . .   9
-     6.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  10
+     6.1.  Load Management . . . . . . . . . . . . . . . . . . . . .   9
      6.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  10
      6.3.  Subscription Expiration . . . . . . . . . . . . . . . . .  10
      6.4.  Implications for Application Reliability  . . . . . . . .  11
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
-     7.1.  Confidentiality from Push Service Access  . . . . . . . .  12
+     7.1.  Confidentiality from Push Service Access  . . . . . . . .  11
      7.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  12
      7.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  13
      7.4.  Denial of Service Considerations  . . . . . . . . . . . .  13
@@ -86,7 +86,7 @@ Table of Contents
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
      10.2.  Informative References . . . . . . . . . . . . . . . . .  17
-     10.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  18
+     10.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  17
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
 
 1.  Introduction
@@ -471,11 +471,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    DATA         [stream 4] +END_STREAM
      Hello World!\r\n
 
-   A user agent might receive a PUSH_PROMISE for a resource for which
-   they have no active subscription.  The resulting unwanted push
-   message can be ignored, or the corresponding stream can be reset
-   (using RST_STREAM) to avoid expending bandwidth.
-
    A user agent can request the contents of the "subscription" resource
    immediately by including a Prefer header field [RFC7240] with a
    "wait" parameter set to "0".  The push server SHOULD return a link
@@ -494,18 +489,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    open TCP connections.  Effective management of those connections can
    depend on being able to move connections between server instances.
 
-
-
-
-
-
-
-
-Thomson, et al.          Expires October 8, 2015                [Page 9]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
 6.1.  Load Management
 
    A user agent MUST support the 307 (Temporary Redirect) status code
@@ -515,6 +498,14 @@ Internet-Draft                HTTP Web Push                   April 2015
    A server that wishes to redistribute load can do so using alternative
    services [I-D.ietf-httpbis-alt-svc].  Alternative services allows for
    redistribution of load whilst maintaining the same URIs for various
+
+
+
+Thomson, et al.          Expires October 8, 2015                [Page 9]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    resources.  User agents can ensure a graceful transition by using the
    GOAWAY frame once it has established a replacement connection.
 
@@ -554,14 +545,6 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    A push service might choose to set a fixed expiration time.  If a
    resource has a known expiration time, expiration information is
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 10]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    included in responses to requests that create the resource, or in
    requests that retrieve a representation of the resource.
 
@@ -569,6 +552,15 @@ Internet-Draft                HTTP Web Push                   April 2015
    setting a "max-age" parameter on a Cache-Control header field (see
    [RFC7234]).  The Cache-Control header field MUST also include the
    "private" directive.
+
+
+
+
+
+Thomson, et al.          Expires October 8, 2015               [Page 10]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    A push service can remove a subscription at any time.  If a user
    agent has an outstanding request to a "subscription" resource (see
@@ -610,14 +602,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    integrity protection for subscriptions and push messages from
    external parties.
 
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 11]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
 7.1.  Confidentiality from Push Service Access
 
    The protection afforded by TLS does not protect content from the push
@@ -626,6 +610,14 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Applications are able to provide additional confidentiality,
    integrity or authentication mechanisms within the push message
+
+
+
+Thomson, et al.          Expires October 8, 2015               [Page 11]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    itself.  The application server sending the push message and the
    application on the user agent that receives it are frequently just
    different instances of the same application, so no standardized
@@ -665,15 +657,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    include any information that allows them to be correlated with the
    user agent.
 
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 12]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    Note:  This need not be perfect as long as the resulting anonymity
       set (see [RFC6973], Section 6.1.1) is sufficiently large.  A
       "push" URI necessarily identifies a push service or a single
@@ -682,6 +665,14 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    A user agent MUST be able to create new subscriptions with new
    identifiers at any time.
+
+
+
+
+Thomson, et al.          Expires October 8, 2015               [Page 12]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 7.3.  Authorization
 
@@ -723,19 +714,21 @@ Internet-Draft                HTTP Web Push                   April 2015
    Ensuring that "push" URIs are hard to guess ensures that only
    application servers that have been given a "push" URI can use it.
 
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 13]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    A malicious application with a valid "push" URI could use the greater
    resources of a push service to mount a denial of service attack on a
    user agent.  Push services SHOULD limit the rate at which push
    messages are sent to individual user agents.  A push service or user
    agent MAY terminate subscriptions (Section 6.3) that receive too many
    push messages.
+
+
+
+
+
+Thomson, et al.          Expires October 8, 2015               [Page 13]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    End-to-end confidentiality mechanisms, such as those in [API],
    prevent an entity with a valid "subscription" URI from learning the
@@ -775,7 +768,14 @@ Internet-Draft                HTTP Web Push                   April 2015
    associated registry entries shall be added according to the permanent
    registrations below (see [RFC3864]):
 
+   +-------------------+----------+----------+--------------+
+   | Header Field Name | Protocol | Status   | Reference    |
+   +-------------------+----------+----------+--------------+
+   | TTL               | http     | standard | Section 4.1  |
+   +-------------------+----------+----------+--------------+
 
+   The change controller is: "IETF (iesg@ietf.org) - Internet
+   Engineering Task Force".
 
 
 
@@ -785,15 +785,6 @@ Thomson, et al.          Expires October 8, 2015               [Page 14]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
-
-   +-------------------+----------+----------+--------------+
-   | Header Field Name | Protocol | Status   | Reference    |
-   +-------------------+----------+----------+--------------+
-   | TTL               | http     | standard | Section 4.1  |
-   +-------------------+----------+----------+--------------+
-
-   The change controller is: "IETF (iesg@ietf.org) - Internet
-   Engineering Task Force".
 
 8.2.  Link Relation URNs
 
@@ -835,13 +826,6 @@ Internet-Draft                HTTP Web Push                   April 2015
       registered include a description of how the URN is constructed.
       This is not applicable for specific URNs.
 
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 15]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    Two values are entered as the initial content of the "Web Push
    Identifiers" registry.
 
@@ -849,6 +833,14 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Description:  This link relation type is used to identify a resource
       for sending push messages.
+
+
+
+
+Thomson, et al.          Expires October 8, 2015               [Page 15]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    Specification:  (this document)
 
@@ -890,6 +882,14 @@ Internet-Draft                HTTP Web Push                   April 2015
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
+   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
+
+   [RFC3553]  Mealling, M., Masinter, L., Hardie, T., and G. Klyne, "An
+              IETF URN Sub-namespace for Registered Protocol
+              Parameters", BCP 73, RFC 3553, June 2003.
+
+
+
 
 
 
@@ -897,12 +897,6 @@ Thomson, et al.          Expires October 8, 2015               [Page 16]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
-
-   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
-
-   [RFC3553]  Mealling, M., Masinter, L., Hardie, T., and G. Klyne, "An
-              IETF URN Sub-namespace for Registered Protocol
-              Parameters", BCP 73, RFC 3553, June 2003.
 
    [RFC3864]  Klyne, G., Nottingham, M., and J. Mogul, "Registration
               Procedures for Message Header Fields", BCP 90, RFC 3864,
@@ -945,6 +939,12 @@ Internet-Draft                HTTP Web Push                   April 2015
               3GPP, "Technical realization of the Short Message Service
               (SMS)", 3GPP TS 23.040 12.2.0, October 2014.
 
+10.3.  URIs
+
+   [1] https://www.iana.org/assignments/message-headers/
+
+
+
 
 
 
@@ -953,10 +953,6 @@ Thomson, et al.          Expires October 8, 2015               [Page 17]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
-
-10.3.  URIs
-
-   [1] https://www.iana.org/assignments/message-headers/
 
 Authors' Addresses
 
@@ -985,6 +981,10 @@ Authors' Addresses
    US
 
    Email: brian.raymor@microsoft.com
+
+
+
+
 
 
 

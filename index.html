@@ -746,9 +746,8 @@ HEADERS      [stream 4] +END_HEADERS
 DATA         [stream 4] +END_STREAM
   Hello World!\r\n
 </pre>
-<p id="rfc.section.5.p.3">A user agent might receive a PUSH_PROMISE for a resource for which they have no active subscription.  The resulting unwanted push message can be ignored, or the corresponding stream can be reset (using RST_STREAM) to avoid expending bandwidth.  </p>
-<p id="rfc.section.5.p.4">A user agent can request the contents of the "subscription" resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  The push server SHOULD return a link reference to the "push" resource and expiration information in response to this request.  This request also triggers the delivery of all push messages that the push service has stored but not yet delivered.  The server MUST generate a server push for all stored messages that have not yet been delivered.  </p>
-<p id="rfc.section.5.p.5">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  </p>
+<p id="rfc.section.5.p.3">A user agent can request the contents of the "subscription" resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  The push server SHOULD return a link reference to the "push" resource and expiration information in response to this request.  This request also triggers the delivery of all push messages that the push service has stored but not yet delivered.  The server MUST generate a server push for all stored messages that have not yet been delivered.  </p>
+<p id="rfc.section.5.p.4">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#operational" id="operational">Operational Considerations</a></h1>
 <p id="rfc.section.6.p.1">A push service is likely to have to maintain a very large number of open TCP connections.  Effective management of those connections can depend on being able to move connections between server instances.  </p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#load" id="load">Load Management</a></h1>
