@@ -484,13 +484,6 @@ DATA         [stream 4] +END_STREAM
       </figure>
 
       <t>
-        A user agent might receive a PUSH_PROMISE for a resource for which they
-        have no active subscription.  The resulting unwanted push message can be
-        ignored, or the corresponding stream can be reset (using RST_STREAM) to
-        avoid expending bandwidth.
-      </t>
-
-      <t>
         A user agent can request the contents of the "subscription" resource
         immediately by including a <xref target="RFC7240">Prefer header
         field</xref> with a "wait" parameter set to "0".  The push server SHOULD
