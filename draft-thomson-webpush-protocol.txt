@@ -536,9 +536,9 @@ Internet-Draft                HTTP Web Push                   April 2015
    of [RFC7232]) indicating when delivery was requested by an
    application server.
 
-   A GET request to a "subscription" resource that has expired messages
-   results in a 204 (No Content) status response, equivalent to if no
-   push message were ever sent.
+   A GET request to a "subscription" resource that has only expired
+   messages results in response as though no push message were ever
+   sent.
 
    Push services might need to limit the size and number of stored push
    messages to avoid overloading.  In addition to using the 413 (Payload
@@ -570,7 +570,7 @@ Internet-Draft                HTTP Web Push                   April 2015
    [RFC7234]).  The Cache-Control header field MUST also include the
    "private" directive.
 
-   A push service can invalidate a subscription at any time.  If a user
+   A push service can remove a subscription at any time.  If a user
    agent has an outstanding request to a "subscription" resource (see
    Section 5), this can be signaled by returning a 400-series status
    code, such as 410 (Gone).
