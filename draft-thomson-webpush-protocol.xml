@@ -550,9 +550,8 @@ DATA         [stream 4] +END_STREAM
           an application server.
         </t>
         <t><!-- TODO remove when we split subscriptions -->
-          A GET request to a "subscription" resource that has expired messages
-          results in a 204 (No Content) status response, equivalent to if no
-          push message were ever sent.
+          A GET request to a "subscription" resource that has only expired
+          messages results in response as though no push message were ever sent.
         </t>
         <t>
           Push services might need to limit the size and number of stored push
