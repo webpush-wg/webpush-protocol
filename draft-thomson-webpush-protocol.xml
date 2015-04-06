@@ -584,10 +584,10 @@ DATA         [stream 4] +END_STREAM
           include the "private" directive.
         </t>
         <t>
-          A push service can invalidate a subscription at any time. If a user
-          agent has an outstanding request to a "subscription" resource (see
-          <xref target="monitor"/>), this can be signaled by returning a
-          400-series status code, such as 410 (Gone).
+          A push service can remove a subscription at any time. If a user agent
+          has an outstanding request to a "subscription" resource (see <xref
+          target="monitor"/>), this can be signaled by returning a 400-series
+          status code, such as 410 (Gone).
         </t>
         <t>
           A user agent can request that a subscription be removed by sending a
