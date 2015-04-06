@@ -61,7 +61,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   4
+     1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   3
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.1.  HTTP Resources  . . . . . . . . . . . . . . . . . . . . .   6
    3.  Subscribing . . . . . . . . . . . . . . . . . . . . . . . . .   6
@@ -131,8 +131,6 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    o  request the delivery of a push message to a user agent,
 
-   o  register a new user agent,
-
    o  create new push message delivery subscriptions, and
 
    o  monitor for new push messages.
@@ -159,9 +157,11 @@ Internet-Draft                HTTP Web Push                   April 2015
    alternative monitoring schemes is left to documents that extend this
    basic protocol.
 
+1.1.  Conventions and Terminology
 
-
-
+   In cases where normative language needs to be emphasized, this
+   document falls back on established shorthands for expressing
+   interoperability requirements on implementations: the capitalized
 
 
 
@@ -170,11 +170,6 @@ Thomson, et al.          Expires October 8, 2015                [Page 3]
 Internet-Draft                HTTP Web Push                   April 2015
 
 
-1.1.  Conventions and Terminology
-
-   In cases where normative language needs to be emphasized, this
-   document falls back on established shorthands for expressing
-   interoperability requirements on implementations: the capitalized
    words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these
    is described in [RFC2119].
 
@@ -208,6 +203,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    A general model for push services includes three basic actors: a user
    agent, a push service, and an application (server).
+
+
+
+
+
 
 
 
