@@ -117,9 +117,6 @@
             request the delivery of a push message to a user agent,
           </t>
           <t>
-            register a new user agent,
-          </t>
-          <t>
             create new push message delivery subscriptions, and
           </t>
           <t>
