@@ -275,7 +275,7 @@
             </t>
             <t hangText="subscription:">
               A link relation of type "urn:ietf:params:push:subscription" refers
-              to a resource with read and delete access to a subscription.  
+              to a resource with read and delete access to a subscription.
               A user agent <xref target="monitor">receives push messages</xref>
               using this resource.
             </t>
@@ -566,7 +566,7 @@ DATA         [stream 4] +END_STREAM
       </section>
 
       <section anchor="delete" title="Subscription Expiration">
-        <!-- Does there need to be more detail about the specific 
+        <!-- Does there need to be more detail about the specific
              subscription-related resources (monitor, push) ?-->
         <t>
           In some cases, it may be necessary to terminate subscriptions so that
@@ -588,11 +588,11 @@ DATA         [stream 4] +END_STREAM
           A push service can invalidate a subscription at any time. If a user
           agent has an outstanding request to a "subscription" resource (see
           <xref target="monitor"/>), this can be signaled by returning a
-          400-series status code, such as 410 (Gone).  
+          400-series status code, such as 410 (Gone).
         </t>
         <t>
           A user agent can request that a subscription be removed by sending a
-          DELETE request to its private "subscription" URI. 
+          DELETE request to its private "subscription" URI.
         </t>
         <t>
           A push service MUST return a 400-series status code, such as 404 (Not
@@ -747,7 +747,7 @@ DATA         [stream 4] +END_STREAM
        </t>
        <t>
          An application can limit where valid push messages can originate by
-         limiting the distribution of "push" URIs to authorized entities.  
+         limiting the distribution of "push" URIs to authorized entities.
          Ensuring that "push" URIs are hard to guess ensures that only
          application servers that have been given a "push" URI can use it.
        </t>
