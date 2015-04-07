@@ -367,7 +367,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         <t>
           An application server can use the Receipt header field to request a
           confirmation that the push message was delivered to the user agent.
-          The Receipt header field must must take one of two values: "1"
+          The Receipt header field must take one of two values: "1"
           ("receipt enabled") or "0" ("receipt disabled").  All other values are
           reserved. The absence of the header field indicates that no
           confirmation is requested.
