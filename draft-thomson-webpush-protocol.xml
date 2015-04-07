@@ -130,26 +130,12 @@
         currently fulfilled by proprietary protocols; these are adequate, but do
         not offer any of the advantages that standardization affords.
       </t>
-      <t>
-        The monitoring function described in this document is intended to be
-        replaceable, enabling the use of monitoring schemes that are better
-        optimized for the network environment and the user agent.  For instance,
-        using notification systems like the <xref target="TS.3GPP.23.040">3GPP
-        Short Message Service (SMS)</xref> can take advantage of the native
-        paging capabilities of a cellular network, avoiding the ongoing
-        maintainence cost of a persistent TCP connection.
-      </t>
 
       <t>
         This document intentionally does not describe how a push service is
         discovered.  Discovery of push services is left for future efforts, if
         it turns out to be necessary at all.  User agents are expected to be
         configured with a URL for a push service.
-      </t>
-      <t>
-        Similarly, discovery of support for and negotiation of use of
-        alternative monitoring schemes is left to documents that extend this
-        basic protocol.
       </t>
 
       <section anchor="terminology" title="Conventions and Terminology">
@@ -946,16 +932,6 @@ DATA         [stream 4] +END_STREAM
 
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6973.xml"?>
 
-      <reference anchor="TS.3GPP.23.040">
-        <front>
-          <title>Technical realization of the Short Message Service (SMS)</title>
-          <author><organization>3GPP</organization></author>
-          <date month="October" year="2014"/>
-        </front>
-
-        <seriesInfo name="3GPP TS" value="23.040 12.2.0"/>
-        <format type="HTML" target="http://www.3gpp.org/ftp/Specs/html-info/23040.htm"/>
-      </reference>
     </references>
 
     <!--
