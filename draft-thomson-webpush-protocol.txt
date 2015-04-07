@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: October 8, 2015                                       B. Raymor
+Expires: October 9, 2015                                       B. Raymor
                                                                Microsoft
-                                                           April 6, 2015
+                                                           April 7, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 8, 2015.
+   This Internet-Draft will expire on October 9, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 1]
+Thomson, et al.          Expires October 9, 2015                [Page 1]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -86,7 +86,7 @@ Table of Contents
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
      10.2.  Informative References . . . . . . . . . . . . . . . . .  17
-     10.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     10.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  18
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 2]
+Thomson, et al.          Expires October 9, 2015                [Page 2]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 3]
+Thomson, et al.          Expires October 9, 2015                [Page 3]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 4]
+Thomson, et al.          Expires October 9, 2015                [Page 4]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 5]
+Thomson, et al.          Expires October 9, 2015                [Page 5]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 6]
+Thomson, et al.          Expires October 9, 2015                [Page 6]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 7]
+Thomson, et al.          Expires October 9, 2015                [Page 7]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 8]
+Thomson, et al.          Expires October 9, 2015                [Page 8]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015                [Page 9]
+Thomson, et al.          Expires October 9, 2015                [Page 9]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015               [Page 10]
+Thomson, et al.          Expires October 9, 2015               [Page 10]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.          Expires October 8, 2015               [Page 11]
+Thomson, et al.          Expires October 9, 2015               [Page 11]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -644,35 +644,41 @@ Internet-Draft                HTTP Web Push                   April 2015
    is communicating and when they are communicating is protected.
    However, the amount of information that is exposed can be limited.
 
-   "Push" URIs MUST NOT provide any basis to correlate communications
-   for a given user agent.  It MUST NOT be possible to correlate any two
-   "push" URIs based solely on the content of the "push" URIs.  This
-   allows a user agent to control correlation across different
-   applications, or over time.
+   The URIs provided for "push" resources MUST NOT provide any basis to
+   correlate communications for a given user agent.  It MUST NOT be
+   possible to correlate any two "push" URIs based solely on their
+   contents.  This allows a user agent to control correlation across
+   different applications, or over time.
 
-   In particular, user and device information MUST NOT be exposed
-   through the "push" URI.
+   Similarly, the URIs provided by the push service to identify a push
+   message MUST NOT provide any information that allows for correlation
+   across subscriptions.  Push message URIs for the same subscription
+   MAY contain information that would allow correlation with the
+   associated subscription or other push messages for that subscription.
 
-   In addition, "push" URIs established by the same user agent MUST NOT
-   include any information that allows them to be correlated with the
-   user agent.
+   User and device information MUST NOT be exposed through a "push" or
+   push message URI.
+
+   In addition, "push" URIs established by the same user agent or push
+   message URIs for the same subscription MUST NOT include any
+   information that allows them to be correlated with the user agent.
 
    Note:  This need not be perfect as long as the resulting anonymity
       set (see [RFC6973], Section 6.1.1) is sufficiently large.  A
       "push" URI necessarily identifies a push service or a single
+
+
+
+Thomson, et al.          Expires October 9, 2015               [Page 12]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
       server instance.  It is also possible that traffic analysis could
       be used to correlate subscriptions.
 
    A user agent MUST be able to create new subscriptions with new
    identifiers at any time.
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 12]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
 7.3.  Authorization
 
@@ -688,19 +694,22 @@ Internet-Draft                HTTP Web Push                   April 2015
    Authorization for subscriptions is managed using "subscription" and
    "push" capability URLs (see [CAP-URI]).  A capability URL grants
    access to a resource based solely on knowledge of the URL.
+
    Capability URLs are used for their "easy onward sharing" and "easy
    client API" properties.  These make it possible to avoid relying on
    relationships between push services and application servers, with the
    protocols necessary to build and support those relationships.
 
-   A "subscription" or "push" URI therefore acts as a bearer token.
-   Knowledge of the "subscription" URI implies authorization to either
-   receive push messages or delete the subscription.  Knowledge of the
-   "push" URI implies authorization to send push messages.
+   A "subscription", "push" or push message URI therefore acts as a
+   bearer token.  Knowledge of a "subscription" URI implies
+   authorization to either receive push messages or delete the
+   subscription.  Knowledge of a "push" URI implies authorization to
+   send push messages.  Knowledge of a push message URI allows for
+   reading that specific message.
 
    Encoding a large amount of random entropy (at least 120 bits) in the
    path component ensures that it is difficult to successfully guess a
-   valid "subscription" or "push" URI.
+   valid capability URL.
 
 7.4.  Denial of Service Considerations
 
@@ -714,21 +723,19 @@ Internet-Draft                HTTP Web Push                   April 2015
    Ensuring that "push" URIs are hard to guess ensures that only
    application servers that have been given a "push" URI can use it.
 
+
+
+Thomson, et al.          Expires October 9, 2015               [Page 13]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    A malicious application with a valid "push" URI could use the greater
    resources of a push service to mount a denial of service attack on a
    user agent.  Push services SHOULD limit the rate at which push
    messages are sent to individual user agents.  A push service or user
    agent MAY terminate subscriptions (Section 6.3) that receive too many
    push messages.
-
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 13]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
    End-to-end confidentiality mechanisms, such as those in [API],
    prevent an entity with a valid "subscription" URI from learning the
@@ -748,7 +755,8 @@ Internet-Draft                HTTP Web Push                   April 2015
    a "subscription" URI enables the receipt of messages or deletion of
    the subscription.  Acquiring a "push" URI permits the sending of push
    messages.  Logging could also reveal relationships between different
-   subscription-related URIs for the same user agent.
+   subscription-related URIs for the same user agent.  Encrypted message
+   contents are not revealed to the push service.
 
    Limitations on log retention and strong access control mechanisms can
    ensure that URIs are not learned by unauthorized entities.
@@ -768,6 +776,16 @@ Internet-Draft                HTTP Web Push                   April 2015
    associated registry entries shall be added according to the permanent
    registrations below (see [RFC3864]):
 
+
+
+
+
+
+Thomson, et al.          Expires October 9, 2015               [Page 14]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    +-------------------+----------+----------+--------------+
    | Header Field Name | Protocol | Status   | Reference    |
    +-------------------+----------+----------+--------------+
@@ -776,15 +794,6 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    The change controller is: "IETF (iesg@ietf.org) - Internet
    Engineering Task Force".
-
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 14]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
 8.2.  Link Relation URNs
 
@@ -826,6 +835,13 @@ Internet-Draft                HTTP Web Push                   April 2015
       registered include a description of how the URN is constructed.
       This is not applicable for specific URNs.
 
+
+
+Thomson, et al.          Expires October 9, 2015               [Page 15]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    Two values are entered as the initial content of the "Web Push
    Identifiers" registry.
 
@@ -833,14 +849,6 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Description:  This link relation type is used to identify a resource
       for sending push messages.
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 15]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
    Specification:  (this document)
 
@@ -882,21 +890,19 @@ Internet-Draft                HTTP Web Push                   April 2015
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
+
+
+
+Thomson, et al.          Expires October 9, 2015               [Page 16]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
    [RFC3553]  Mealling, M., Masinter, L., Hardie, T., and G. Klyne, "An
               IETF URN Sub-namespace for Registered Protocol
               Parameters", BCP 73, RFC 3553, June 2003.
-
-
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 16]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
    [RFC3864]  Klyne, G., Nottingham, M., and J. Mogul, "Registration
               Procedures for Message Header Fields", BCP 90, RFC 3864,
@@ -939,20 +945,18 @@ Internet-Draft                HTTP Web Push                   April 2015
               3GPP, "Technical realization of the Short Message Service
               (SMS)", 3GPP TS 23.040 12.2.0, October 2014.
 
-10.3.  URIs
-
-   [1] https://www.iana.org/assignments/message-headers/
 
 
 
 
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 17]
+Thomson, et al.          Expires October 9, 2015               [Page 17]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
+
+10.3.  URIs
+
+   [1] https://www.iana.org/assignments/message-headers/
 
 Authors' Addresses
 
@@ -1001,8 +1005,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-Thomson, et al.          Expires October 8, 2015               [Page 18]
+Thomson, et al.          Expires October 9, 2015               [Page 18]

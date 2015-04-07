@@ -487,7 +487,7 @@ ul.toc a:first-child {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-thomson-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-4-6" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-4-7" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -511,7 +511,7 @@ ul.toc a:first-child {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 8, 2015</td>
+  <td class="left">Expires: October 9, 2015</td>
   <td class="right">B. Raymor</td>
 </tr>
 <tr>
@@ -520,7 +520,7 @@ ul.toc a:first-child {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 6, 2015</td>
+  <td class="right">April 7, 2015</td>
 </tr>
 
     	
@@ -540,7 +540,7 @@ ul.toc a:first-child {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 8, 2015.</p>
+<p>This Internet-Draft will expire on October 9, 2015.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -778,9 +778,10 @@ DATA         [stream 4] +END_STREAM
 <p id="rfc.section.7.1.p.4">The public key for a subscription ensures that applications using that subscription can identify messages from unknown sources and discard them.  This depends on the public key only being disclosed to entities that are authorized to send messages on the channel.  The push server does not require access to this public key.  </p>
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> Privacy Considerations</h1>
 <p id="rfc.section.7.2.p.1">Push message confidentiality does not ensure that the identity of who is communicating and when they are communicating is protected.  However, the amount of information that is exposed can be limited.  </p>
-<p id="rfc.section.7.2.p.2">"Push" URIs MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two "push" URIs based solely on the content of the "push" URIs.  This allows a user agent to control correlation across different applications, or over time.  </p>
-<p id="rfc.section.7.2.p.3">In particular, user and device information MUST NOT be exposed through the "push" URI.  </p>
-<p id="rfc.section.7.2.p.4">In addition, "push" URIs established by the same user agent MUST NOT include any information that allows them to be correlated with the user agent.  </p>
+<p id="rfc.section.7.2.p.2">The URIs provided for "push" resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two "push" URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  </p>
+<p id="rfc.section.7.2.p.3">Similarly, the URIs provided by the push service to identify a push message MUST NOT provide any information that allows for correlation across subscriptions.  Push message URIs for the same subscription MAY contain information that would allow correlation with the associated subscription or other push messages for that subscription.  </p>
+<p id="rfc.section.7.2.p.4">User and device information MUST NOT be exposed through a "push" or push message URI.  </p>
+<p id="rfc.section.7.2.p.5">In addition, "push" URIs established by the same user agent or push message URIs for the same subscription MUST NOT include any information that allows them to be correlated with the user agent.  </p>
 
 <dl>
   <dt>Note:</dt>
@@ -788,12 +789,13 @@ DATA         [stream 4] +END_STREAM
 </dl>
 
 <p> </p>
-<p id="rfc.section.7.2.p.5">A user agent MUST be able to create new subscriptions with new identifiers at any time.  </p>
+<p id="rfc.section.7.2.p.6">A user agent MUST be able to create new subscriptions with new identifiers at any time.  </p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> Authorization</h1>
 <p id="rfc.section.7.3.p.1">This protocol does not define how a push service establishes whether a user agent is permitted to create a subscription, or whether push messages can be delivered to the user agent.  A push service MAY choose to authorize request based on any HTTP-compatible authorization method available, of which there are numerous options.  The authorization process and any associated credentials are expected to be configured in the user agent along with the URI for the "push service".  </p>
-<p id="rfc.section.7.3.p.2">Authorization for subscriptions is managed using "subscription" and "push" capability URLs (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  Capability URLs are used for their "easy onward sharing" and "easy client API" properties. These make it possible to avoid relying on relationships between push services and application servers, with the protocols necessary to build and support those relationships.  </p>
-<p id="rfc.section.7.3.p.3">A "subscription" or "push" URI therefore acts as a bearer token.  Knowledge of the "subscription" URI implies authorization to either receive push messages or delete the subscription. Knowledge of the "push" URI implies authorization to send push messages.  </p>
-<p id="rfc.section.7.3.p.4">Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid "subscription" or "push" URI.  </p>
+<p id="rfc.section.7.3.p.2">Authorization for subscriptions is managed using "subscription" and "push" capability URLs (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  </p>
+<p id="rfc.section.7.3.p.3">Capability URLs are used for their "easy onward sharing" and "easy client API" properties. These make it possible to avoid relying on relationships between push services and application servers, with the protocols necessary to build and support those relationships.  </p>
+<p id="rfc.section.7.3.p.4">A "subscription", "push" or push message URI therefore acts as a bearer token.  Knowledge of a "subscription" URI implies authorization to either receive push messages or delete the subscription. Knowledge of a "push" URI implies authorization to send push messages.  Knowledge of a push message URI allows for reading that specific message.  </p>
+<p id="rfc.section.7.3.p.5">Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid capability URL.  </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Denial of Service Considerations</h1>
 <p id="rfc.section.7.4.p.1">Discarding unwanted messages at the user agent based on message authentication doesn't protect against a denial of service attack on the user agent.  Even a relatively small volume of push messages can cause battery-powered devices to exhaust power reserves.  </p>
 <p id="rfc.section.7.4.p.2">An application can limit where valid push messages can originate by limiting the distribution of "push" URIs to authorized entities.  Ensuring that "push" URIs are hard to guess ensures that only application servers that have been given a "push" URI can use it.  </p>
@@ -801,7 +803,7 @@ DATA         [stream 4] +END_STREAM
 <p id="rfc.section.7.4.p.4">End-to-end confidentiality mechanisms, such as those in <a href="#API">[API]</a>, prevent an entity with a valid "subscription" URI from learning the contents of push messages.  In both cases, push messages that are not successfully authenticated will not be delivered by the API, but this can present a denial of service risk.  </p>
 <p id="rfc.section.7.4.p.5">Conversely, a push service is also able to deny service to user agents.  Intentional failure to deliver messages is difficult to distinguish from faults, which might occur due to transient network errors, interruptions in user agent availability, or genuine service outages.  </p>
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> Logging Risks</h1>
-<p id="rfc.section.7.5.p.1">Server request logs can reveal subscription-related URIs. Acquiring a "subscription" URI enables the receipt of messages or deletion of the subscription. Acquiring a "push" URI permits the sending of push messages.  Logging could also reveal relationships between different subscription-related URIs for the same user agent.  </p>
+<p id="rfc.section.7.5.p.1">Server request logs can reveal subscription-related URIs. Acquiring a "subscription" URI enables the receipt of messages or deletion of the subscription. Acquiring a "push" URI permits the sending of push messages.  Logging could also reveal relationships between different subscription-related URIs for the same user agent.  Encrypted message contents are not revealed to the push service.  </p>
 <p id="rfc.section.7.5.p.2">Limitations on log retention and strong access control mechanisms can ensure that URIs are not learned by unauthorized entities.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <p id="rfc.section.8.p.1">This protocol defines new HTTP header fields in <a href="#iana.header.fields">Section 8.1</a>.  New link relation types are identified using the URNs defined in <a href="#iana.urns">Section 8.2</a>.  </p>
