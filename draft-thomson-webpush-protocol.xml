@@ -535,8 +535,10 @@ DATA         [stream 4] +END_STREAM
           A user agent that does not actively monitor for push messages will not
           receive messages that expire during that interval.  An application
           server that depends on push messages being delivered reliably over
-          longer periods can retransmit push messages prior to the time
-          indicated in the TTL header field to ensure that they do not expire.
+          longer periods can send new push messages prior to the time indicated
+          in the TTL header field to ensure that they do not expire.  However,
+          if the same message is sent multiple times, a mechanism could be
+          needed for the application to identify and remove duplicate messages.
         </t>
         <t>
           Push messages that are stored and not delivered to a user agent are
