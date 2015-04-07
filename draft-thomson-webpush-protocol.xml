@@ -665,21 +665,27 @@ DATA         [stream 4] +END_STREAM
          However, the amount of information that is exposed can be limited.
        </t>
        <t>
-
-         "Push" URIs MUST NOT provide any basis to correlate
-         communications for a given user agent.  It MUST NOT be possible to
-         correlate any two "push" URIs based solely on the content of the
-         "push" URIs.  This allows a user agent to control correlation
-         across different applications, or over time.
+         The URIs provided for "push" resources MUST NOT provide any basis to
+         correlate communications for a given user agent.  It MUST NOT be
+         possible to correlate any two "push" URIs based solely on their
+         contents.  This allows a user agent to control correlation across
+         different applications, or over time.
        </t>
        <t>
-         In particular, user and device information MUST NOT be exposed through
-         the "push" URI.
+         Similarly, the URIs provided by the push service to identify a push
+         message MUST NOT provide any information that allows for correlation
+         across subscriptions.  Push message URIs for the same subscription MAY
+         contain information that would allow correlation with the associated
+         subscription or other push messages for that subscription.
        </t>
        <t>
-         In addition, "push" URIs established by the same user agent MUST
-         NOT include any information that allows them to be correlated with the
-         user agent.
+         User and device information MUST NOT be exposed through a "push" or
+         push message URI.
+       </t>
+       <t>
+         In addition, "push" URIs established by the same user agent or push
+         message URIs for the same subscription MUST NOT include any information
+         that allows them to be correlated with the user agent.
          <list style="hanging">
            <t hangText="Note:">
              This need not be perfect as long as the resulting anonymity set
@@ -691,8 +697,8 @@ DATA         [stream 4] +END_STREAM
          </list>
        </t>
        <t>
-         A user agent MUST be able to create new subscriptions
-         with new identifiers at any time.
+         A user agent MUST be able to create new subscriptions with new
+         identifiers at any time.
        </t>
      </section>
 
@@ -711,22 +717,25 @@ DATA         [stream 4] +END_STREAM
          Authorization for subscriptions is managed using "subscription" and
          "push" capability URLs (see <xref target="CAP-URI"/>).  A capability
          URL grants access to a resource based solely on knowledge of the URL.
-
+       </t>
+       <t>
          Capability URLs are used for their "easy onward sharing" and "easy
          client API" properties. These make it possible to avoid relying on
          relationships between push services and application servers, with the
          protocols necessary to build and support those relationships.
         </t>
         <t>
-         A "subscription" or "push" URI therefore acts as a bearer token.
-         Knowledge of the "subscription" URI implies authorization to either
-         receive push messages or delete the subscription. Knowledge of the
-         "push" URI implies authorization to send push messages.
+         A "subscription", "push" or push message URI therefore acts as a bearer
+         token.  Knowledge of a "subscription" URI implies authorization to
+         either receive push messages or delete the subscription. Knowledge of a
+         "push" URI implies authorization to send push messages.  Knowledge of a
+         push message URI allows for reading that specific message<!-- and
+         enables message acknowledgment -->.
         </t>
         <t>
          Encoding a large amount of random entropy (at least 120 bits) in the
          path component ensures that it is difficult to successfully guess a
-         valid "subscription" or "push" URI.
+         valid capability URL.
        </t>
      </section>
 
@@ -772,7 +781,8 @@ DATA         [stream 4] +END_STREAM
          "subscription" URI enables the receipt of messages or deletion of the
          subscription. Acquiring a "push" URI permits the sending of push
          messages.  Logging could also reveal relationships between different
-         subscription-related URIs for the same user agent.
+         subscription-related URIs for the same user agent.  Encrypted message
+         contents are not revealed to the push service.
        </t>
        <t>
          Limitations on log retention and strong access control mechanisms can
