@@ -932,18 +932,6 @@ DATA         [stream 4] +END_STREAM
 
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6973.xml"?>
 
-      <reference anchor="TS.3GPP.23.040">
-        <front>
-          <title>Technical realization of the Short Message Service (SMS)</title>
-          <author><organization>3GPP</organization></author>
-          <date month="October" year="2014"/>
-        </front>
-
-        <seriesInfo name="3GPP TS" value="23.040 12.2.0"/>
-        <format type="HTML" target="http://www.3gpp.org/ftp/Specs/html-info/23040.htm"/>
-      </reference>
-    </references>
-
     <!--
         <section title="Change Log">
         <t>[[The RFC Editor is requested to remove this section at publication.]]</t>
