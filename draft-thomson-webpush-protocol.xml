@@ -299,7 +299,7 @@
       </t>
       <t>
         The user agent should securely distribute the "push" resource to its
-        application server. (Details are outside the scope of this document.)
+        application server. Details are outside the scope of this document.
       </t>
       <figure>
         <artwork type="inline"><![CDATA[
@@ -312,7 +312,6 @@ Host: push.example.net
         A response with a 201 (Created) status code includes a URI for the
         "subscription" resource in the Location header field.
       </t>
-      <!-- Need to ensure that subscription and push have unique capability urls. -->
       <figure>
         <artwork type="inline">
   <![CDATA[
@@ -364,7 +363,24 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         Push services MUST NOT generate a 413 status code in responses to an
         entity body that is 4k (4096 bytes) or less in size.
       </t>
-
+      <section anchor="receipt" title="Push Message Receipts">
+        <t>
+          An application server can use the Receipt header field to request a
+          confirmation that the push message was delivered to the user agent.
+          The Receipt header field must must take one of two values: "1"
+          ("receipt enabled") or "0" ("receipt disabled").  All other values are
+          reserved. The absence of the header field indicates that no
+          confirmation is requested.
+        </t>
+        <figure>
+          <artwork type="abnf">
+            <![CDATA[
+Receipt = BIT
+          ]]>
+          </artwork>
+        </figure>
+      </section>
+        
       <section anchor="ttl" title="Push Message Time-To-Live">
         <t>
           A push service can improve the reliability of push message delivery
@@ -497,6 +513,30 @@ DATA         [stream 4] +END_STREAM
         A 204 (No Content) status code with no associated server pushes
         indicates that no messages are presently available.
       </t>
+      <section anchor="acknowledge_receipt"
+               title="Acknowledging Push Message Receipts">
+        <t>
+          To enable "at least once delivery", the user agent MUST acknowledge
+          receipt of the message by performing a HTTP DELETE on the resource in
+          the :path pseudo-header field from the PUSH_PROMISE.
+        </t>
+
+        <figure>
+          <artwork type="inline">
+            <![CDATA[
+DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
+Host: push.example.net
+
+]]>
+          </artwork>
+        </figure>
+
+        <t>
+          If the application has requested a delivery receipt, the push server
+          MUST deliver a response to the application server monitoring the
+          "receipt" resource.
+        </t>
+      </section>
     </section>
 
     <section anchor="operational" title="Operational Considerations">
@@ -558,8 +598,6 @@ DATA         [stream 4] +END_STREAM
       </section>
 
       <section anchor="delete" title="Subscription Expiration">
-        <!-- Does there need to be more detail about the specific
-             subscription-related resources (monitor, push) ?-->
         <t>
           In some cases, it may be necessary to terminate subscriptions so that
           they can be refreshed.
@@ -812,6 +850,12 @@ DATA         [stream 4] +END_STREAM
           <c>standard</c>
           <c>
             <xref target="ttl"/>
+          </c>
+          <c>Receipt</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="receipt"/>
           </c>
         </texttable>
         <t>
