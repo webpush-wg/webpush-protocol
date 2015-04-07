@@ -78,29 +78,27 @@
   <middle>
     <section anchor="intro" title="Introduction">
       <t>
-        Mobile computing devices are increasingly relied upon for a great many
-        applications.  Mobile devices typically have limited power reserves, so
-        finding more efficient ways to serve application requirements is an
-        important part of any mobile platform.
-      </t>
-
-      <t>
-        One significant contributor to power usage mobile devices is the radio.
-        Radio communications consumes a significant portion of the energy budget
-        on a wirelessly connected mobile device.
+        Many applications on mobile and embedded devices require continuous
+        access to network communications so that real-time events - such as
+        incoming calls or messages - can be delivered (or "pushed") in a timely
+        fashion. These devices typically have limited power reserves, so finding
+        more efficient ways to serve application requirements greatly benefits
+        the application ecosystem.
       </t>
       <t>
-        Many applications require continuous access to network communications so
-        that real-time events - such as incoming calls or messages - can be
-        conveyed (or "pushed") to the user in a timely fashion.  Uncoordinated
-        use of persistent connections or sessions from multiple applications can
-        contribute to unnecessary use of the device radio, since each
-        independent session independently incurs overheads.  In particular, keep
-        alive traffic used to ensure that middleboxes do not prematurely time
-        out sessions, can result in significant waste.  Maintenance traffic
-        tends to dominate over the long term, since events are relatively rare.
+        One significant contributor to power usage is the radio.  Radio
+        communications consume a significant portion of the energy budget
+        on a wireless device.
       </t>
-
+      <t>
+        Uncoordinated use of persistent connections or sessions from multiple
+        applications can contribute to unnecessary use of the device radio,
+        since each independent session independently incurs overheads.  In
+        particular, keep alive traffic used to ensure that middleboxes do not
+        prematurely time out sessions, can result in significant waste.
+        Maintenance traffic tends to dominate over the long term, since events
+        are relatively rare.
+      </t>
       <t>
         Consolidating all real-time events into a single session ensures more
         efficient use of network and radio resources.  A single service
@@ -139,7 +137,6 @@
         paging capabilities of a cellular network, avoiding the ongoing
         maintainence cost of a persistent TCP connection.
       </t>
-
       <t>
         This document intentionally does not describe how a push service is
         discovered.  Discovery of push services is left for future efforts, if
