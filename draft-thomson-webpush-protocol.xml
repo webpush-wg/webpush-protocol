@@ -107,9 +107,9 @@
         overhead costs.
       </t>
       <t>
-        The <xref target="API">W3C Web Push API</xref> describes an API that enables
-        the use of a consolidated push service from web applications.  This
-        expands on that work by describing a protocol that can be used to:
+        The <xref target="API">W3C Web Push API</xref> describes an API that
+        enables the use of a consolidated push service from web applications.
+        This expands on that work by describing a protocol that can be used to:
         <list style="symbols">
           <t>
             request the delivery of a push message to a user agent,
@@ -124,7 +124,7 @@
       </t>
       <t>
         Requesting the delivery of events is particularly important for the Web
-        Push API.  The registration, management and monitoring functions are
+        Push API.  The subscription, management and monitoring functions are
         currently fulfilled by proprietary protocols; these are adequate, but do
         not offer any of the advantages that standardization affords.
       </t>
@@ -621,7 +621,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             The push service permits the request to remain outstanding.  When
             the user agent acknowledges the message, the push server pushes a
             delivery receipt to the application server. A 410 (Gone) status code
-            confirms that the message was delivered.
+            confirms that the message was delivered and acknowledged.
           </preamble>
           <artwork>
             <![CDATA[
