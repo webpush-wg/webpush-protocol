@@ -406,6 +406,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         Push services MUST NOT generate a 413 status code in responses to an
         entity body that is 4k (4096 bytes) or less in size.
       </t>
+
       <section anchor="request_receipt" title="Requesting Push Message Receipts">
         <t>
           An application server can use the Push-Receipt header field to request
