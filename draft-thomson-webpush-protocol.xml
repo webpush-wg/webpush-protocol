@@ -86,18 +86,14 @@
         the application ecosystem.
       </t>
       <t>
-        One significant contributor to power usage is the radio.  Radio
-        communications consume a significant portion of the energy budget
-        on a wireless device.
-      </t>
-      <t>
-        Uncoordinated use of persistent connections or sessions from multiple
-        applications can contribute to unnecessary use of the device radio, 
-        since each independent session independently incurs overheads.  In
-        particular, keep alive traffic used to ensure that middleboxes do not
-        prematurely time out sessions, can result in significant waste.
-        Maintenance traffic tends to dominate over the long term, since events
-        are relatively rare.
+        Radio communications consume a significant portion of the energy budget
+        on a wireless device.  Uncoordinated use of persistent connections or
+        sessions from multiple applications can contribute to unnecessary use of
+        the device radio, since each independent session independently incurs
+        overheads.  In particular, keep alive traffic used to ensure that
+        middleboxes do not prematurely time out sessions, can result in
+        significant waste. Maintenance traffic tends to dominate over the long
+        term, since events are relatively rare.
       </t>
       <t>
         Consolidating all real-time events into a single session ensures more
@@ -340,9 +336,9 @@ Cache-Control: max-age:864000, private
         An application server creates a new subscription for push message
         receipts by sending a HTTP POST request to the "receipt subscribe"
         resource distributed by its user agent.  If successful, the push service
-        MUST return a new "receipt" resource in response to this request. The
-        URI for this resource is included in a Link header field in the
-        response.
+        MUST return a new "receipt subscription" resource in response to this
+        request. The URI for this resource is included in a Link header field
+        in the response.
       </t>
       <figure>
         <artwork type="inline">
@@ -355,7 +351,7 @@ Host: push.example.net
       </figure>
       <t>
         A response with a 201 (Created) status code includes a URI for the
-        "receipt" resource in the Location header field.
+        "receipt subscription" resource in the Location header field.
       </t>
       <figure>
         <artwork type="inline">
@@ -413,10 +409,10 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           URI-Reference as defined in Section 2.7 of
           <xref target="RFC7230"></xref>.
           
-          Its value is the "receipt" URI returned from the push server in
-          response to the receipt subscription request
-          (<xref target="receipt_subscription"></xref>) from the
-          application server.
+          Its value is the "receipt subscription" URI returned from the push
+          server in response to the receipt subscription request
+          (<xref target="receipt_subscription"></xref>) from the application
+          server.
         </t>
         <figure>
           <artwork type="abnf">
@@ -582,17 +578,18 @@ Host: push.example.net
         <t>
           If the application has requested a delivery receipt, the push server
           MUST deliver a response to the application server monitoring the
-          "receipt" resource.
+          "receipt subscription" resource.
         </t>
       </section>
       <section anchor="receive_receipt" title="Receiving Push Message Receipts">
         <t>
           The application server requests the delivery of receipts from
-          the push server by making a HTTP GET request to the "receipt"
-          resource. The push service does not respond to this request, it instead
-          uses <xref target="I-D.ietf-httpbis-http2">HTTP/2 server push</xref>
-          to send push receipts when messages are acknowledged (<xref
-          target="acknowledge_message"></xref>) by the user agent.
+          the push server by making a HTTP GET request to the "receipt
+          subscription" resource. The push service does not respond to this
+          request, it instead uses <xref target="I-D.ietf-httpbis-http2">HTTP/2
+          server push</xref> to send push receipts when messages are
+          acknowledged (<xref target="acknowledge_message"></xref>) by the user
+          agent.
         </t>
         <t>
           Each receipt is pushed in response to a synthesized GET request.
@@ -857,16 +854,16 @@ HEADERS      [stream 4] +END_STREAM
          This protocol does not define how a push service establishes whether a
          user agent is permitted to create a subscription, or whether push
          messages can be delivered to the user agent.  A push service MAY choose
-         to authorize request based on any HTTP-compatible authorization method
+         to authorize requests based on any HTTP-compatible authorization method
          available, of which there are numerous options.  The authorization
          process and any associated credentials are expected to be configured in
          the user agent along with the URI for the "push service".
        </t>
        <t>
-         Authorization is managed using "subscription", "push", "receipt", and
-         "receipt subcribe" capability URLs (see <xref target="CAP-URI"/>).  
-         A capability URL grants access to a resource based solely on knowledge
-         of the URL.
+         Authorization is managed using "subscription", "push", "receipt
+         subscription", and "receipt subcribe" capability URLs (see 
+         <xref target="CAP-URI"/>).  A capability URL grants access to a
+         resource based solely on knowledge of the URL.
        </t>
        <t>
          Capability URLs are used for their "easy onward sharing" and "easy
@@ -875,14 +872,15 @@ HEADERS      [stream 4] +END_STREAM
          protocols necessary to build and support those relationships.
         </t>
         <t>
-         A "subscription", "push", "receipt", "receipt subcribe", or push
-         message URI acts as a bearer token.  Knowledge of a "subscription" URI
-         implies authorization to either receive push messages or delete the
-         subscription. Knowledge of a "push" URI implies authorization to send
-         push messages.  Knowledge of a "receipt" URI implies authorization to 
-         receive push receipts. Knowledge of a "receipt subscribe" URI implies
-         authorization to create subscriptions for receipts. Knowledge of a push
-         message URI allows for reading and acknowledging that specific message.
+         A "subscription", "push", "receipt subscription", "receipt subcribe", 
+         or push message URI acts as a bearer token.  Knowledge of a
+         "subscription" URI implies authorization to either receive push
+         messages or delete the subscription. Knowledge of a "push" URI implies
+         authorization to send push messages.  Knowledge of a "receipt
+         subscription" URI implies authorization to receive push receipts.
+         Knowledge of a "receipt subscribe" URI implies authorization to create
+         subscriptions for receipts. Knowledge of a push message URI allows for
+         reading and acknowledging that specific message.
         </t>
         <t>
          Encoding a large amount of random entropy (at least 120 bits) in the
