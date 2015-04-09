@@ -157,16 +157,20 @@
               the delivery of a push message.
             </t>
             <t hangText="push message:">
-              A message, sent from an application server to a user agent via a
+              A message sent from an application server to a user agent via a
               push service.
             </t>
             <t hangText="push service:">
               A service that delivers push messages to user agents.
             </t>
-            <t hangText="subscription:">
+            <t hangText="message subscription:">
               A message delivery context that is established between the user
-              agent and the push service and shared with applications.  All push
-              messages are associated with a subscription.
+              agent and the push service and shared with the application server.
+              All push messages are associated with a message subscription.
+            </t>
+            <t hangText="push message receipt:">
+              A message delivery confirmation sent from the push server to the
+              application server.
             </t>
             <t hangText="user agent:">
               A device and software that is the recipient of push messages.
@@ -210,13 +214,14 @@
 ]]></artwork>
       </figure>
       <t>
-        At the very beginning of the process, a new subscription is created by
-        the user agent and then distributed to its application server. The
-        subscription is the basis of all future interactions between the actors.
+        At the very beginning of the process, a new  message subscription is
+        created by the user agent and then distributed to its application
+        server. This subscription is the basis of all future interactions between
+        the actors.
       </t>
       <t>
-        To offer more control for authorization, a subscription is modeled as
-        two resources with different capabilities:
+        To offer more control for authorization, a message subscription is
+        modeled as two resources with different capabilities:
         <list style="symbols">
           <t>
             A “subscription” resource grants the rights to receive messages
@@ -252,37 +257,54 @@
           are defined:
           <list style="hanging">
             <t hangText="push service:">
-              This resource is used in <xref
-              target="subscribe">Subscribing</xref>.  It is configured into user
-              agents.
+              This resource is used to subscribe <xref
+              target="message_subscription">for push messages</xref>.
+              It is configured into user agents.
             </t>
-            <t hangText="subscription:">
-              A link relation of type "urn:ietf:params:push:subscription" refers
-              to a resource with read and delete access to a subscription.
-              A user agent <xref target="monitor">receives push messages</xref>
-              using this resource.
+            <t hangText="message subscription:">
+              A link relation of type
+              "urn:ietf:params:push:message:subscription" refers to a resource
+              with read and delete access to a message subscription. A user
+              agent <xref target="monitor">receives push messages</xref> using
+              this resource.
             </t>
             <t hangText="push:">
-              A link relation of type "urn:ietf:params:push" refers to a
-              resource with write access to a subscription.  An application
-              server <xref target="send"> sends push messages</xref> using this
+              A link relation of type "urn:ietf:params:push:message" refers to a
+              resource with write access to a message subscription.  An
+              application server <xref target="send">sends push messages</xref>
+              using this resource.
+            </t>
+            <t hangText="receipt subscribe:">
+              A link relation of type "urn:ietf:params:push:receipt:subscribe"
+              refers to a resource used to subscribe for
+              <xref target="receipt_subscription">push message receipts</xref>. 
+              An application server creates a receipt subscription using this 
+              resource.
+            </t>
+            <t hangText="receipt subscription:">
+              A link relation of type
+              "urn:ietf:params:push:receipt:subscription" refers to a
+              resource with read access to a receipt subscription.  An
+              application server <xref target="request_receipt">receives
+              delivery confirmations</xref> for push messages using this
               resource.
             </t>
           </list>
         </t>
       </section>
     </section>
-    <section anchor="subscribe" title="Subscribing">
+    <section anchor="message_subscription" title="Subscribing for Push Messages">
       <t>
         A user agent sends a POST request to its configured push service
         resource to create a new subscription. If successful, the push service
-        MUST return new "subscription" and "push" resources in response to this
-        request. URIs for these resources are included in Link header fields in
-        the response.
+        MUST return new "subscription", "push", and "receipt subscribe"
+        resources in response to this request. URIs for these resources are 
+        included in Link header fields in the response.
       </t>
       <t>
-        The user agent should securely distribute the "push" resource to its
-        application server. (Details are outside the scope of this document.)
+        The user agent should securely distribute both the "push" and "receipt
+        subscribe" resources to its application server. Details are outside the
+        scope of this document.
       </t>
       <figure>
         <artwork type="inline"><![CDATA[
@@ -295,23 +317,59 @@ Host: push.example.net
         A response with a 201 (Created) status code includes a URI for the
         "subscription" resource in the Location header field.
       </t>
-      <!-- Need to ensure that subscription and push have unique capability urls. -->
       <figure>
         <artwork type="inline">
   <![CDATA[
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Link: </s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
-        rel="urn:ietf:params:push:subscription
+        rel="urn:ietf:params:push:message:subscription"
 Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
-        rel="urn:ietf:params:push"
+        rel="urn:ietf:params:push:message"
+Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+        rel="urn:ietf:params:push:receipt:subscribe"
 Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 Cache-Control: max-age:864000, private
 
 ]]></artwork>
       </figure>
     </section>
+    <section anchor="receipt_subscription"
+             title="Subscribing for Push Message Receipts">
+      <t>
+        An application server creates a new subscription for push message
+        receipts by sending a HTTP POST request to the "receipt subscribe"
+        resource distributed by its user agent.  If successful, the push service
+        MUST return a new "receipt" resource in response to this request. The
+        URI for this resource is included in a Link header field in the
+        response.
+      </t>
+      <figure>
+        <artwork type="inline">
+          <![CDATA[
+POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
+Host: push.example.net
 
+]]>
+        </artwork>
+      </figure>
+      <t>
+        A response with a 201 (Created) status code includes a URI for the
+        "receipt" resource in the Location header field.
+      </t>
+      <figure>
+        <artwork type="inline">
+          <![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:52 GMT
+Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN>;
+        rel="urn:ietf:params:push:receipt:subscription"
+Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+
+]]>
+        </artwork>
+      </figure>
+    </section>
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
@@ -347,7 +405,29 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         Push services MUST NOT generate a 413 status code in responses to an
         entity body that is 4k (4096 bytes) or less in size.
       </t>
+      <section anchor="request_receipt" title="Requesting Push Message Receipts">
+        <t>
+          An application server can use the Push-Receipt header field to request
+          a confirmation from the push server when a push message is delivered
+          and acknowledged by the user agent. The Push-Receipt header field is a
+          URI-Reference as defined in Section 2.7 of
+          <xref target="RFC7230"></xref>.
+          
+          Its value is the "receipt" URI returned from the push server in
+          response to the receipt subscription request
+          (<xref target="receipt_subscription"></xref>) from the
+          application server.
+        </t>
+        <figure>
+          <artwork type="abnf">
+            <![CDATA[
+Push-Receipt = URI-reference
+          ]]>
+          </artwork>
+        </figure>
+      </section>
 
+        
       <section anchor="ttl" title="Push Message Time-To-Live">
         <t>
           A push service can improve the reliability of push message delivery
@@ -422,10 +502,10 @@ TTL = 1*DIGIT
       </t>
       <t>
         Each push message is pushed in response to a synthesized GET request.
-        The GET request is made to the same "push" resource that is used by
-        the application server to send the message.  The response body is the
-        entity body from the most recent request sent to the "push"
-        resource.
+        The GET request is made to the same "push message" resource that was
+        created by the push server when the application server requested
+        message delivery.  The response body is the entity body from the most
+        recent request sent to the "push" resource.
       </t>
 
       <figure>
@@ -480,6 +560,86 @@ DATA         [stream 4] +END_STREAM
         A 204 (No Content) status code with no associated server pushes
         indicates that no messages are presently available.
       </t>
+
+      <section anchor="acknowledge_message"
+               title="Acknowledging Push Messages">
+        <t>
+          To ensure that a push message is properly delivered to the user agent
+          at least once, the user agent MUST acknowledge receipt of the message
+          by performing a HTTP DELETE on the push message resource.
+        </t>
+
+        <figure>
+          <artwork type="inline">
+            <![CDATA[
+DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
+Host: push.example.net
+
+]]>
+          </artwork>
+        </figure>
+
+        <t>
+          If the application has requested a delivery receipt, the push server
+          MUST deliver a response to the application server monitoring the
+          "receipt" resource.
+        </t>
+      </section>
+      <section anchor="receive_receipt" title="Receiving Push Message Receipts">
+        <t>
+          The application server requests the delivery of receipts from
+          the push server by making a HTTP GET request to the "receipt"
+          resource. The push service does not respond to this request, it instead
+          uses <xref target="I-D.ietf-httpbis-http2">HTTP/2 server push</xref>
+          to send push receipts when messages are acknowledged (<xref
+          target="acknowledge_message"></xref>) by the user agent.
+        </t>
+        <t>
+          Each receipt is pushed in response to a synthesized GET request.
+          The GET request is made to the same "push message" resource that was
+          created by the push server when the application server requested
+          message delivery. A successful response includes a 410 (GONE) status
+          code with no data.
+        </t>
+
+        <figure>
+          <preamble>
+            The following example request is made over HTTP/2.
+          </preamble>
+          <artwork>
+            <![CDATA[
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :method        = GET
+  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+  :authority     = push.example.net
+]]>
+          </artwork>
+        </figure>
+
+        <figure>
+          <preamble>
+            The push service permits the request to remain outstanding.  When
+            the user agent acknowledges the message, the push server pushes a
+            delivery receipt to the application server. A 410 (Gone) status code
+            confirms that the message was delivered.
+          </preamble>
+          <artwork>
+            <![CDATA[
+PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+  :method        = GET
+  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :authority     = push.example.net
+
+HEADERS      [stream 4] +END_STREAM
+                        +END_HEADERS
+  :status        = 410
+  date           = Thu, 11 Dec 2014 23:56:56 GMT
+
+]]>
+          </artwork>
+        </figure>
+
+      </section>
     </section>
 
     <section anchor="operational" title="Operational Considerations">
@@ -525,7 +685,7 @@ DATA         [stream 4] +END_STREAM
           of <xref target="RFC7232"/>) indicating when delivery was requested by
           an application server.
         </t>
-        <t><!-- TODO remove when we split subscriptions -->
+        <t>
           A GET request to a "subscription" resource that has only expired
           messages results in response as though no push message were ever sent.
         </t>
@@ -541,8 +701,6 @@ DATA         [stream 4] +END_STREAM
       </section>
 
       <section anchor="delete" title="Subscription Expiration">
-        <!-- Does there need to be more detail about the specific
-             subscription-related resources (monitor, push) ?-->
         <t>
           In some cases, it may be necessary to terminate subscriptions so that
           they can be refreshed.
@@ -578,22 +736,31 @@ DATA         [stream 4] +END_STREAM
 
       <section title="Implications for Application Reliability">
         <t>
-          An application developer might find it tempting to create alternative
-          mechanisms for message delivery in case the push service fails to
-          deliver a critical message.  Setting up a polling mechanism or a
-          backup messaging channel in order to compensate for these shortcomings
-          negates almost all of the advantages a push service provides.
+          A push server that does not support reliable delivery over
+          intermittent network connections or failing applications on devices,
+          forces the device to acknowledge receipt directly to the application
+          server, incurring additional power drain in order to establish
+          (usually secure) connections to the individual application servers.
         </t>
         <t>
-          Applications are encouraged to instead provide a means to detect
-          situations where push messages were not delivered and recover
-          gracefully.  For instance, an application server might include a
-          sequence number in push messages; a gap in the sequence can then be
-          used to trigger some form of state resynchronization.  For instance,
-          the missing messages might be requested from the application server
-          directly.  Push service failures are expected to be rare, therefore
-          performance optimization of any recovery mechanism might be
-          unnecessary.
+          While reliability is not required for messages that expire in few
+          seconds (e.g. an incoming call) or collapsible ones (e.g. the current
+          number of unread emails), it is more important when messages contain
+          information that is longer lasting, e.g. a command to update a
+          configuration value, or the acknowledgement of a financial transaction
+          or workflow step. In particular, in the case of power-constrained
+          devices, it is preferable to transmit the actual information in the
+          “pushed” message reliably, instead of forcing them to reconnect
+          periodically to get the current state.
+        </t>
+        <t>
+          The availability of push message delivery receipts in the protocol
+          ensures that the application developer is not tempted to create
+          alternative mechanisms for message delivery in case the push service
+          fails to deliver a critical message. Setting up a polling mechanism or
+          a backup messaging channel in order to compensate for these
+          shortcomings negates almost all of the advantages a push service
+          provides.
         </t>
       </section>
     </section>
@@ -648,21 +815,27 @@ DATA         [stream 4] +END_STREAM
          However, the amount of information that is exposed can be limited.
        </t>
        <t>
-
-         "Push" URIs MUST NOT provide any basis to correlate
-         communications for a given user agent.  It MUST NOT be possible to
-         correlate any two "push" URIs based solely on the content of the
-         "push" URIs.  This allows a user agent to control correlation
-         across different applications, or over time.
+         The URIs provided for "push" resources MUST NOT provide any basis to
+         correlate communications for a given user agent.  It MUST NOT be
+         possible to correlate any two "push" URIs based solely on their
+         contents.  This allows a user agent to control correlation across
+         different applications, or over time.
        </t>
        <t>
-         In particular, user and device information MUST NOT be exposed through
-         the "push" URI.
+         Similarly, the URIs provided by the push service to identify a push
+         message MUST NOT provide any information that allows for correlation
+         across subscriptions.  Push message URIs for the same subscription MAY
+         contain information that would allow correlation with the associated
+         subscription or other push messages for that subscription.
        </t>
        <t>
-         In addition, "push" URIs established by the same user agent MUST
-         NOT include any information that allows them to be correlated with the
-         user agent.
+         User and device information MUST NOT be exposed through a "push" or
+         push message URI.
+       </t>
+       <t>
+         In addition, "push" URIs established by the same user agent or push
+         message URIs for the same subscription MUST NOT include any information
+         that allows them to be correlated with the user agent.
          <list style="hanging">
            <t hangText="Note:">
              This need not be perfect as long as the resulting anonymity set
@@ -674,42 +847,47 @@ DATA         [stream 4] +END_STREAM
          </list>
        </t>
        <t>
-         A user agent MUST be able to create new subscriptions
-         with new identifiers at any time.
+         A user agent MUST be able to create new subscriptions with new
+         identifiers at any time.
        </t>
      </section>
 
      <section title="Authorization">
        <t>
          This protocol does not define how a push service establishes whether a
-         user agent is permitted to create a subscription, or
-         whether push messages can be delivered to the user agent.  A push
-         service MAY choose to authorize request based on any HTTP-compatible
-         authorization method available, of which there are numerous options.
-         The authorization process and any associated credentials are expected
-         to be configured in the user agent along with the URI for the "push
-         service".
+         user agent is permitted to create a subscription, or whether push
+         messages can be delivered to the user agent.  A push service MAY choose
+         to authorize request based on any HTTP-compatible authorization method
+         available, of which there are numerous options.  The authorization
+         process and any associated credentials are expected to be configured in
+         the user agent along with the URI for the "push service".
        </t>
        <t>
-         Authorization for subscriptions is managed using "subscription" and
-         "push" capability URLs (see <xref target="CAP-URI"/>).  A capability
-         URL grants access to a resource based solely on knowledge of the URL.
-
+         Authorization is managed using "subscription", "push", "receipt", and
+         "receipt subcribe" capability URLs (see <xref target="CAP-URI"/>).  
+         A capability URL grants access to a resource based solely on knowledge
+         of the URL.
+       </t>
+       <t>
          Capability URLs are used for their "easy onward sharing" and "easy
          client API" properties. These make it possible to avoid relying on
          relationships between push services and application servers, with the
          protocols necessary to build and support those relationships.
         </t>
         <t>
-         A "subscription" or "push" URI therefore acts as a bearer token.
-         Knowledge of the "subscription" URI implies authorization to either
-         receive push messages or delete the subscription. Knowledge of the
-         "push" URI implies authorization to send push messages.
+         A "subscription", "push", "receipt", "receipt subcribe", or push
+         message URI acts as a bearer token.  Knowledge of a "subscription" URI
+         implies authorization to either receive push messages or delete the
+         subscription. Knowledge of a "push" URI implies authorization to send
+         push messages.  Knowledge of a "receipt" URI implies authorization to 
+         receive push receipts. Knowledge of a "receipt subscribe" URI implies
+         authorization to create subscriptions for receipts. Knowledge of a push
+         message URI allows for reading and acknowledging that specific message.
         </t>
         <t>
          Encoding a large amount of random entropy (at least 120 bits) in the
          path component ensures that it is difficult to successfully guess a
-         valid "subscription" or "push" URI.
+         valid capability URL.
        </t>
      </section>
 
@@ -755,7 +933,8 @@ DATA         [stream 4] +END_STREAM
          "subscription" URI enables the receipt of messages or deletion of the
          subscription. Acquiring a "push" URI permits the sending of push
          messages.  Logging could also reveal relationships between different
-         subscription-related URIs for the same user agent.
+         subscription-related URIs for the same user agent.  Encrypted message
+         contents are not revealed to the push service.
        </t>
        <t>
          Limitations on log retention and strong access control mechanisms can
@@ -796,6 +975,12 @@ DATA         [stream 4] +END_STREAM
           <c>
             <xref target="ttl"/>
           </c>
+          <c>Push-Receipt</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="request_receipt"/>
+          </c>
         </texttable>
         <t>
           The change controller is: "IETF (iesg@ietf.org) - Internet
@@ -805,12 +990,12 @@ DATA         [stream 4] +END_STREAM
 
       <section anchor="iana.urns" title="Link Relation URNs">
         <t>
-          This document registers three URNs for use in identifying link
-          relation types.  These are added to a new "Web Push Identifiers"
-          registry according to the procedures in Section 4 of <xref
-          target="RFC3553"/>; the corresponding "push" sub-namespace is entered
-          in the "IETF URN Sub-namespace for Registered Protocol Parameter
-          Identifiers" registry.
+          This document registers URNs for use in identifying link relation
+          types.  These are added to a new "Web Push Identifiers" registry
+          according to the procedures in Section 4 of <xref target="RFC3553"/>;
+          the corresponding "push" sub-namespace is entered in the "IETF URN
+          Sub-namespace for Registered Protocol Parameter Identifiers"
+          registry.
         </t>
         <t>
           The "Web Push Identifiers" registry operates under the <xref
@@ -819,7 +1004,7 @@ DATA         [stream 4] +END_STREAM
             <t hangText="Registry name:">Web Push Identifiers</t>
             <t hangText="URN Prefix:">urn:ietf:params:push</t>
             <t hangText="Specification:">(this document)</t>
-            <t hangText="Respository:">[Editor/IANA note: please include a link
+            <t hangText="Repository:">[Editor/IANA note: please include a link
             to the final registry location.]</t>
             <t hangText="Index value:">Values in this registry are URNs or URN
             prefixes that start with the prefix <spanx
@@ -843,12 +1028,12 @@ DATA         [stream 4] +END_STREAM
           </list>
         </t>
         <t>
-          Two values are entered as the initial content of the "Web Push
+          These values are entered as the initial content of the "Web Push
           Identifiers" registry.
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push</t>
+            <t hangText="URN:">urn:ietf:params:push:message</t>
             <t hangText="Description:">This link relation type is used to
             identify a resource for sending push messages.</t>
             <t hangText="Specification:">(this document)</t>
@@ -857,10 +1042,31 @@ DATA         [stream 4] +END_STREAM
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:subscription</t>
+            <t hangText="URN:">urn:ietf:params:push:message:subscription</t>
             <t hangText="Description:">This link relation type is used to
-            identify a resource for receiving push messages and deleting a
-            subscription.</t>
+            identify a resource for subscribing to push messages.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:receipt:subscription</t>
+            <t hangText="Description:">
+              This link relation type is used to identify a resource for
+              subscribing for delivery confirmations for push messages.
+            </t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:receipt:subscribe</t>
+            <t hangText="Description:">
+              This link relation type is used to identify a resource for
+              creating new push message receipt subscriptions.
+            </t>
             <t hangText="Specification:">(this document)</t>
             <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
           </list>
