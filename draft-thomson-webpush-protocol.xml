@@ -913,9 +913,9 @@ HEADERS      [stream 4] +END_STREAM
        <t>
          End-to-end confidentiality mechanisms, such as those in <xref
          target="API"/>, prevent an entity with a valid "subscription" URI from
-         learning the contents of push messages.  In both cases, push messages
-         that are not successfully authenticated will not be delivered by the
-         API, but this can present a denial of service risk.
+         learning the contents of push messages.  Push messages that are not
+         successfully authenticated will not be delivered by the API, but this
+         can present a denial of service risk.
        </t>
        <t>
          Conversely, a push service is also able to deny service to user agents.
