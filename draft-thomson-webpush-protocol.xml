@@ -307,10 +307,19 @@ Host: push.example.net
         new "subscription" resource in the Location header field.
       </t>
       <t>
-        The push server MUST also return new "push" and "receipt subscribe"
-        resources in the Link header fields in the response. The user agent 
-        SHOULD securely distribute these resources to its application server.
-        Details are outside the scope of this document.
+        The push server MUST provide a URI for a new push resource that
+        corresponds to this subscription in a link relation of type
+        "urn:ietf:params:push:message".
+      </t>
+      <t>
+        The push server MUST provide a URI for a new receipt subscribe resource
+        that corresponds to this subscription in a link relation of type
+        "urn:ietf:params:push:receipt:subscribe".
+      </t>
+      <t>
+        The user agent SHOULD securely distribute both the "push" and
+        "receipt subscribe" URIs to its application server. Details are outside
+        the scope of this document.
       </t>
       <figure>
         <artwork type="inline">
