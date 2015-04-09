@@ -310,6 +310,7 @@
         </t>
       </section>
     </section>
+
     <section anchor="message_subscription" title="Subscribing for Push Messages">
       <t>
         A user agent sends a POST request to its configured push service
