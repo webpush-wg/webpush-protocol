@@ -78,29 +78,27 @@
   <middle>
     <section anchor="intro" title="Introduction">
       <t>
-        Mobile computing devices are increasingly relied upon for a great many
-        applications.  Mobile devices typically have limited power reserves, so
-        finding more efficient ways to serve application requirements is an
-        important part of any mobile platform.
-      </t>
-
-      <t>
-        One significant contributor to power usage mobile devices is the radio.
-        Radio communications consumes a significant portion of the energy budget
-        on a wirelessly connected mobile device.
+        Many applications on mobile and embedded devices require continuous
+        access to network communications so that real-time events - such as
+        incoming calls or messages - can be delivered (or "pushed") in a timely
+        fashion. These devices typically have limited power reserves, so finding
+        more efficient ways to serve application requirements greatly benefits
+        the application ecosystem.
       </t>
       <t>
-        Many applications require continuous access to network communications so
-        that real-time events - such as incoming calls or messages - can be
-        conveyed (or "pushed") to the user in a timely fashion.  Uncoordinated
-        use of persistent connections or sessions from multiple applications can
-        contribute to unnecessary use of the device radio, since each
-        independent session independently incurs overheads.  In particular, keep
-        alive traffic used to ensure that middleboxes do not prematurely time
-        out sessions, can result in significant waste.  Maintenance traffic
-        tends to dominate over the long term, since events are relatively rare.
+        One significant contributor to power usage is the radio.  Radio
+        communications consume a significant portion of the energy budget
+        on a wireless device.
       </t>
-
+      <t>
+        Uncoordinated use of persistent connections or sessions from multiple
+        applications can contribute to unnecessary use of the device radio,
+        since each independent session independently incurs overheads.  In
+        particular, keep alive traffic used to ensure that middleboxes do not
+        prematurely time out sessions, can result in significant waste.
+        Maintenance traffic tends to dominate over the long term, since events
+        are relatively rare.
+      </t>
       <t>
         Consolidating all real-time events into a single session ensures more
         efficient use of network and radio resources.  A single service
@@ -109,9 +107,9 @@
         overhead costs.
       </t>
       <t>
-        The <xref target="API">W3C Web Push API</xref> describes an API that enables
-        the use of a consolidated push service from web applications.  This
-        expands on that work by describing a protocol that can be used to:
+        The <xref target="API">W3C Web Push API</xref> describes an API that
+        enables the use of a consolidated push service from web applications.
+        This expands on that work by describing a protocol that can be used to:
         <list style="symbols">
           <t>
             request the delivery of a push message to a user agent,
@@ -126,30 +124,15 @@
       </t>
       <t>
         Requesting the delivery of events is particularly important for the Web
-        Push API.  The registration, management and monitoring functions are
+        Push API.  The subscription, management and monitoring functions are
         currently fulfilled by proprietary protocols; these are adequate, but do
         not offer any of the advantages that standardization affords.
       </t>
-      <t>
-        The monitoring function described in this document is intended to be
-        replaceable, enabling the use of monitoring schemes that are better
-        optimized for the network environment and the user agent.  For instance,
-        using notification systems like the <xref target="TS.3GPP.23.040">3GPP
-        Short Message Service (SMS)</xref> can take advantage of the native
-        paging capabilities of a cellular network, avoiding the ongoing
-        maintainence cost of a persistent TCP connection.
-      </t>
-
       <t>
         This document intentionally does not describe how a push service is
         discovered.  Discovery of push services is left for future efforts, if
         it turns out to be necessary at all.  User agents are expected to be
         configured with a URL for a push service.
-      </t>
-      <t>
-        Similarly, discovery of support for and negotiation of use of
-        alternative monitoring schemes is left to documents that extend this
-        basic protocol.
       </t>
 
       <section anchor="terminology" title="Conventions and Terminology">
@@ -358,9 +341,9 @@ Cache-Control: max-age:864000, private
         An application server creates a new subscription for push message
         receipts by sending a HTTP POST request to the "receipt subscribe"
         resource distributed by its user agent.  If successful, the push service
-        MUST return a new "receipt" resource in response to this request. The
-        URI for this resource is included in a Link header field in the
-        response.
+        MUST return a new "receipt subscription" resource in response to this
+        request. The URI for this resource is included in a Link header field
+        in the response.
       </t>
       <figure>
         <artwork type="inline">
@@ -373,7 +356,7 @@ Host: push.example.net
       </figure>
       <t>
         A response with a 201 (Created) status code includes a URI for the
-        "receipt" resource in the Location header field.
+        "receipt subscription" resource in the Location header field.
       </t>
       <figure>
         <artwork type="inline">
@@ -423,6 +406,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         Push services MUST NOT generate a 413 status code in responses to an
         entity body that is 4k (4096 bytes) or less in size.
       </t>
+
       <section anchor="request_receipt" title="Requesting Push Message Receipts">
         <t>
           An application server can use the Push-Receipt header field to request
@@ -431,10 +415,10 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           URI-Reference as defined in Section 2.7 of
           <xref target="RFC7230"></xref>.
 
-          Its value is the "receipt" URI returned from the push server in
-          response to the receipt subscription request
-          (<xref target="receipt_subscription"></xref>) from the
-          application server.
+          Its value is the "receipt subscription" URI returned from the push
+          server in response to the receipt subscription request
+          (<xref target="receipt_subscription"></xref>) from the application
+          server.
         </t>
         <figure>
           <artwork type="abnf">
@@ -600,17 +584,18 @@ Host: push.example.net
         <t>
           If the application has requested a delivery receipt, the push server
           MUST deliver a response to the application server monitoring the
-          "receipt" resource.
+          "receipt subscription" resource.
         </t>
       </section>
       <section anchor="receive_receipt" title="Receiving Push Message Receipts">
         <t>
           The application server requests the delivery of receipts from
-          the push server by making a HTTP GET request to the "receipt"
-          resource. The push service does not respond to this request, it instead
-          uses <xref target="I-D.ietf-httpbis-http2">HTTP/2 server push</xref>
-          to send push receipts when messages are acknowledged (<xref
-          target="acknowledge_message"></xref>) by the user agent.
+          the push server by making a HTTP GET request to the "receipt
+          subscription" resource. The push service does not respond to this
+          request, it instead uses <xref target="I-D.ietf-httpbis-http2">HTTP/2
+          server push</xref> to send push receipts when messages are
+          acknowledged (<xref target="acknowledge_message"></xref>) by the user
+          agent.
         </t>
         <t>
           Each receipt is pushed in response to a synthesized GET request.
@@ -639,7 +624,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             The push service permits the request to remain outstanding.  When
             the user agent acknowledges the message, the push server pushes a
             delivery receipt to the application server. A 410 (Gone) status code
-            confirms that the message was delivered.
+            confirms that the message was delivered and acknowledged.
           </preamble>
           <artwork>
             <![CDATA[
@@ -875,16 +860,16 @@ HEADERS      [stream 4] +END_STREAM
          This protocol does not define how a push service establishes whether a
          user agent is permitted to create a subscription, or whether push
          messages can be delivered to the user agent.  A push service MAY choose
-         to authorize request based on any HTTP-compatible authorization method
+         to authorize requests based on any HTTP-compatible authorization method
          available, of which there are numerous options.  The authorization
          process and any associated credentials are expected to be configured in
          the user agent along with the URI for the "push service".
        </t>
        <t>
-         Authorization is managed using "subscription", "push", "receipt", and
-         "receipt subcribe" capability URLs (see <xref target="CAP-URI"/>).
-         A capability URL grants access to a resource based solely on knowledge
-         of the URL.
+         Authorization is managed using "subscription", "push", "receipt
+         subscription", and "receipt subcribe" capability URLs (see
+         <xref target="CAP-URI"/>).  A capability URL grants access to a
+         resource based solely on knowledge of the URL.
        </t>
        <t>
          Capability URLs are used for their "easy onward sharing" and "easy
@@ -893,14 +878,15 @@ HEADERS      [stream 4] +END_STREAM
          protocols necessary to build and support those relationships.
         </t>
         <t>
-         A "subscription", "push", "receipt", "receipt subcribe", or push
-         message URI acts as a bearer token.  Knowledge of a "subscription" URI
-         implies authorization to either receive push messages or delete the
-         subscription. Knowledge of a "push" URI implies authorization to send
-         push messages.  Knowledge of a "receipt" URI implies authorization to
-         receive push receipts. Knowledge of a "receipt subscribe" URI implies
-         authorization to create subscriptions for receipts. Knowledge of a push
-         message URI allows for reading and acknowledging that specific message.
+         A "subscription", "push", "receipt subscription", "receipt subcribe",
+         or push message URI acts as a bearer token.  Knowledge of a
+         "subscription" URI implies authorization to either receive push
+         messages or delete the subscription. Knowledge of a "push" URI implies
+         authorization to send push messages.  Knowledge of a "receipt
+         subscription" URI implies authorization to receive push receipts.
+         Knowledge of a "receipt subscribe" URI implies authorization to create
+         subscriptions for receipts. Knowledge of a push message URI allows for
+         reading and acknowledging that specific message.
         </t>
         <t>
          Encoding a large amount of random entropy (at least 120 bits) in the
@@ -933,9 +919,9 @@ HEADERS      [stream 4] +END_STREAM
        <t>
          End-to-end confidentiality mechanisms, such as those in <xref
          target="API"/>, prevent an entity with a valid "subscription" URI from
-         learning the contents of push messages.  In both cases, push messages
-         that are not successfully authenticated will not be delivered by the
-         API, but this can present a denial of service risk.
+         learning the contents of push messages.  Push messages that are not
+         successfully authenticated will not be delivered by the API, but this
+         can present a denial of service risk.
        </t>
        <t>
          Conversely, a push service is also able to deny service to user agents.
@@ -1143,16 +1129,6 @@ HEADERS      [stream 4] +END_STREAM
 
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6973.xml"?>
 
-      <reference anchor="TS.3GPP.23.040">
-        <front>
-          <title>Technical realization of the Short Message Service (SMS)</title>
-          <author><organization>3GPP</organization></author>
-          <date month="October" year="2014"/>
-        </front>
-
-        <seriesInfo name="3GPP TS" value="23.040 12.2.0"/>
-        <format type="HTML" target="http://www.3gpp.org/ftp/Specs/html-info/23040.htm"/>
-      </reference>
     </references>
 
     <!--
