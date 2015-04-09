@@ -84,7 +84,7 @@
         important part of any mobile platform.
       </t>
 
-     <t>
+      <t>
         One significant contributor to power usage mobile devices is the radio.
         Radio communications consumes a significant portion of the energy budget
         on a wirelessly connected mobile device.
@@ -294,8 +294,8 @@
             <t hangText="receipt subscribe:">
               A link relation of type "urn:ietf:params:push:receipt:subscribe"
               refers to a resource used to subscribe for
-              <xref target="receipt_subscription">push message receipts</xref>. 
-              An application server creates a receipt subscription using this 
+              <xref target="receipt_subscription">push message receipts</xref>.
+              An application server creates a receipt subscription using this
               resource.
             </t>
             <t hangText="receipt subscription:">
@@ -315,7 +315,7 @@
         A user agent sends a POST request to its configured push service
         resource to create a new subscription. If successful, the push service
         MUST return new "subscription", "push", and "receipt subscribe"
-        resources in response to this request. URIs for these resources are 
+        resources in response to this request. URIs for these resources are
         included in Link header fields in the response.
       </t>
       <t>
@@ -429,7 +429,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           and acknowledged by the user agent. The Push-Receipt header field is a
           URI-Reference as defined in Section 2.7 of
           <xref target="RFC7230"></xref>.
-          
+
           Its value is the "receipt" URI returned from the push server in
           response to the receipt subscription request
           (<xref target="receipt_subscription"></xref>) from the
@@ -444,7 +444,7 @@ Push-Receipt = URI-reference
         </figure>
       </section>
 
-        
+
       <section anchor="ttl" title="Push Message Time-To-Live">
         <t>
           A push service can improve the reliability of push message delivery
@@ -881,7 +881,7 @@ HEADERS      [stream 4] +END_STREAM
        </t>
        <t>
          Authorization is managed using "subscription", "push", "receipt", and
-         "receipt subcribe" capability URLs (see <xref target="CAP-URI"/>).  
+         "receipt subcribe" capability URLs (see <xref target="CAP-URI"/>).
          A capability URL grants access to a resource based solely on knowledge
          of the URL.
        </t>
@@ -896,7 +896,7 @@ HEADERS      [stream 4] +END_STREAM
          message URI acts as a bearer token.  Knowledge of a "subscription" URI
          implies authorization to either receive push messages or delete the
          subscription. Knowledge of a "push" URI implies authorization to send
-         push messages.  Knowledge of a "receipt" URI implies authorization to 
+         push messages.  Knowledge of a "receipt" URI implies authorization to
          receive push receipts. Knowledge of a "receipt subscribe" URI implies
          authorization to create subscriptions for receipts. Knowledge of a push
          message URI allows for reading and acknowledging that specific message.
