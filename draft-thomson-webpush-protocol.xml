@@ -761,24 +761,24 @@ HEADERS      [stream 4] +END_STREAM
           (usually secure) connections to the individual application servers.
         </t>
         <t>
-          Reliability might not be necessary for messages that expire in few
-          seconds (e.g. an incoming call) or messages that are quickly
-          superceded (e.g. the current number of unread emails). Reliability can
-          be important when messages contain information that is longer lasting.
-          For example, reliability is useful for messages that contain commands,
-          or for acknowledgement of important actions, like a financial
-          transaction or workflow step. In these cases, retransmitting a push
-          message can be prefered over relying on period polling to update
-          state.
+          Push message reliability can be important if messages contain
+          information critical to the state of an application.  Repairing state
+          can be costly, particularly for devices with limited communications
+          capacity.  Knowing that a push message has been correctly received
+          avoids costly retransmissions, polling and state resynchronization.
         </t>
         <t>
-          The availability of push message delivery receipts in the protocol
-          ensures that the application developer is not tempted to create
-          alternative mechanisms for message delivery in case the push service
-          fails to deliver a critical message. Setting up a polling mechanism or
-          a backup messaging channel in order to compensate for these
-          shortcomings negates almost all of the advantages a push service
-          provides.
+          The availability of push message delivery receipts ensures that the
+          application developer is not tempted to create alternative mechanisms
+          for message delivery in case the push service fails to deliver a
+          critical message. Setting up a polling mechanism or a backup messaging
+          channel in order to compensate for these shortcomings negates almost
+          all of the advantages a push service provides.
+        </t>
+        <t>
+          However, reliability might not be necessary for messages that are
+          transient (e.g. an incoming call) or messages that are quickly
+          superceded (e.g. the current number of unread emails).
         </t>
       </section>
     </section>
