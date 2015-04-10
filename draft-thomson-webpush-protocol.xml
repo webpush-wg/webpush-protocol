@@ -376,8 +376,8 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
-        a HTTP request to the "push" resource distributed by its user agent. The
-        push message is included in the body of the request.
+        a HTTP request to a push resource provided by a user agent. The push
+        message is included in the body of the request.
       </t>
       <figure>
         <artwork type="inline"><![CDATA[
