@@ -471,12 +471,13 @@ TTL = 1*DIGIT
           ]]></artwork>
         </figure>
         <t>
-          Once the TTL period elapses, the push service MUST remove the push
-          message and cease any attempt to deliver it to the user agent.  A push
-          service might retain values for a short duration after the TTL period
-          to account for time accounting errors in processing.  For instance,
-          distributing a push message within a server cluster might accrue
-          errors due to clock variation, or processing and transit delays.
+          Once the Time-To-Live (TTL) period elapses, the push service MUST
+          remove the push message and cease any attempt to deliver it to the
+          user agent.  A push service might retain values for a short duration
+          after the TTL period to account for time accounting errors in
+          processing.  For instance, distributing a push message within a server
+          cluster might accrue errors due to clock variation, or processing and
+          transit delays.
         </t>
         <t>
           A push service is not obligated to account for time spent by the
