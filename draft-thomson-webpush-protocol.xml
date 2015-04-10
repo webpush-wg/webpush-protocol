@@ -601,20 +601,19 @@ Host: push.example.net
 
       <section anchor="receive_receipt" title="Receiving Push Message Receipts">
         <t>
-          The application server requests the delivery of receipts from
-          the push server by making a HTTP GET request to the "receipt
-          subscription" resource. The push service does not respond to this
-          request, it instead uses <xref target="I-D.ietf-httpbis-http2">HTTP/2
-          server push</xref> to send push receipts when messages are
-          acknowledged (<xref target="acknowledge_message"></xref>) by the user
-          agent.
+          The application server requests the delivery of receipts from the push
+          server by making a HTTP GET request to the receipt subscription
+          resource. The push service does not respond to this request, it
+          instead uses <xref target="I-D.ietf-httpbis-http2">HTTP/2 server
+          push</xref> to send push receipts when messages are acknowledged
+          (<xref target="acknowledge_message"></xref>) by the user agent.
         </t>
         <t>
-          Each receipt is pushed in response to a synthesized GET request.
-          The GET request is made to the same "push message" resource that was
-          created by the push server when the application server requested
-          message delivery. A successful response includes a 410 (GONE) status
-          code with no data.
+          Each receipt is pushed in response to a synthesized GET request.  The
+          GET request is made to the same push message resource that was created
+          by the push server when the application server requested message
+          delivery. A successful response includes a 410 (GONE) status code with
+          no data.
         </t>
 
         <figure>
