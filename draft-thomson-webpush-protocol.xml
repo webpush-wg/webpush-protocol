@@ -926,12 +926,12 @@ HEADERS      [stream 4] +END_STREAM
        </t>
        <t>
          An application can limit where valid push messages can originate by
-         limiting the distribution of "push" URIs to authorized entities.
-         Ensuring that "push" URIs are hard to guess ensures that only
-         application servers that have been given a "push" URI can use it.
+         limiting the distribution of push URIs to authorized entities.
+         Ensuring that push URIs are hard to guess ensures that only application
+         servers that have been given a push URI can use it.
        </t>
        <t>
-         A malicious application with a valid "push" URI could use the greater
+         A malicious application with a valid push URI could use the greater
          resources of a push service to mount a denial of service attack on a
          user agent.  Push services SHOULD limit the rate at which push messages
          are sent to individual user agents.  A push service or user agent MAY
@@ -940,10 +940,10 @@ HEADERS      [stream 4] +END_STREAM
        </t>
        <t>
          End-to-end confidentiality mechanisms, such as those in <xref
-         target="API"/>, prevent an entity with a valid "subscription" URI from
-         learning the contents of push messages.  Push messages that are not
-         successfully authenticated will not be delivered by the API, but this
-         can present a denial of service risk.
+         target="API"/>, prevent an entity with a valid push message
+         subscription URI from learning the contents of push messages.  Push
+         messages that are not successfully authenticated will not be delivered
+         by the API, but this can present a denial of service risk.
        </t>
        <t>
          Conversely, a push service is also able to deny service to user agents.
@@ -956,11 +956,11 @@ HEADERS      [stream 4] +END_STREAM
      <section title="Logging Risks">
        <t>
          Server request logs can reveal subscription-related URIs. Acquiring a
-         "subscription" URI enables the receipt of messages or deletion of the
-         subscription. Acquiring a "push" URI permits the sending of push
-         messages.  Logging could also reveal relationships between different
-         subscription-related URIs for the same user agent.  Encrypted message
-         contents are not revealed to the push service.
+         push message subscription URI enables the receipt of messages or
+         deletion of the subscription. Acquiring a push URI permits the sending
+         of push messages.  Logging could also reveal relationships between
+         different subscription-related URIs for the same user agent.  Encrypted
+         message contents are not revealed to the push service.
        </t>
        <t>
          Limitations on log retention and strong access control mechanisms can
