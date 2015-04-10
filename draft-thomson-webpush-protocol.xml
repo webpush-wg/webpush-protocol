@@ -783,12 +783,12 @@ HEADERS      [stream 4] +END_STREAM
 
     <section anchor="security" title="Security Considerations">
       <t>
-        This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>; this
-        includes any communications between user agent and push service, plus
-        communications between the application and the push service.  Thus, all
-        URIs use the "https" scheme.  This provides confidentiality and
-        integrity protection for subscriptions and push messages from external
-        parties.
+        This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>.
+        This includes any communications between user agent and push service,
+        plus communications between the application and the push service.  All
+        URIs therefore use the "https" scheme.  This provides confidentiality
+        and integrity protection for subscriptions and push messages from
+        external parties.
       </t>
 
       <section title="Confidentiality from Push Service Access">
