@@ -572,7 +572,8 @@ DATA         [stream 4] +END_STREAM
       </t>
       <t>
         A 204 (No Content) status code with no associated server pushes
-        indicates that no messages are presently available.
+        indicates that no messages are presently available.  This could be
+        because push messages have expired.
       </t>
 
       <section anchor="acknowledge_message"
