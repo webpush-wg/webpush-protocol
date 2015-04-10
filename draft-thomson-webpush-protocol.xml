@@ -831,9 +831,9 @@ HEADERS      [stream 4] +END_STREAM
          However, the amount of information that is exposed can be limited.
        </t>
        <t>
-         The URIs provided for "push" resources MUST NOT provide any basis to
+         The URIs provided for push resources MUST NOT provide any basis to
          correlate communications for a given user agent.  It MUST NOT be
-         possible to correlate any two "push" URIs based solely on their
+         possible to correlate any two push resource URIs based solely on their
          contents.  This allows a user agent to control correlation across
          different applications, or over time.
        </t>
@@ -845,20 +845,20 @@ HEADERS      [stream 4] +END_STREAM
          subscription or other push messages for that subscription.
        </t>
        <t>
-         User and device information MUST NOT be exposed through a "push" or
-         push message URI.
+         User and device information MUST NOT be exposed through a push or push
+         message URI.
        </t>
        <t>
-         In addition, "push" URIs established by the same user agent or push
+         In addition, push URIs established by the same user agent or push
          message URIs for the same subscription MUST NOT include any information
          that allows them to be correlated with the user agent.
          <list style="hanging">
            <t hangText="Note:">
              This need not be perfect as long as the resulting anonymity set
              (see <xref target="RFC6973"/>, Section 6.1.1) is sufficiently
-             large.  A "push" URI necessarily identifies a push service or
-             a single server instance.  It is also possible that traffic
-             analysis could be used to correlate subscriptions.
+             large.  A push URI necessarily identifies a push service or a
+             single server instance.  It is also possible that traffic analysis
+             could be used to correlate subscriptions.
            </t>
          </list>
        </t>
