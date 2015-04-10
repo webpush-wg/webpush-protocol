@@ -338,9 +338,9 @@ Cache-Control: max-age:864000, private
     <section anchor="receipt_subscription"
              title="Subscribing for Push Message Receipts">
       <t>
-        An application server creates a new subscription for push message
-        receipts by sending a HTTP POST request to the "receipt subscribe"
-        resource distributed by its user agent.
+        An application server requests the creation of a receipt subscription by
+        sending a HTTP POST request to the receipt subscribe resource learned
+        from a user agent.
       </t>
       <figure>
         <artwork type="inline">
@@ -352,8 +352,8 @@ Host: push.example.net
         </artwork>
       </figure>
       <t>
-        A successful response with a 201 (Created) status code MUST include a
-        URI for the "receipt subscription" resource in the Location header field.
+        A successful response with a 201 (Created) status code includes a URI
+        for the receipt subscription resource in the Location header field.
       </t>
       <figure>
         <artwork type="inline">
