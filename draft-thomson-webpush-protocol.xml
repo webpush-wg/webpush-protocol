@@ -675,7 +675,12 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           A user agent that does not actively monitor for push messages will not
-          receive messages that expire during that interval.
+          receive messages that expire during that interval.  An application
+          server that depends on push messages being delivered reliably over
+          longer periods can send new push messages prior to the time indicated
+          in the TTL header field to ensure that they do not expire.  However,
+          if the same message is sent multiple times, a mechanism could be
+          needed for the application to identify and remove duplicate messages.
         </t>
         <t>
           Push messages that are stored and not delivered to a user agent are
@@ -717,10 +722,13 @@ HEADERS      [stream 4] +END_STREAM
           include the "private" directive.
         </t>
         <t>
-          A push service can remove a subscription at any time. If a user agent
-          has an outstanding request to a "subscription" resource (see <xref
-          target="monitor"/>), this can be signaled by returning a 400-series
-          status code, such as 410 (Gone).
+          A push service can remove a subscription at any time. For instance, a
+          push service might choose to remove a subscription if the user agent
+          has not made a request relating to the subscription for an extended
+          period of time.  If a user agent has an outstanding request to a
+          removed "subscription" resource (see <xref target="monitor"/>), this
+          can be signaled by returning a 400-series status code, such as 410
+          (Gone).
         </t>
         <t>
           A user agent can request that a subscription be removed by sending a
