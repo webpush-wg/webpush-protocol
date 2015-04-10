@@ -273,6 +273,11 @@
               relation of type "urn:ietf:params:push:message" is used to
               identify a push resource.
             </t>
+            <t hangText="push message:">
+              A push message resource is created to identify push messages that
+              have been accepted by the push service.  The push message resource
+              is also used to acknowledge receipt of a push message.
+            </t>
             <t hangText="receipt subscribe:">
               A receipt subscription resource is used by applications to create
               a receipt subscription (see <xref
