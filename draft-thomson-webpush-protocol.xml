@@ -876,32 +876,41 @@ HEADERS      [stream 4] +END_STREAM
          to authorize requests based on any HTTP-compatible authorization method
          available, of which there are numerous options.  The authorization
          process and any associated credentials are expected to be configured in
-         the user agent along with the URI for the "push service".
+         the user agent along with the URI for the push service.
        </t>
        <t>
-         Authorization is managed using "subscription", "push", "receipt
-         subscription", and "receipt subcribe" capability URLs (see
-         <xref target="CAP-URI"/>).  A capability URL grants access to a
-         resource based solely on knowledge of the URL.
+         Authorization is managed using capability URLs for the push message
+         subscription, push, and receipt subscription resources (see <xref
+         target="CAP-URI"/>).  A capability URL grants access to a resource
+         based solely on knowledge of the URL.
        </t>
        <t>
          Capability URLs are used for their "easy onward sharing" and "easy
          client API" properties. These make it possible to avoid relying on
          relationships between push services and application servers, with the
          protocols necessary to build and support those relationships.
-        </t>
-        <t>
-         A "subscription", "push", "receipt subscription", "receipt subcribe",
-         or push message URI acts as a bearer token.  Knowledge of a
-         "subscription" URI implies authorization to either receive push
-         messages or delete the subscription. Knowledge of a "push" URI implies
-         authorization to send push messages.  Knowledge of a "receipt
-         subscription" URI implies authorization to receive push receipts.
-         Knowledge of a "receipt subscribe" URI implies authorization to create
-         subscriptions for receipts. Knowledge of a push message URI allows for
-         reading and acknowledging that specific message.
-        </t>
-        <t>
+       </t>
+       <t>
+         Capability URLs act as bearer tokens.  Knowledge of a push message
+         subscription URI implies authorization to either receive push messages
+         or delete the subscription. Knowledge of a push URI implies
+         authorization to send push messages.  Knowledge of a push message URI
+         allows for reading and acknowledging that specific message.  Knowledge
+         of a receipt subscription URI implies authorization to receive push
+         receipts.  Knowledge of a receipt subscribe URI implies authorization
+         to create subscriptions for receipts.
+       </t>
+       <t>
+         Note that the same receipt subscribe URI could be returned for multiple
+         push message subscriptions.  Using the same value for a large number of
+         subscriptions allows application servers to reuse receipt
+         subscriptions, which can provide a significant efficiency advantage.  A
+         push service that uses a common receipt subscribe URI loses control
+         over the creation of receipt subscriptions.  This can result in a
+         potential exposure to denial of service; stateless resource creation
+         can be used to mitigate the effects of this exposure.
+       </t>
+       <t>
          Encoding a large amount of random entropy (at least 120 bits) in the
          path component ensures that it is difficult to successfully guess a
          valid capability URL.
