@@ -256,31 +256,30 @@
           are defined:
           <list style="hanging">
             <t hangText="push service:">
-              This resource is used to subscribe <xref
-              target="message_subscription">for push messages</xref>.
-              It is configured into user agents.
+              This resource is used to create push message subscriptions (see
+              <xref target="message_subscription"/>).  A URL for the push
+              service is configured into user agents.
             </t>
-            <t hangText="message subscription:">
+            <t hangText="push message subscription:">
               This resource provides read and delete access for a message
               subscription. A user agent <xref target="monitor">receives push
-              messages</xref> using a message subscription.
+              messages</xref> using a push message subscription.
             </t>
             <t hangText="push:">
-              A link relation of type "urn:ietf:params:push:message" refers to a
-              resource with write access to a message subscription.  An
-              application server <xref target="send">sends push messages</xref>
-              using this resource.
+              A push resource is used by the application server to request the
+              delivery of a push message (see <xref target="send"/>).  A link
+              relation of type "urn:ietf:params:push:message" is used to
+              identify a push resource.
             </t>
             <t hangText="receipt subscribe:">
-              A link relation of type "urn:ietf:params:push:receipt:subscribe"
-              refers to a resource used to subscribe for
-              <xref target="receipt_subscription">push message receipts</xref>.
-              An application server creates a receipt subscription using this
-              resource.
+              A receipt subscription resource is used by applications to create
+              a receipt subscription (see <xref
+              target="receipt_subscription"/>).  A link relation of type
+              "urn:ietf:params:push:receipt:subscribe" is used to identity a
+              receipt subscribe resource.
             </t>
             <t hangText="receipt subscription:">
-              This resource provides read access for a receipt subscription. An
-              application server <xref target="request_receipt">receives
+              An application server <xref target="request_receipt">receives
               delivery confirmations</xref> for push messages using a receipt
               subscription.
             </t>
