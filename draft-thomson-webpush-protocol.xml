@@ -224,14 +224,13 @@
         modeled as two resources with different capabilities:
         <list style="symbols">
           <t>
-            A “subscription” resource grants the rights to receive messages
-            from a subscription and to delete a subscription. It is private to
-            the user agent.
+            A subscription resource is used to receive messages from a
+            subscription and to delete a subscription. It is private to the user
+            agent.
           </t>
           <t>
-            A “push” resource grants the right to send messages to a
-            subscription. It is public and shared by the
-            the user agent with its application server.
+            A push resource is used to send messages to a subscription. It is
+            public and shared by the the user agent with its application server.
           </t>
         </list>
       </t>
