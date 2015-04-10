@@ -263,7 +263,9 @@
             <t hangText="push message subscription:">
               This resource provides read and delete access for a message
               subscription. A user agent <xref target="monitor">receives push
-              messages</xref> using a push message subscription.
+              messages</xref> using a push message subscription.  Every push
+              message subscription has exactly one push resource associated with
+              it.
             </t>
             <t hangText="push:">
               A push resource is used by the application server to request the
@@ -301,18 +303,17 @@ Host: push.example.net
 ]]></artwork>
       </figure>
       <t>
-        A response with a 201 (Created) status code MUST include a URI for the
-        new "subscription" resource in the Location header field.
+        A response with a 201 (Created) status code MUST include a URI for a new
+        push message subscription resource in the Location header field.
       </t>
       <t>
-        The push server MUST provide a URI for a new push resource that
-        corresponds to this subscription in a link relation of type
+        The push server MUST provide a URI for the push resource corresponding
+        to the push message subscription using a link relation of type
         "urn:ietf:params:push:message".
       </t>
       <t>
-        The push server MUST provide a URI for a new receipt subscribe resource
-        that corresponds to this subscription in a link relation of type
-        "urn:ietf:params:push:receipt:subscribe".
+        The push server MUST provide a URI for a receipt subscribe resource in a
+        link relation of type "urn:ietf:params:push:receipt:subscribe".
       </t>
       <t>
         The user agent SHOULD securely distribute both the "push" and
