@@ -365,7 +365,14 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 ]]>
         </artwork>
       </figure>
+      <t>
+        A push service SHOULD provide the same receipt subscribe URI to user
+        agents.  Equality of the receipt subscribe URI can be used by an
+        application server as a signal that an existing receipt subscription
+        resource can be reused.
+      </t>
     </section>
+
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
