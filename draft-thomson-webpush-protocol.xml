@@ -416,11 +416,11 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           a confirmation from the push server when a push message is delivered
           and acknowledged by the user agent. The Push-Receipt header field is a
           URI-Reference as defined in Section 2.7 of
-          <xref target="RFC7230"></xref>.
+          <xref target="RFC7230"/>.
 
           Its value is the "receipt subscription" URI returned from the push
           server in response to the receipt subscription request
-          (<xref target="receipt_subscription"></xref>) from the application
+          (<xref target="receipt_subscription"/>) from the application
           server.
         </t>
         <figure>
