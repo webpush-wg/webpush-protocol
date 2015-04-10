@@ -270,8 +270,8 @@
             <t hangText="push:">
               A push resource is used by the application server to request the
               delivery of a push message (see <xref target="send"/>).  A link
-              relation of type "urn:ietf:params:push:message" is used to
-              identify a push resource.
+              relation of type "urn:ietf:params:push" is used to identify a push
+              resource.
             </t>
             <t hangText="push message:">
               A push message resource is created to identify push messages that
@@ -282,7 +282,7 @@
               A receipt subscription resource is used by applications to create
               a receipt subscription (see <xref
               target="receipt_subscription"/>).  A link relation of type
-              "urn:ietf:params:push:receipt:subscribe" is used to identity a
+              "urn:ietf:params:push:receipt" is used to identity a
               receipt subscribe resource.
             </t>
             <t hangText="receipt subscription:">
@@ -314,11 +314,11 @@ Host: push.example.net
       <t>
         The push server MUST provide a URI for the push resource corresponding
         to the push message subscription using a link relation of type
-        "urn:ietf:params:push:message".
+        "urn:ietf:params:push".
       </t>
       <t>
         The push server MUST provide a URI for a receipt subscribe resource in a
-        link relation of type "urn:ietf:params:push:receipt:subscribe".
+        link relation of type "urn:ietf:params:push:receipt".
       </t>
       <t>
          An application-specific method is used to send the pust and receipt
@@ -333,9 +333,9 @@ Host: push.example.net
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
-        rel="urn:ietf:params:push:message"
+        rel="urn:ietf:params:push"
 Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-        rel="urn:ietf:params:push:receipt:subscribe"
+        rel="urn:ietf:params:push:receipt"
 Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 Cache-Control: max-age:864000, private
 
@@ -1059,7 +1059,7 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:message</t>
+            <t hangText="URN:">urn:ietf:params:push</t>
             <t hangText="Description:">This link relation type is used to
             identify a resource for sending push messages.</t>
             <t hangText="Specification:">(this document)</t>
@@ -1068,7 +1068,7 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:receipt:subscribe</t>
+            <t hangText="URN:">urn:ietf:params:push:receipt</t>
             <t hangText="Description:">
               This link relation type is used to identify a resource for
               creating new push message receipt subscriptions.
