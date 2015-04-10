@@ -417,11 +417,6 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           and acknowledged by the user agent. The Push-Receipt header field is a
           URI-Reference as defined in Section 2.7 of
           <xref target="RFC7230"/>.
-
-          Its value is the "receipt subscription" URI returned from the push
-          server in response to the receipt subscription request
-          (<xref target="receipt_subscription"/>) from the application
-          server.
         </t>
         <figure>
           <artwork type="abnf">
@@ -430,8 +425,13 @@ Push-Receipt = URI-reference
           ]]>
           </artwork>
         </figure>
+        <t>
+          The application sets the Push-Receipt header field value to a receipt
+          subscription URI.  This receipt subscription resource MUST be created
+          from the same receipt subscribe resource as was included with the push
+          message subscription (see <xref target="message_subscription"/>).
+        </t>
       </section>
-
 
       <section anchor="ttl" title="Push Message Time-To-Live">
         <t>
