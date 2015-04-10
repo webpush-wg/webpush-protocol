@@ -436,8 +436,9 @@ Push-Receipt = URI-reference
         <t>
           The application sets the Push-Receipt header field value to a receipt
           subscription URI.  This receipt subscription resource MUST be created
-          from the same receipt subscribe resource as was included with the push
-          message subscription (see <xref target="message_subscription"/>).
+          from the same receipt subscribe resource which was returned with the
+          push message subscription response (see <xref
+          target="message_subscription"/>).
         </t>
       </section>
 
