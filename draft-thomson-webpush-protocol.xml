@@ -203,7 +203,7 @@
      |       Monitor        |                      |
      |<====================>|                      |
      |                      |                      |
-     |           Provide Subscription Write Access |
+     |          Distribute Push Resource           |
      |-------------------------------------------->|
      |                      |                      |
      :                      :                      :
@@ -235,7 +235,7 @@
         </list>
       </t>
       <t>
-        It is expected that a unique subscription will be provided to each
+        It is expected that a unique subscription will be distributed to each
         application; however, there are no inherent cardinality constraints in
         the protocol.  Multiple subscriptions might be created for the same
         application, or multiple applications could use the same subscription.
@@ -321,11 +321,11 @@ Host: push.example.net
         link relation of type "urn:ietf:params:push:receipt".
       </t>
       <t>
-        An application-specific method is used to send the push and receipt
-        subscribe URIs to the application server.  Confidentiality protection
-        and application server authentication SHOULD be used to ensure that
-        these URIs are not disclosed to unauthorized recipients (see <xref
-        target="authorization"/>).
+        An application-specific method is used to distribute the push and
+        receipt subscribe URIs to the application server.  Confidentiality
+        protection and application server authentication SHOULD be used to
+        ensure that these URIs are not disclosed to unauthorized recipients (see
+        <xref target="authorization"/>).
       </t>
       <figure>
         <artwork type="inline">
@@ -346,8 +346,8 @@ Cache-Control: max-age:864000, private
              title="Subscribing for Push Message Receipts">
       <t>
         An application server requests the creation of a receipt subscription by
-        sending a HTTP POST request to the receipt subscribe resource learned
-        from a user agent.
+        sending a HTTP POST request to the receipt subscribe resource
+        distributed to the application server by a user agent.
       </t>
       <figure>
         <artwork type="inline">
@@ -383,8 +383,9 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
-        a HTTP request to a push resource provided by a user agent. The push
-        message is included in the body of the request.
+        a HTTP request to a push resource distributed to the application server
+        by a user agent. The push message is included in the body of the
+        request.
       </t>
       <figure>
         <artwork type="inline"><![CDATA[
