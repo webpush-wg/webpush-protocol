@@ -321,11 +321,11 @@ Host: push.example.net
         link relation of type "urn:ietf:params:push:receipt".
       </t>
       <t>
-         An application-specific method is used to send the pust and receipt
-         subscribe URIs to the application server.  Confidentiality protection
-         and application server authentication SHOULD be used to ensure that
-         these URIs are not disclosed to unauthorized recipients (see <xref
-         target="authorization"/>).
+        An application-specific method is used to send the pust and receipt
+        subscribe URIs to the application server.  Confidentiality protection
+        and application server authentication SHOULD be used to ensure that
+        these URIs are not disclosed to unauthorized recipients (see <xref
+        target="authorization"/>).
       </t>
       <figure>
         <artwork type="inline">
