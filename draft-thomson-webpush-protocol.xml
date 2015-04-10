@@ -717,7 +717,8 @@ HEADERS      [stream 4] +END_STREAM
       <section anchor="delete" title="Subscription Expiration">
         <t>
           In some cases, it may be necessary to terminate subscriptions so that
-          they can be refreshed.
+          they can be refreshed.  This applies to both push message
+          subscriptions and receipt subscriptions.
         </t>
         <t>
           A push service might choose to set a fixed expiration time.  If a
@@ -733,18 +734,19 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           A push service can remove a subscription at any time. If a user agent
-          has an outstanding request to a "subscription" resource (see <xref
-          target="monitor"/>), this can be signaled by returning a 400-series
-          status code, such as 410 (Gone).
+          or application server has an outstanding request to a subscription
+          resource (see <xref target="monitor"/>), this can be signaled by
+          returning a 400-series status code, such as 410 (Gone).
         </t>
         <t>
-          A user agent can request that a subscription be removed by sending a
-          DELETE request to its private "subscription" URI.
+          A user agent or application server can request that a subscription be
+          removed by sending a DELETE request to the push message subscription
+          or receipt subscription URI.
         </t>
         <t>
           A push service MUST return a 400-series status code, such as 404 (Not
           Found) or 410 (Gone) if an application server attempts to send a push
-          message to a removed or expired subscription.
+          message to a removed or expired push message subscription.
         </t>
       </section>
 
