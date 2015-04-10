@@ -759,15 +759,15 @@ HEADERS      [stream 4] +END_STREAM
           (usually secure) connections to the individual application servers.
         </t>
         <t>
-          While reliability is not required for messages that expire in few
-          seconds (e.g. an incoming call) or collapsible ones (e.g. the current
-          number of unread emails), it is more important when messages contain
-          information that is longer lasting, e.g. a command to update a
-          configuration value, or the acknowledgement of a financial transaction
-          or workflow step. In particular, in the case of power-constrained
-          devices, it is preferable to transmit the actual information in the
-          “pushed” message reliably, instead of forcing them to reconnect
-          periodically to get the current state.
+          Reliability might not be necessary for messages that expire in few
+          seconds (e.g. an incoming call) or messages that are quickly
+          superceded (e.g. the current number of unread emails). Reliability can
+          be important when messages contain information that is longer lasting.
+          For example, reliability is useful for messages that contain commands,
+          or for acknowledgement of important actions, like a financial
+          transaction or workflow step. In these cases, retransmitting a push
+          message can be prefered over relying on period polling to update
+          state.
         </t>
         <t>
           The availability of push message delivery receipts in the protocol
