@@ -595,9 +595,10 @@ Host: push.example.net
         <t>
           If the application has requested a delivery receipt, the push server
           MUST deliver a response to the application server monitoring the
-          "receipt subscription" resource.
+          receipt subscription resource.
         </t>
       </section>
+
       <section anchor="receive_receipt" title="Receiving Push Message Receipts">
         <t>
           The application server requests the delivery of receipts from
