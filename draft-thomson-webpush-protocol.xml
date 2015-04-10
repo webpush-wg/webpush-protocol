@@ -391,9 +391,10 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
       </figure>
       <figure>
         <preamble>
-          A 201 response indicates that the push message was accepted.  A URI
-          for the push message is included in the Location header field.  This
-          does not indicate that the message was delivered to the user agent.
+          A 201 (Created) response indicates that the push message was accepted.
+          A URI for the push message resource that was created in response to
+          the request is included in the Location header field.  This does not
+          indicate that the message was delivered to the user agent.
         </preamble>
         <artwork type="inline"><![CDATA[
 HTTP/1.1 201 Created
