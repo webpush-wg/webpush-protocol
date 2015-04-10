@@ -156,21 +156,21 @@
               The component of an application that runs on a server and requests
               the delivery of a push message.
             </t>
+            <t hangText="push message subscription:">
+              A message delivery context that is established between the user
+              agent and the push service and shared with the application server.
+              All push messages are associated with a push message subscription.
+            </t>
             <t hangText="push message:">
               A message sent from an application server to a user agent via a
               push service.
             </t>
-            <t hangText="push service:">
-              A service that delivers push messages to user agents.
-            </t>
-            <t hangText="message subscription:">
-              A message delivery context that is established between the user
-              agent and the push service and shared with the application server.
-              All push messages are associated with a message subscription.
-            </t>
             <t hangText="push message receipt:">
               A message delivery confirmation sent from the push server to the
               application server.
+            </t>
+            <t hangText="push service:">
+              A service that delivers push messages to user agents.
             </t>
             <t hangText="user agent:">
               A device and software that is the recipient of push messages.
