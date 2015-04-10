@@ -700,8 +700,9 @@ HEADERS      [stream 4] +END_STREAM
           an application server.
         </t>
         <t>
-          A GET request to a "subscription" resource that has only expired
-          messages results in response as though no push message were ever sent.
+          A GET request to a push message subscription resource that has only
+          expired messages results in response as though no push message were
+          ever sent.
         </t>
         <t>
           Push services might need to limit the size and number of stored push
@@ -709,8 +710,7 @@ HEADERS      [stream 4] +END_STREAM
           Too Large) status code for too large push messages, a push service MAY
           expire push messages prior to any advertised expiration time.  A push
           service can reduce the impact push message retention by reducing the
-          time-to-live of push messages. <!-- TODO note the need to advertise a
-          lower bound on this reduction when we get to TTL guarantees -->
+          time-to-live of push messages.
         </t>
       </section>
 
