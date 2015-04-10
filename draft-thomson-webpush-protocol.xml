@@ -279,11 +279,11 @@
               is also used to acknowledge receipt of a push message.
             </t>
             <t hangText="receipt subscribe:">
-              A receipt subscription resource is used by applications to create
-              a receipt subscription (see <xref
+              A receipt subscribe resource is used by an application server to
+              create a receipt subscription (see <xref
               target="receipt_subscription"/>).  A link relation of type
-              "urn:ietf:params:push:receipt" is used to identity a
-              receipt subscribe resource.
+              "urn:ietf:params:push:receipt" is used to identity a receipt
+              subscribe resource.
             </t>
             <t hangText="receipt subscription:">
               An application server <xref target="request_receipt">receives
