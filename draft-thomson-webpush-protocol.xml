@@ -308,7 +308,7 @@ Host: push.example.net
 ]]></artwork>
       </figure>
       <t>
-        A response with a 201 (Created) status code MUST include a URI for a new
+        A response with a 201 (Created) status code includes a URI for a new
         push message subscription resource in the Location header field.
       </t>
       <t>
