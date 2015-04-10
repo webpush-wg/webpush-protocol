@@ -321,9 +321,11 @@ Host: push.example.net
         link relation of type "urn:ietf:params:push:receipt:subscribe".
       </t>
       <t>
-        The user agent SHOULD securely distribute the push and receipt subscribe
-        URIs to its application server. Details are outside the scope of this
-        document.
+         An application-specific method is used to send the pust and receipt
+         subscribe URIs to the application server.  Confidentiality protection
+         and application server authentication SHOULD be used to ensure that
+         these URIs are not disclosed to unauthorized recipients (see <xref
+         target="authorization"/>).
       </t>
       <figure>
         <artwork type="inline">
@@ -863,7 +865,7 @@ HEADERS      [stream 4] +END_STREAM
        </t>
      </section>
 
-     <section title="Authorization">
+     <section anchor="authorization" title="Authorization">
        <t>
          This protocol does not define how a push service establishes whether a
          user agent is permitted to create a subscription, or whether push
