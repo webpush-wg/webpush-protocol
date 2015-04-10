@@ -491,7 +491,7 @@ ul.toc a:first-child {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-thomson-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-4-9" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-4-10" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -515,7 +515,7 @@ ul.toc a:first-child {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 11, 2015</td>
+  <td class="left">Expires: October 12, 2015</td>
   <td class="right">B. Raymor</td>
 </tr>
 <tr>
@@ -524,7 +524,7 @@ ul.toc a:first-child {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 9, 2015</td>
+  <td class="right">April 10, 2015</td>
 </tr>
 
     	
@@ -544,7 +544,7 @@ ul.toc a:first-child {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 11, 2015.</p>
+<p>This Internet-Draft will expire on October 12, 2015.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -669,31 +669,31 @@ ul.toc a:first-child {
   <dt>push service:</dt>
   <dd style="margin-left: 8">This resource is used to subscribe <a href="#message_subscription">for push messages</a> <cite title="NONE">[message_subscription]</cite>.  It is configured into user agents.  </dd>
   <dt>message subscription:</dt>
-  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:message:subscription" refers to a resource with read and delete access to a message subscription. A user agent <a href="#monitor">receives push messages</a> <cite title="NONE">[monitor]</cite> using this resource.  </dd>
+  <dd style="margin-left: 8">This resource provides read and delete access for a message subscription. A user agent <a href="#monitor">receives push messages</a> <cite title="NONE">[monitor]</cite> using a message subscription.  </dd>
   <dt>push:</dt>
   <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:message" refers to a resource with write access to a message subscription.  An application server <a href="#send">sends push messages</a> <cite title="NONE">[send]</cite> using this resource.  </dd>
   <dt>receipt subscribe:</dt>
   <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:receipt:subscribe" refers to a resource used to subscribe for <a href="#receipt_subscription">push message receipts</a> <cite title="NONE">[receipt_subscription]</cite>.  An application server creates a receipt subscription using this resource.  </dd>
   <dt>receipt subscription:</dt>
-  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:receipt:subscription" refers to a resource with read access to a receipt subscription.  An application server <a href="#request_receipt">receives delivery confirmations</a> <cite title="NONE">[request_receipt]</cite> for push messages using this resource.  </dd>
+  <dd style="margin-left: 8">This resource provides read access for a receipt subscription. An application server <a href="#request_receipt">receives delivery confirmations</a> <cite title="NONE">[request_receipt]</cite> for push messages using a receipt subscription.  </dd>
 </dl>
 
 <p> </p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#message_subscription" id="message_subscription">Subscribing for Push Messages</a></h1>
-<p id="rfc.section.3.p.1">A user agent sends a POST request to its configured push service resource to create a new subscription. If successful, the push service MUST return new "subscription", "push", and "receipt subscribe" resources in response to this request. URIs for these resources are included in Link header fields in the response.  </p>
-<p id="rfc.section.3.p.2">The user agent should securely distribute both the "push" and "receipt subscribe" resources to its application server. Details are outside the scope of this document.  </p>
+<p id="rfc.section.3.p.1">A user agent sends a POST request to its configured push service resource to create a new subscription.  </p>
 <pre>
 POST /subscribe/ HTTP/1.1
 Host: push.example.net
 
 </pre>
-<p id="rfc.section.3.p.3">A response with a 201 (Created) status code includes a URI for the "subscription" resource in the Location header field.  </p>
+<p id="rfc.section.3.p.2">A response with a 201 (Created) status code MUST include a URI for the new "subscription" resource in the Location header field.  </p>
+<p id="rfc.section.3.p.3">The push server MUST provide a URI for a new push resource that corresponds to this subscription in a link relation of type "urn:ietf:params:push:message".  </p>
+<p id="rfc.section.3.p.4">The push server MUST provide a URI for a new receipt subscribe resource that corresponds to this subscription in a link relation of type "urn:ietf:params:push:receipt:subscribe".  </p>
+<p id="rfc.section.3.p.5">The user agent SHOULD securely distribute both the "push" and "receipt subscribe" URIs to its application server. Details are outside the scope of this document.  </p>
 <pre>
   
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Link: &lt;/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx&gt;;
-        rel="urn:ietf:params:push:message:subscription"
 Link: &lt;/p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
         rel="urn:ietf:params:push:message"
 Link: &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
@@ -703,7 +703,7 @@ Cache-Control: max-age:864000, private
 
 </pre>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#receipt_subscription" id="receipt_subscription">Subscribing for Push Message Receipts</a></h1>
-<p id="rfc.section.4.p.1">An application server creates a new subscription for push message receipts by sending a HTTP POST request to the "receipt subscribe" resource distributed by its user agent.  If successful, the push service MUST return a new "receipt subscription" resource in response to this request. The URI for this resource is included in a Link header field in the response.  </p>
+<p id="rfc.section.4.p.1">An application server creates a new subscription for push message receipts by sending a HTTP POST request to the "receipt subscribe" resource distributed by its user agent.  </p>
 <pre>
           
 POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
@@ -711,13 +711,11 @@ Host: push.example.net
 
 
         </pre>
-<p id="rfc.section.4.p.2">A response with a 201 (Created) status code includes a URI for the "receipt subscription" resource in the Location header field.  </p>
+<p id="rfc.section.4.p.2">A successful response with a 201 (Created) status code MUST include a URI for the "receipt subscription" resource in the Location header field.  </p>
 <pre>
           
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Link: &lt;/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN&gt;;
-        rel="urn:ietf:params:push:receipt:subscription"
 Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 
 
@@ -958,34 +956,6 @@ HEADERS      [stream 4] +END_STREAM
   <dd style="margin-left: 8">urn:ietf:params:push:message</dd>
   <dt>Description:</dt>
   <dd style="margin-left: 8">This link relation type is used to identify a resource for sending push messages.</dd>
-  <dt>Specification:</dt>
-  <dd style="margin-left: 8">(this document)</dd>
-  <dt>Contact:</dt>
-  <dd style="margin-left: 8">The Web Push WG (webpush@ietf.org)</dd>
-</dl>
-
-<p> </p>
-<p/>
-
-<dl>
-  <dt>URN:</dt>
-  <dd style="margin-left: 8">urn:ietf:params:push:message:subscription</dd>
-  <dt>Description:</dt>
-  <dd style="margin-left: 8">This link relation type is used to identify a resource for subscribing to push messages.</dd>
-  <dt>Specification:</dt>
-  <dd style="margin-left: 8">(this document)</dd>
-  <dt>Contact:</dt>
-  <dd style="margin-left: 8">The Web Push WG (webpush@ietf.org)</dd>
-</dl>
-
-<p> </p>
-<p/>
-
-<dl>
-  <dt>URN:</dt>
-  <dd style="margin-left: 8">urn:ietf:params:push:receipt:subscription</dd>
-  <dt>Description:</dt>
-  <dd style="margin-left: 8">This link relation type is used to identify a resource for subscribing for delivery confirmations for push messages.  </dd>
   <dt>Specification:</dt>
   <dd style="margin-left: 8">(this document)</dd>
   <dt>Contact:</dt>

@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: October 11, 2015                                      B. Raymor
+Expires: October 12, 2015                                      B. Raymor
                                                                Microsoft
-                                                           April 9, 2015
+                                                          April 10, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 11, 2015.
+   This Internet-Draft will expire on October 12, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 1]
+Thomson, et al.         Expires October 12, 2015                [Page 1]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -67,7 +67,7 @@ Table of Contents
    3.  Subscribing for Push Messages . . . . . . . . . . . . . . . .   6
    4.  Subscribing for Push Message Receipts . . . . . . . . . . . .   6
    5.  Requesting Push Message Delivery  . . . . . . . . . . . . . .   7
-     5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .   8
+     5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .   7
      5.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .   8
    6.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .   9
      6.1.  Acknowledging Push Messages . . . . . . . . . . . . . . .  10
@@ -86,7 +86,7 @@ Table of Contents
    9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
      9.1.  Header Field Registrations  . . . . . . . . . . . . . . .  17
      9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  17
-   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
+   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  19
      11.2.  Informative References . . . . . . . . . . . . . . . . .  20
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 2]
+Thomson, et al.         Expires October 12, 2015                [Page 2]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 3]
+Thomson, et al.         Expires October 12, 2015                [Page 3]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 4]
+Thomson, et al.         Expires October 12, 2015                [Page 4]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -262,10 +262,9 @@ Internet-Draft                HTTP Web Push                   April 2015
    push service:  This resource is used to subscribe for push messages
       (Section 3).  It is configured into user agents.
 
-   message subscription:  A link relation of type
-      "urn:ietf:params:push:message:subscription" refers to a resource
-      with read and delete access to a message subscription.  A user
-      agent receives push messages (Section 6) using this resource.
+   message subscription:  This resource provides read and delete access
+      for a message subscription.  A user agent receives push messages
+      (Section 6) using a message subscription.
 
    push:  A link relation of type "urn:ietf:params:push:message" refers
       to a resource with write access to a message subscription.  An
@@ -274,48 +273,50 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    receipt subscribe:  A link relation of type
       "urn:ietf:params:push:receipt:subscribe" refers to a resource used
+      to subscribe for push message receipts (Section 4).  An
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 5]
+Thomson, et al.         Expires October 12, 2015                [Page 5]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
 
-      to subscribe for push message receipts (Section 4).  An
       application server creates a receipt subscription using this
       resource.
 
-   receipt subscription:  A link relation of type
-      "urn:ietf:params:push:receipt:subscription" refers to a resource
-      with read access to a receipt subscription.  An application server
-      receives delivery confirmations (Section 5.1) for push messages
-      using this resource.
+   receipt subscription:  This resource provides read access for a
+      receipt subscription.  An application server receives delivery
+      confirmations (Section 5.1) for push messages using a receipt
+      subscription.
 
 3.  Subscribing for Push Messages
 
    A user agent sends a POST request to its configured push service
-   resource to create a new subscription.  If successful, the push
-   service MUST return new "subscription", "push", and "receipt
-   subscribe" resources in response to this request.  URIs for these
-   resources are included in Link header fields in the response.
-
-   The user agent should securely distribute both the "push" and
-   "receipt subscribe" resources to its application server.  Details are
-   outside the scope of this document.
+   resource to create a new subscription.
 
    POST /subscribe/ HTTP/1.1
    Host: push.example.net
 
 
-   A response with a 201 (Created) status code includes a URI for the
-   "subscription" resource in the Location header field.
+   A response with a 201 (Created) status code MUST include a URI for
+   the new "subscription" resource in the Location header field.
+
+   The push server MUST provide a URI for a new push resource that
+   corresponds to this subscription in a link relation of type
+   "urn:ietf:params:push:message".
+
+   The push server MUST provide a URI for a new receipt subscribe
+   resource that corresponds to this subscription in a link relation of
+   type "urn:ietf:params:push:receipt:subscribe".
+
+   The user agent SHOULD securely distribute both the "push" and
+   "receipt subscribe" URIs to its application server.  Details are
+   outside the scope of this document.
 
 
    HTTP/1.1 201 Created
    Date: Thu, 11 Dec 2014 23:56:52 GMT
-   Link: </s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx>;
-           rel="urn:ietf:params:push:message:subscription"
    Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
            rel="urn:ietf:params:push:message"
    Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
@@ -328,18 +329,13 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    An application server creates a new subscription for push message
    receipts by sending a HTTP POST request to the "receipt subscribe"
-   resource distributed by its user agent.  If successful, the push
-   service MUST return a new "receipt subscription" resource in response
+   resource distributed by its user agent.
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 6]
+Thomson, et al.         Expires October 12, 2015                [Page 6]
 
 Internet-Draft                HTTP Web Push                   April 2015
-
-
-   to this request.  The URI for this resource is included in a Link
-   header field in the response.
 
 
    POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
@@ -347,14 +343,13 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-   A response with a 201 (Created) status code includes a URI for the
-   "receipt subscription" resource in the Location header field.
+   A successful response with a 201 (Created) status code MUST include a
+   URI for the "receipt subscription" resource in the Location header
+   field.
 
 
    HTTP/1.1 201 Created
    Date: Thu, 11 Dec 2014 23:56:52 GMT
-   Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN>;
-           rel="urn:ietf:params:push:receipt:subscription"
    Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 
 
@@ -386,19 +381,19 @@ Internet-Draft                HTTP Web Push                   April 2015
    Push services MUST NOT generate a 413 status code in responses to an
    entity body that is 4k (4096 bytes) or less in size.
 
-
-
-
-Thomson, et al.         Expires October 11, 2015                [Page 7]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
 5.1.  Requesting Push Message Receipts
 
    An application server can use the Push-Receipt header field to
    request a confirmation from the push server when a push message is
    delivered and acknowledged by the user agent.  The Push-Receipt
+
+
+
+Thomson, et al.         Expires October 12, 2015                [Page 7]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    header field is a URI-Reference as defined in Section 2.7 of
    [RFC7230].  Its value is the "receipt subscription" URI returned from
    the push server in response to the receipt subscription request
@@ -442,17 +437,18 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    A push service is not obligated to account for time spent by the
    application server in sending a push message to the push service, or
-
-
-
-Thomson, et al.         Expires October 11, 2015                [Page 8]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    delays incurred while sending a push message to the user agent.  An
    application server needs to account for transit delays in selecting a
    TTL header field value.
+
+
+
+
+
+Thomson, et al.         Expires October 12, 2015                [Page 8]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    Absence of the TTL header field is interpreted as equivalent to a
    zero value.  Push messages with a zero TTL indicate that storage is
@@ -501,7 +497,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015                [Page 9]
+
+
+
+
+Thomson, et al.         Expires October 12, 2015                [Page 9]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 10]
+Thomson, et al.         Expires October 12, 2015               [Page 10]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 11]
+Thomson, et al.         Expires October 12, 2015               [Page 11]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 12]
+Thomson, et al.         Expires October 12, 2015               [Page 12]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 13]
+Thomson, et al.         Expires October 12, 2015               [Page 13]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 14]
+Thomson, et al.         Expires October 12, 2015               [Page 14]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 15]
+Thomson, et al.         Expires October 12, 2015               [Page 15]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 16]
+Thomson, et al.         Expires October 12, 2015               [Page 16]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 11, 2015               [Page 17]
+Thomson, et al.         Expires October 12, 2015               [Page 17]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -986,32 +986,6 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Contact:  The Web Push WG (webpush@ietf.org)
 
-   URN:  urn:ietf:params:push:message:subscription
-
-   Description:  This link relation type is used to identify a resource
-      for subscribing to push messages.
-
-   Specification:  (this document)
-
-   Contact:  The Web Push WG (webpush@ietf.org)
-
-   URN:  urn:ietf:params:push:receipt:subscription
-
-   Description:  This link relation type is used to identify a resource
-      for subscribing for delivery confirmations for push messages.
-
-   Specification:  (this document)
-
-
-
-
-Thomson, et al.         Expires October 11, 2015               [Page 18]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
-   Contact:  The Web Push WG (webpush@ietf.org)
-
    URN:  urn:ietf:params:push:receipt:subscribe
 
    Description:  This link relation type is used to identify a resource
@@ -1026,6 +1000,15 @@ Internet-Draft                HTTP Web Push                   April 2015
    Significant technical input to this document has been provided by
    Costin Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and
    many others.
+
+
+
+
+
+Thomson, et al.         Expires October 12, 2015               [Page 18]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 11.  References
 
@@ -1058,14 +1041,6 @@ Internet-Draft                HTTP Web Push                   April 2015
               Procedures for Message Header Fields", BCP 90, RFC 3864,
               September 2004.
 
-
-
-
-Thomson, et al.         Expires October 11, 2015               [Page 19]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
               May 2008.
@@ -1081,6 +1056,15 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    [RFC7232]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Conditional Requests", RFC 7232, June 2014.
+
+
+
+
+
+Thomson, et al.         Expires October 12, 2015               [Page 19]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    [RFC7234]  Fielding, R., Nottingham, M., and J. Reschke, "Hypertext
               Transfer Protocol (HTTP/1.1): Caching", RFC 7234, June
@@ -1114,14 +1098,6 @@ Authors' Addresses
    Email: martin.thomson@gmail.com
 
 
-
-
-
-Thomson, et al.         Expires October 11, 2015               [Page 20]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    Elio Damaggio
    Microsoft
    One Microsoft Way
@@ -1141,36 +1117,4 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Thomson, et al.         Expires October 11, 2015               [Page 21]
+Thomson, et al.         Expires October 12, 2015               [Page 20]
