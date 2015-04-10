@@ -316,9 +316,9 @@ Host: push.example.net
         link relation of type "urn:ietf:params:push:receipt:subscribe".
       </t>
       <t>
-        The user agent SHOULD securely distribute both the "push" and
-        "receipt subscribe" URIs to its application server. Details are outside
-        the scope of this document.
+        The user agent SHOULD securely distribute the push and receipt subscribe
+        URIs to its application server. Details are outside the scope of this
+        document.
       </t>
       <figure>
         <artwork type="inline">
