@@ -374,9 +374,10 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
       </figure>
       <t>
         A push service SHOULD provide the same receipt subscribe URI to user
-        agents.  Equality of the receipt subscribe URI can be used by an
-        application server as a signal that an existing receipt subscription
-        resource can be reused.
+        agents.  An application MAY reuse a receipt subscription resource with a
+        push message request if the receipt subscribe URI provided with the push
+        resource is identical to the one used to create the receipt
+        subscription.
       </t>
     </section>
 
