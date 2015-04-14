@@ -341,7 +341,7 @@ Cache-Control: max-age:864000, private
       <t>
         An application server creates a new subscription for push message
         receipts by sending a HTTP POST request to the "receipt subscribe"
-        resource distributed by its user agent. 
+        resource distributed by its user agent.
       </t>
       <figure>
         <artwork type="inline">
@@ -1067,19 +1067,194 @@ HEADERS      [stream 4] +END_STREAM
   <back>
 
     <references title="Normative References">
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2818.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3553.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3864.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7231.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7232.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7234.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7240.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-httpbis-http2.xml"?>
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-httpbis-alt-svc.xml"?>
+      <reference anchor="RFC2119">
+        <front>
+          <title>
+            Key words for use in RFCs to Indicate Requirement Levels
+          </title>
+          <author initials="S." surname="Bradner" fullname="Scott Bradner">
+            <organization>Harvard University</organization>
+            <address><email>sob@harvard.edu</email></address>
+          </author>
+          <date month="March" year="1997"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="2119"/>
+      </reference>
+
+     <reference anchor="RFC2818">
+        <front>
+          <title>
+            HTTP Over TLS
+          </title>
+          <author initials="E." surname="Rescorla" fullname="Eric Rescorla"/>
+          <date month="May" year="2000"/>
+        </front>
+        <seriesInfo name="RFC" value="2818"/>
+      </reference>
+
+      <reference anchor="RFC3553">
+        <front>
+          <title>An IETF URN Sub-namespace for Registered Protocol Parameters</title>
+          <author initials="M." surname="Mealling" fullname="M. Mealling">
+          <organization /></author>
+          <author initials="L." surname="Masinter" fullname="L. Masinter">
+          <organization /></author>
+          <author initials="T." surname="Hardie" fullname="T. Hardie">
+          <organization /></author>
+          <author initials="G." surname="Klyne" fullname="G. Klyne">
+          <organization /></author>
+          <date year="2003" month="June" />
+        </front>
+
+        <seriesInfo name="BCP" value="73" />
+        <seriesInfo name="RFC" value="3553" />
+        <format type="TXT" octets="14815" target="http://www.rfc-editor.org/rfc/rfc3553.txt" />
+      </reference>
+
+      <reference anchor="RFC3864">
+        <front>
+          <title>Registration Procedures for Message Header Fields</title>
+          <author initials="G." surname="Klyne" fullname="G. Klyne">
+          <organization /></author>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <author initials="J." surname="Mogul" fullname="J. Mogul">
+          <organization /></author>
+          <date year="2004" month="September" />
+        </front>
+        <seriesInfo name="BCP" value="90" />
+        <seriesInfo name="RFC" value="3864" />
+        <format type="TXT" octets="36231" target="http://www.rfc-editor.org/rfc/rfc3864.txt" />
+      </reference>
+
+      <reference anchor="RFC5226">
+        <front>
+          <title>Guidelines for Writing an IANA Considerations Section in RFCs</title>
+          <author initials="T." surname="Narten" fullname="T. Narten">
+          <organization /></author>
+          <author initials="H." surname="Alvestrand" fullname="H. Alvestrand">
+          <organization /></author>
+          <date year="2008" month="May" />
+        </front>
+        <seriesInfo name="BCP" value="26" />
+        <seriesInfo name="RFC" value="5226" />
+        <format type="TXT" octets="66160" target="http://www.rfc-editor.org/rfc/rfc5226.txt" />
+      </reference>
+
+      <reference anchor="RFC5988">
+        <front>
+          <title>Web Linking</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <date year="2010" month="October" />
+        </front>
+        <seriesInfo name="RFC" value="5988" />
+        <format type="TXT" octets="46834" target="http://www.rfc-editor.org/rfc/rfc5988.txt" />
+      </reference>
+
+      <reference anchor="RFC7230">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7230" />
+        <format type="TXT" octets="205947" target="http://www.rfc-editor.org/rfc/rfc7230.txt" />
+      </reference>
+
+      <reference anchor="RFC7231">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7231" />
+        <format type="TXT" octets="235053" target="http://www.rfc-editor.org/rfc/rfc7231.txt" />
+      </reference>
+
+      <reference anchor="RFC7232">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7232" />
+        <format type="TXT" octets="56696" target="http://www.rfc-editor.org/rfc/rfc7232.txt" />
+      </reference>
+
+      <reference anchor="RFC7234">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Caching</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7234" />
+        <format type="TXT" octets="90647" target="http://www.rfc-editor.org/rfc/rfc7234.txt" />
+      </reference>
+
+      <reference anchor="RFC7240">
+        <front>
+          <title>Prefer Header for HTTP</title>
+          <author initials="J." surname="Snell" fullname="J. Snell">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7240" />
+        <format type="TXT" octets="32796" target="http://www.rfc-editor.org/rfc/rfc7240.txt" />
+      </reference>
+
+      <reference anchor="I-D.ietf-httpbis-http2">
+        <front>
+          <title>Hypertext Transfer Protocol version 2</title>
+          <author initials="M" surname="Belshe" fullname="Mike Belshe">
+            <organization />
+          </author>
+          <author initials="R" surname="Peon" fullname="Roberto Peon">
+            <organization />
+          </author>
+          <author initials="M" surname="Thomson" fullname="Martin Thomson">
+            <organization />
+          </author>
+          <date month="February" day="10" year="2015" />
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-17" />
+        <format type="TXT"
+                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-http2-17.txt" />
+      </reference>
+
+      <reference anchor="I-D.ietf-httpbis-alt-svc">
+        <front>
+          <title>HTTP Alternative Services</title>
+          <author initials="M" surname="Nottingham" fullname="Mark Nottingham">
+            <organization />
+          </author>
+          <author initials="P" surname="McManus" fullname="Patrick McManus">
+            <organization />
+          </author>
+          <author initials="J" surname="Reschke" fullname="Julian Reschke">
+            <organization />
+          </author>
+          <date month="February" day="5" year="2015" />
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-06" />
+        <format type="TXT"
+                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-06.txt" />
+      </reference>
 
       <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
         <front>
@@ -1103,7 +1278,28 @@ HEADERS      [stream 4] +END_STREAM
         <seriesInfo name="ED" value="push-api" />
       </reference>
 
-      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6973.xml"?>
+      <reference anchor="RFC6973">
+        <front>
+          <title>Privacy Considerations for Internet Protocols</title>
+          <author initials="A." surname="Cooper" fullname="A. Cooper">
+          <organization /></author>
+          <author initials="H." surname="Tschofenig" fullname="H. Tschofenig">
+          <organization /></author>
+          <author initials="B." surname="Aboba" fullname="B. Aboba">
+          <organization /></author>
+          <author initials="J." surname="Peterson" fullname="J. Peterson">
+          <organization /></author>
+          <author initials="J." surname="Morris" fullname="J. Morris">
+          <organization /></author>
+          <author initials="M." surname="Hansen" fullname="M. Hansen">
+          <organization /></author>
+          <author initials="R." surname="Smith" fullname="R. Smith">
+          <organization /></author>
+          <date year="2013" month="July" />
+        </front>
+        <seriesInfo name="RFC" value="6973" />
+        <format type="TXT" octets="89198" target="http://www.rfc-editor.org/rfc/rfc6973.txt" />
+      </reference>
 
     </references>
 
