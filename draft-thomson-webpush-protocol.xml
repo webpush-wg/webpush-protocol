@@ -231,7 +231,7 @@
           <t>
             A “push” resource grants the right to send messages to a
             subscription. It is public and shared by the
-            the user agent with its application server.
+            user agent with its application server.
           </t>
         </list>
       </t>
@@ -728,7 +728,7 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           A push service MUST return a 400-series status code, such as 404 (Not
-          Found) or 410 (Gone) if an application server atttempts to send a push
+          Found) or 410 (Gone) if an application server attempts to send a push
           message to a removed or expired subscription.
         </t>
       </section>
@@ -863,7 +863,7 @@ HEADERS      [stream 4] +END_STREAM
        </t>
        <t>
          Authorization is managed using "subscription", "push", "receipt
-         subscription", and "receipt subcribe" capability URLs (see
+         subscription", and "receipt subscribe" capability URLs (see
          <xref target="CAP-URI"/>).  A capability URL grants access to a
          resource based solely on knowledge of the URL.
        </t>
@@ -874,7 +874,7 @@ HEADERS      [stream 4] +END_STREAM
          protocols necessary to build and support those relationships.
         </t>
         <t>
-         A "subscription", "push", "receipt subscription", "receipt subcribe",
+         A "subscription", "push", "receipt subscription", "receipt subscribe",
          or push message URI acts as a bearer token.  Knowledge of a
          "subscription" URI implies authorization to either receive push
          messages or delete the subscription. Knowledge of a "push" URI implies
