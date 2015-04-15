@@ -828,6 +828,7 @@ HEADERS      [stream 4] +END_STREAM
 
 
           </pre>
+<p id="rfc.section.6.2.p.3">The push server MUST push a response with a status code of 5XX (TBD) if the user agent fails to acknowledge the receipt of the push message or the push server fails to deliver the message prior to its expiration.  </p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#operational" id="operational">Operational Considerations</a></h1>
 <p id="rfc.section.7.p.1">A push service is likely to have to maintain a very large number of open TCP connections.  Effective management of those connections can depend on being able to move connections between server instances.  </p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#load" id="load">Load Management</a></h1>

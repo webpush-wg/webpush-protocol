@@ -636,6 +636,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
+   The push server MUST push a response with a status code of 5XX (TBD)
+   if the user agent fails to acknowledge the receipt of the push
+   message or the push server fails to deliver the message prior to its
+   expiration.
+
 7.  Operational Considerations
 
    A push service is likely to have to maintain a very large number of
@@ -660,11 +665,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    potentially significant amount of storage for a push service.  A push
    service is not obligated to store messages indefinitely.  A push
    service is able to indicate how long it intends to retain a message
-   to an application server using the TTL header field (see
-   Section 5.2).
-
-   A user agent that does not actively monitor for push messages will
-   not receive messages that expire during that interval.
 
 
 
@@ -673,6 +673,12 @@ Thomson, et al.         Expires October 17, 2015               [Page 12]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
+
+   to an application server using the TTL header field (see
+   Section 5.2).
+
+   A user agent that does not actively monitor for push messages will
+   not receive messages that expire during that interval.
 
    Push messages that are stored and not delivered to a user agent are
    delivered when the user agent recommences monitoring.  Stored push
@@ -716,12 +722,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    removed by sending a DELETE request to the push message subscription
    or receipt subscription URI.
 
-   A push service MUST return a 400-series status code, such as 404 (Not
-   Found) or 410 (Gone) if an application server attempts to send a push
-   message to a removed or expired push message subscription.
-
-
-
 
 
 
@@ -729,6 +729,10 @@ Thomson, et al.         Expires October 17, 2015               [Page 13]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
+
+   A push service MUST return a 400-series status code, such as 404 (Not
+   Found) or 410 (Gone) if an application server attempts to send a push
+   message to a removed or expired push message subscription.
 
 7.4.  Implications for Application Reliability
 
@@ -774,10 +778,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    integrity or authentication mechanisms within the push message
    itself.  The application server sending the push message and the
    application on the user agent that receives it are frequently just
-   different instances of the same application, so no standardized
-   protocol is needed to establish a proper security context.  The
-   process of providing the application server with subscription
-   information provides a convenient medium for key agreement.
 
 
 
@@ -785,6 +785,11 @@ Thomson, et al.         Expires October 17, 2015               [Page 14]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
+
+   different instances of the same application, so no standardized
+   protocol is needed to establish a proper security context.  The
+   process of providing the application server with subscription
+   information provides a convenient medium for key agreement.
 
    The Web Push API codifies this practice by requiring that each push
    subscription created by the browser be bound to a browser generated
@@ -830,17 +835,15 @@ Internet-Draft                HTTP Web Push                   April 2015
       instance.  It is also possible that traffic analysis could be used
       to correlate subscriptions.
 
-   A user agent MUST be able to create new subscriptions with new
-   identifiers at any time.
-
-
-
 
 
 Thomson, et al.         Expires October 17, 2015               [Page 15]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
+
+   A user agent MUST be able to create new subscriptions with new
+   identifiers at any time.
 
 8.3.  Authorization
 
@@ -885,9 +888,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    Encoding a large amount of random entropy (at least 120 bits) in the
    path component ensures that it is difficult to successfully guess a
    valid capability URL.
-
-
-
 
 
 
