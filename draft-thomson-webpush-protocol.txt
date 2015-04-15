@@ -239,8 +239,7 @@ Internet-Draft                HTTP Web Push                   April 2015
       user agent.
 
    o  A push resource is used to send messages to a subscription.  It is
-      public and shared by the the user agent with its application
-      server.
+      public and shared by the user agent with its application server.
 
    It is expected that a unique subscription will be distributed to each
    application; however, there are no inherent cardinality constraints
@@ -273,6 +272,7 @@ Internet-Draft                HTTP Web Push                   April 2015
       the delivery of a push message (see Section 5).  A link relation
       of type "urn:ietf:params:push" is used to identify a push
       resource.
+
 
 
 
