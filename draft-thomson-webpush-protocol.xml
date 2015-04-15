@@ -637,7 +637,11 @@ HEADERS      [stream 4] +END_STREAM
 ]]>
           </artwork>
         </figure>
-
+        <t>
+          The push server MUST generate a 5XX (TBD) if the user agent fails to
+          acknowledge the receipt of the push message or the push server fails
+          to deliver the message prior to its expiration.
+        </t>
       </section>
     </section>
 
