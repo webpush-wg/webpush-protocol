@@ -616,14 +616,14 @@ ul.toc a:first-child {
   <dd style="margin-left: 8">Both the sender and ultimate consumer of push messages.  Many applications have components that are run on a user agent and other components that run on servers.  </dd>
   <dt>application server:</dt>
   <dd style="margin-left: 8">The component of an application that runs on a server and requests the delivery of a push message.  </dd>
+  <dt>push message subscription:</dt>
+  <dd style="margin-left: 8">A message delivery context that is established between the user agent and the push service and shared with the application server.  All push messages are associated with a push message subscription.  </dd>
   <dt>push message:</dt>
   <dd style="margin-left: 8">A message sent from an application server to a user agent via a push service.  </dd>
-  <dt>push service:</dt>
-  <dd style="margin-left: 8">A service that delivers push messages to user agents.  </dd>
-  <dt>message subscription:</dt>
-  <dd style="margin-left: 8">A message delivery context that is established between the user agent and the push service and shared with the application server.  All push messages are associated with a message subscription.  </dd>
   <dt>push message receipt:</dt>
   <dd style="margin-left: 8">A message delivery confirmation sent from the push server to the application server.  </dd>
+  <dt>push service:</dt>
+  <dd style="margin-left: 8">A service that delivers push messages to user agents.  </dd>
   <dt>user agent:</dt>
   <dd style="margin-left: 8">A device and software that is the recipient of push messages.  </dd>
 </dl>
@@ -642,7 +642,7 @@ ul.toc a:first-child {
      |       Monitor        |                      |
      |&lt;====================&gt;|                      |
      |                      |                      |
-     |           Provide Subscription Write Access |
+     |          Distribute Push Resource           |
      |--------------------------------------------&gt;|
      |                      |                      |
      :                      :                      :
@@ -655,27 +655,29 @@ ul.toc a:first-child {
 <p id="rfc.section.2.p.3">To offer more control for authorization, a message subscription is modeled as two resources with different capabilities: </p>
 
 <ul>
-  <li>A &#8220;subscription&#8221; resource grants the rights to receive messages from a subscription and to delete a subscription. It is private to the user agent.  </li>
-  <li>A &#8220;push&#8221; resource grants the right to send messages to a subscription. It is public and shared by the user agent with its application server.  </li>
+  <li>A subscription resource is used to receive messages from a subscription and to delete a subscription. It is private to the user agent.  </li>
+  <li>A push resource is used to send messages to a subscription. It is public and shared by the the user agent with its application server.  </li>
 </ul>
 
 <p> </p>
-<p id="rfc.section.2.p.4">It is expected that a unique subscription will be provided to each application; however, there are no inherent cardinality constraints in the protocol.  Multiple subscriptions might be created for the same application, or multiple applications could use the same subscription.  Note however that sharing subscriptions has security and privacy implications.  </p>
+<p id="rfc.section.2.p.4">It is expected that a unique subscription will be distributed to each application; however, there are no inherent cardinality constraints in the protocol.  Multiple subscriptions might be created for the same application, or multiple applications could use the same subscription.  Note however that sharing subscriptions has security and privacy implications.  </p>
 <p id="rfc.section.2.p.5">Subscriptions have a limited lifetime.  They can also be terminated by either the push service or user agent at any time. User agents and application servers must be prepared to manage changes in subscription state.  </p>
 <h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#resources" id="resources">HTTP Resources</a></h1>
 <p id="rfc.section.2.1.p.1">This protocol uses <a href="#RFC7230">HTTP resources</a> <cite title="NONE">[RFC7230]</cite> and <a href="#RFC5988">link relations</a> <cite title="NONE">[RFC5988]</cite>.  The following resources are defined: </p>
 
 <dl>
   <dt>push service:</dt>
-  <dd style="margin-left: 8">This resource is used to subscribe <a href="#message_subscription">for push messages</a> <cite title="NONE">[message_subscription]</cite>.  It is configured into user agents.  </dd>
-  <dt>message subscription:</dt>
-  <dd style="margin-left: 8">This resource provides read and delete access for a message subscription. A user agent <a href="#monitor">receives push messages</a> <cite title="NONE">[monitor]</cite> using a message subscription.  </dd>
+  <dd style="margin-left: 8">This resource is used to create push message subscriptions (see <a href="#message_subscription">Section 3</a>).  A URL for the push service is configured into user agents.  </dd>
+  <dt>push message subscription:</dt>
+  <dd style="margin-left: 8">This resource provides read and delete access for a message subscription. A user agent <a href="#monitor">receives push messages</a> <cite title="NONE">[monitor]</cite> using a push message subscription.  Every push message subscription has exactly one push resource associated with it.  </dd>
   <dt>push:</dt>
-  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:message" refers to a resource with write access to a message subscription.  An application server <a href="#send">sends push messages</a> <cite title="NONE">[send]</cite> using this resource.  </dd>
+  <dd style="margin-left: 8">A push resource is used by the application server to request the delivery of a push message (see <a href="#send">Section 5</a>).  A link relation of type "urn:ietf:params:push" is used to identify a push resource.  </dd>
+  <dt>push message:</dt>
+  <dd style="margin-left: 8">A push message resource is created to identify push messages that have been accepted by the push service.  The push message resource is also used to acknowledge receipt of a push message.  </dd>
   <dt>receipt subscribe:</dt>
-  <dd style="margin-left: 8">A link relation of type "urn:ietf:params:push:receipt:subscribe" refers to a resource used to subscribe for <a href="#receipt_subscription">push message receipts</a> <cite title="NONE">[receipt_subscription]</cite>.  An application server creates a receipt subscription using this resource.  </dd>
+  <dd style="margin-left: 8">A receipt subscribe resource is used by an application server to create a receipt subscription (see <a href="#receipt_subscription">Section 4</a>).  A link relation of type "urn:ietf:params:push:receipt" is used to identity a receipt subscribe resource.  </dd>
   <dt>receipt subscription:</dt>
-  <dd style="margin-left: 8">This resource provides read access for a receipt subscription. An application server <a href="#request_receipt">receives delivery confirmations</a> <cite title="NONE">[request_receipt]</cite> for push messages using a receipt subscription.  </dd>
+  <dd style="margin-left: 8">An application server <a href="#request_receipt">receives delivery confirmations</a> <cite title="NONE">[request_receipt]</cite> for push messages using a receipt subscription.  </dd>
 </dl>
 
 <p> </p>
@@ -686,24 +688,24 @@ POST /subscribe/ HTTP/1.1
 Host: push.example.net
 
 </pre>
-<p id="rfc.section.3.p.2">A response with a 201 (Created) status code MUST include a URI for the new "subscription" resource in the Location header field.  </p>
-<p id="rfc.section.3.p.3">The push server MUST provide a URI for a new push resource that corresponds to this subscription in a link relation of type "urn:ietf:params:push:message".  </p>
-<p id="rfc.section.3.p.4">The push server MUST provide a URI for a new receipt subscribe resource that corresponds to this subscription in a link relation of type "urn:ietf:params:push:receipt:subscribe".  </p>
-<p id="rfc.section.3.p.5">The user agent SHOULD securely distribute both the "push" and "receipt subscribe" URIs to its application server. Details are outside the scope of this document.  </p>
+<p id="rfc.section.3.p.2">A response with a 201 (Created) status code includes a URI for a new push message subscription resource in the Location header field.  </p>
+<p id="rfc.section.3.p.3">The push server MUST provide a URI for the push resource corresponding to the push message subscription using a link relation of type "urn:ietf:params:push".  </p>
+<p id="rfc.section.3.p.4">The push server MUST provide a URI for a receipt subscribe resource in a link relation of type "urn:ietf:params:push:receipt".  </p>
+<p id="rfc.section.3.p.5">An application-specific method is used to distribute the push and receipt subscribe URIs to the application server.  Confidentiality protection and application server authentication MUST be used to ensure that these URIs are not disclosed to unauthorized recipients (see <a href="#authorization">Section 8.3</a>).  </p>
 <pre>
   
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Link: &lt;/p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
-        rel="urn:ietf:params:push:message"
+        rel="urn:ietf:params:push"
 Link: &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
-        rel="urn:ietf:params:push:receipt:subscribe"
+        rel="urn:ietf:params:push:receipt"
 Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 Cache-Control: max-age:864000, private
 
 </pre>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#receipt_subscription" id="receipt_subscription">Subscribing for Push Message Receipts</a></h1>
-<p id="rfc.section.4.p.1">An application server creates a new subscription for push message receipts by sending a HTTP POST request to the "receipt subscribe" resource distributed by its user agent.  </p>
+<p id="rfc.section.4.p.1">An application server requests the creation of a receipt subscription by sending a HTTP POST request to the receipt subscribe resource distributed to the application server by a user agent.  </p>
 <pre>
           
 POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
@@ -711,7 +713,7 @@ Host: push.example.net
 
 
         </pre>
-<p id="rfc.section.4.p.2">A successful response with a 201 (Created) status code MUST include a URI for the "receipt subscription" resource in the Location header field.  </p>
+<p id="rfc.section.4.p.2">A successful response with a 201 (Created) status code includes a URI for the receipt subscription resource in the Location header field.  </p>
 <pre>
           
 HTTP/1.1 201 Created
@@ -720,8 +722,9 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 
 
         </pre>
+<p id="rfc.section.4.p.3">A push service SHOULD provide the same receipt subscribe URI to user agents.  An application MAY reuse a receipt subscription resource with a push message request if the receipt subscribe URI provided with the push resource is identical to the one used to create the receipt subscription.  </p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#send" id="send">Requesting Push Message Delivery</a></h1>
-<p id="rfc.section.5.p.1">An application server requests the delivery of a push message by sending a HTTP request to the "push" resource distributed by its user agent. The push message is included in the body of the request.  </p>
+<p id="rfc.section.5.p.1">An application server requests the delivery of a push message by sending a HTTP request to a push resource distributed to the application server by a user agent. The push message is included in the body of the request.  </p>
 <pre>
 POST /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx HTTP/1.1
 Host: push.example.net
@@ -730,7 +733,7 @@ Content-Length: 36
 
 iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 </pre>
-<p>A 201 response indicates that the push message was accepted.  A URI for the push message is included in the Location header field.  This does not indicate that the message was delivered to the user agent.  </p>
+<p>A 201 (Created) response indicates that the push message was accepted.  A URI for the push message resource that was created in response to the request is included in the Location header field.  This does not indicate that the message was delivered to the user agent.  </p>
 <pre>
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
@@ -739,12 +742,13 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 </pre>
 <p id="rfc.section.5.p.2">A push service MAY generate a 413 (Payload Too Large) status code in response to requests that include an entity body that is too large.  Push services MUST NOT generate a 413 status code in responses to an entity body that is 4k (4096 bytes) or less in size.  </p>
 <h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#request_receipt" id="request_receipt">Requesting Push Message Receipts</a></h1>
-<p id="rfc.section.5.1.p.1">An application server can use the Push-Receipt header field to request a confirmation from the push server when a push message is delivered and acknowledged by the user agent. The Push-Receipt header field is a URI-Reference as defined in Section 2.7 of <a href="#RFC7230">[RFC7230]</a>.  Its value is the "receipt subscription" URI returned from the push server in response to the receipt subscription request (<a href="#receipt_subscription">Section 4</a>) from the application server.  </p>
+<p id="rfc.section.5.1.p.1">An application server can use the Push-Receipt header field to request a confirmation from the push server when a push message is delivered and acknowledged by the user agent. The Push-Receipt header field is a URI-Reference as defined in Section 2.7 of <a href="#RFC7230">[RFC7230]</a>.  </p>
 <pre>
             
 Push-Receipt = URI-reference
           
           </pre>
+<p id="rfc.section.5.1.p.2">The application sets the Push-Receipt header field value to a receipt subscription URI.  This receipt subscription resource MUST be created from the same receipt subscribe resource which was returned with the push message subscription response (see <a href="#message_subscription">Section 3</a>).  </p>
 <h1 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a> <a href="#ttl" id="ttl">Push Message Time-To-Live</a></h1>
 <p id="rfc.section.5.2.p.1">A push service can improve the reliability of push message delivery considerably by storing push messages for a period.  User agents are often only intermittently connected, and so benefit from having short term message storage at the push service.  </p>
 <p id="rfc.section.5.2.p.2">Delaying delivery might also be used to batch communication with the user agent, thereby conserving radio resources.  </p>
@@ -753,13 +757,13 @@ Push-Receipt = URI-reference
 <pre>
 TTL = 1*DIGIT
           </pre>
-<p id="rfc.section.5.2.p.5">Once the TTL period elapses, the push service MUST remove the push message and cease any attempt to deliver it to the user agent.  A push service might retain values for a short duration after the TTL period to account for time accounting errors in processing.  For instance, distributing a push message within a server cluster might accrue errors due to clock variation, or processing and transit delays.  </p>
+<p id="rfc.section.5.2.p.5">Once the Time-To-Live (TTL) period elapses, the push service MUST remove the push message and cease any attempt to deliver it to the user agent.  A push service might retain values for a short duration after the TTL period to account for time accounting errors in processing.  For instance, distributing a push message within a server cluster might accrue errors due to clock variation, or processing and transit delays.  </p>
 <p id="rfc.section.5.2.p.6">A push service is not obligated to account for time spent by the application server in sending a push message to the push service, or delays incurred while sending a push message to the user agent.  An application server needs to account for transit delays in selecting a TTL header field value.  </p>
 <p id="rfc.section.5.2.p.7">Absence of the TTL header field is interpreted as equivalent to a zero value.  Push messages with a zero TTL indicate that storage is not needed and that the message can be dropped if the user agent isn't immediately available to receive the message.  Push messages with a zero TTL can be delivered very efficiently.  </p>
 <p id="rfc.section.5.2.p.8">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor" id="monitor">Receiving Push Messages</a></h1>
-<p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a "subscription" resource.  The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.6.p.2">Each push message is pushed in response to a synthesized GET request.  The GET request is made to the same "push message" resource that was created by the push server when the application server requested message delivery.  The response body is the entity body from the most recent request sent to the "push" resource.  </p>
+<p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send the contents of push messages as they are sent by application servers.  </p>
+<p id="rfc.section.6.p.2">Each push message is pushed in response to a synthesized GET request.  The GET request is made to the push message resource that was created by the push server when the application server requested message delivery.  The response body is the entity body from the most recent request sent to the push resource.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
@@ -785,8 +789,8 @@ HEADERS      [stream 4] +END_HEADERS
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 </pre>
-<p id="rfc.section.6.p.3">A user agent can request the contents of the "subscription" resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  The push server SHOULD return a link reference to the "push" resource and expiration information in response to this request.  This request also triggers the delivery of all push messages that the push service has stored but not yet delivered.  The server MUST generate a server push for all stored messages that have not yet been delivered.  </p>
-<p id="rfc.section.6.p.4">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  </p>
+<p id="rfc.section.6.p.3">A user agent can request the contents of the push message subscription resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  In response to this request, the push service SHOULD return link references to the push and receipt subscribe resources, plus expiration information.  In response to this request, the push server MUST generate a server push for all push messages that have not yet been delivered.  </p>
+<p id="rfc.section.6.p.4">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#acknowledge_message" id="acknowledge_message">Acknowledging Push Messages</a></h1>
 <p id="rfc.section.6.1.p.1">To ensure that a push message is properly delivered to the user agent at least once, the user agent MUST acknowledge receipt of the message by performing a HTTP DELETE on the push message resource.  </p>
 <pre>
@@ -796,14 +800,14 @@ Host: push.example.net
 
 
           </pre>
-<p id="rfc.section.6.1.p.2">If the application has requested a delivery receipt, the push server MUST deliver a response to the application server monitoring the "receipt subscription" resource.  </p>
+<p id="rfc.section.6.1.p.2">If the application has requested a delivery receipt, the push server MUST deliver a response to the application server monitoring the receipt subscription resource.  </p>
 <h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#receive_receipt" id="receive_receipt">Receiving Push Message Receipts</a></h1>
-<p id="rfc.section.6.2.p.1">The application server requests the delivery of receipts from the push server by making a HTTP GET request to the "receipt subscription" resource. The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send push receipts when messages are acknowledged (<a href="#acknowledge_message">Section 6.1</a>) by the user agent.  </p>
-<p id="rfc.section.6.2.p.2">Each receipt is pushed in response to a synthesized GET request.  The GET request is made to the same "push message" resource that was created by the push server when the application server requested message delivery. A successful response includes a 410 (GONE) status code with no data.  </p>
+<p id="rfc.section.6.2.p.1">The application server requests the delivery of receipts from the push server by making a HTTP GET request to the receipt subscription resource. The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send push receipts when messages are acknowledged (<a href="#acknowledge_message">Section 6.1</a>) by the user agent.  </p>
+<p id="rfc.section.6.2.p.2">Each receipt is pushed in response to a synthesized GET request.  The GET request is made to the same push message resource that was created by the push server when the application server requested message delivery. A successful response includes a 410 (GONE) status code with no data.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
             
-HEADERS      [stream 7] +END_STREAM +END_HEADERS
+HEADERS      [stream 13] +END_STREAM +END_HEADERS
   :method        = GET
   :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
   :authority     = push.example.net
@@ -812,7 +816,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
 <p>The push service permits the request to remain outstanding.  When the user agent acknowledges the message, the push server pushes a delivery receipt to the application server. A 410 (Gone) status code confirms that the message was delivered and acknowledged.  </p>
 <pre>
             
-PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
   :method        = GET
   :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
@@ -833,21 +837,22 @@ HEADERS      [stream 4] +END_STREAM
 <p id="rfc.section.7.2.p.1">Storage of push messages based on the TTL header field comprises a potentially significant amount of storage for a push service.  A push service is not obligated to store messages indefinitely.  A push service is able to indicate how long it intends to retain a message to an application server using the TTL header field (see <a href="#ttl">Section 5.2</a>).  </p>
 <p id="rfc.section.7.2.p.2">A user agent that does not actively monitor for push messages will not receive messages that expire during that interval.  </p>
 <p id="rfc.section.7.2.p.3">Push messages that are stored and not delivered to a user agent are delivered when the user agent recommences monitoring.  Stored push messages SHOULD include a Last-Modified header field (see Section 2.2 of <a href="#RFC7232">[RFC7232]</a>) indicating when delivery was requested by an application server.  </p>
-<p id="rfc.section.7.2.p.4">A GET request to a "subscription" resource that has only expired messages results in response as though no push message were ever sent.  </p>
+<p id="rfc.section.7.2.p.4">A GET request to a push message subscription resource that has only expired messages results in response as though no push message were ever sent.  </p>
 <p id="rfc.section.7.2.p.5">Push services might need to limit the size and number of stored push messages to avoid overloading.  In addition to using the 413 (Payload Too Large) status code for too large push messages, a push service MAY expire push messages prior to any advertised expiration time.  A push service can reduce the impact push message retention by reducing the time-to-live of push messages.  </p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#delete" id="delete">Subscription Expiration</a></h1>
-<p id="rfc.section.7.3.p.1">In some cases, it may be necessary to terminate subscriptions so that they can be refreshed.  </p>
+<p id="rfc.section.7.3.p.1">In some cases, it may be necessary to terminate subscriptions so that they can be refreshed.  This applies to both push message subscriptions and receipt subscriptions.  </p>
 <p id="rfc.section.7.3.p.2">A push service might choose to set a fixed expiration time.  If a resource has a known expiration time, expiration information is included in responses to requests that create the resource, or in requests that retrieve a representation of the resource.  </p>
 <p id="rfc.section.7.3.p.3">Expiration is indicated using either the Expires header field, or by setting a "max-age" parameter on a Cache-Control header field (see <a href="#RFC7234">[RFC7234]</a>).  The Cache-Control header field MUST also include the "private" directive.  </p>
-<p id="rfc.section.7.3.p.4">A push service can remove a subscription at any time. If a user agent has an outstanding request to a "subscription" resource (see <a href="#monitor">Section 6</a>), this can be signaled by returning a 400-series status code, such as 410 (Gone).  </p>
-<p id="rfc.section.7.3.p.5">A user agent can request that a subscription be removed by sending a DELETE request to its private "subscription" URI.  </p>
-<p id="rfc.section.7.3.p.6">A push service MUST return a 400-series status code, such as 404 (Not Found) or 410 (Gone) if an application server attempts to send a push message to a removed or expired subscription.  </p>
+<p id="rfc.section.7.3.p.4">A push service can remove a subscription at any time. If a user agent or application server has an outstanding request to a subscription resource (see <a href="#monitor">Section 6</a>), this can be signaled by returning a 400-series status code, such as 410 (Gone).  </p>
+<p id="rfc.section.7.3.p.5">A user agent or application server can request that a subscription be removed by sending a DELETE request to the push message subscription or receipt subscription URI.  </p>
+<p id="rfc.section.7.3.p.6">A push service MUST return a 400-series status code, such as 404 (Not Found) or 410 (Gone) if an application server attempts to send a push message to a removed or expired push message subscription.  </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Implications for Application Reliability</h1>
 <p id="rfc.section.7.4.p.1">A push server that does not support reliable delivery over intermittent network connections or failing applications on devices, forces the device to acknowledge receipt directly to the application server, incurring additional power drain in order to establish (usually secure) connections to the individual application servers.  </p>
-<p id="rfc.section.7.4.p.2">While reliability is not required for messages that expire in few seconds (e.g. an incoming call) or collapsible ones (e.g. the current number of unread emails), it is more important when messages contain information that is longer lasting, e.g. a command to update a configuration value, or the acknowledgement of a financial transaction or workflow step. In particular, in the case of power-constrained devices, it is preferable to transmit the actual information in the &#8220;pushed&#8221; message reliably, instead of forcing them to reconnect periodically to get the current state.  </p>
-<p id="rfc.section.7.4.p.3">The availability of push message delivery receipts in the protocol ensures that the application developer is not tempted to create alternative mechanisms for message delivery in case the push service fails to deliver a critical message. Setting up a polling mechanism or a backup messaging channel in order to compensate for these shortcomings negates almost all of the advantages a push service provides.  </p>
+<p id="rfc.section.7.4.p.2">Push message reliability can be important if messages contain information critical to the state of an application.  Repairing state can be costly, particularly for devices with limited communications capacity.  Knowing that a push message has been correctly received avoids costly retransmissions, polling and state resynchronization.  </p>
+<p id="rfc.section.7.4.p.3">The availability of push message delivery receipts ensures that the application developer is not tempted to create alternative mechanisms for message delivery in case the push service fails to deliver a critical message. Setting up a polling mechanism or a backup messaging channel in order to compensate for these shortcomings negates almost all of the advantages a push service provides.  </p>
+<p id="rfc.section.7.4.p.4">However, reliability might not be necessary for messages that are transient (e.g. an incoming call) or messages that are quickly superceded (e.g. the current number of unread emails).  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
-<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite>; this includes any communications between user agent and push service, plus communications between the application and the push service.  Thus, all URIs use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
+<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite>.  This includes any communications between user agent and push service, plus communications between the application and the push service.  All URIs therefore use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> Confidentiality from Push Service Access</h1>
 <p id="rfc.section.8.1.p.1">The protection afforded by TLS does not protect content from the push service.  Without additional safeguards, a push service is able to see and modify the content of the messages.  </p>
 <p id="rfc.section.8.1.p.2">Applications are able to provide additional confidentiality, integrity or authentication mechanisms within the push message itself.  The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context.  The process of providing the application server with subscription information provides a convenient medium for key agreement.  </p>
@@ -855,32 +860,33 @@ HEADERS      [stream 4] +END_STREAM
 <p id="rfc.section.8.1.p.4">The public key for a subscription ensures that applications using that subscription can identify messages from unknown sources and discard them.  This depends on the public key only being disclosed to entities that are authorized to send messages on the channel.  The push server does not require access to this public key.  </p>
 <h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> Privacy Considerations</h1>
 <p id="rfc.section.8.2.p.1">Push message confidentiality does not ensure that the identity of who is communicating and when they are communicating is protected.  However, the amount of information that is exposed can be limited.  </p>
-<p id="rfc.section.8.2.p.2">The URIs provided for "push" resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two "push" URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  </p>
+<p id="rfc.section.8.2.p.2">The URIs provided for push resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two push resource URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  </p>
 <p id="rfc.section.8.2.p.3">Similarly, the URIs provided by the push service to identify a push message MUST NOT provide any information that allows for correlation across subscriptions.  Push message URIs for the same subscription MAY contain information that would allow correlation with the associated subscription or other push messages for that subscription.  </p>
-<p id="rfc.section.8.2.p.4">User and device information MUST NOT be exposed through a "push" or push message URI.  </p>
-<p id="rfc.section.8.2.p.5">In addition, "push" URIs established by the same user agent or push message URIs for the same subscription MUST NOT include any information that allows them to be correlated with the user agent.  </p>
+<p id="rfc.section.8.2.p.4">User and device information MUST NOT be exposed through a push or push message URI.  </p>
+<p id="rfc.section.8.2.p.5">In addition, push URIs established by the same user agent or push message URIs for the same subscription MUST NOT include any information that allows them to be correlated with the user agent.  </p>
 
 <dl>
   <dt>Note:</dt>
-  <dd style="margin-left: 8">This need not be perfect as long as the resulting anonymity set (see <a href="#RFC6973">[RFC6973]</a>, Section 6.1.1) is sufficiently large.  A "push" URI necessarily identifies a push service or a single server instance.  It is also possible that traffic analysis could be used to correlate subscriptions.  </dd>
+  <dd style="margin-left: 8">This need not be perfect as long as the resulting anonymity set (see <a href="#RFC6973">[RFC6973]</a>, Section 6.1.1) is sufficiently large.  A push URI necessarily identifies a push service or a single server instance.  It is also possible that traffic analysis could be used to correlate subscriptions.  </dd>
 </dl>
 
 <p> </p>
 <p id="rfc.section.8.2.p.6">A user agent MUST be able to create new subscriptions with new identifiers at any time.  </p>
-<h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> Authorization</h1>
-<p id="rfc.section.8.3.p.1">This protocol does not define how a push service establishes whether a user agent is permitted to create a subscription, or whether push messages can be delivered to the user agent.  A push service MAY choose to authorize requests based on any HTTP-compatible authorization method available, of which there are numerous options.  The authorization process and any associated credentials are expected to be configured in the user agent along with the URI for the "push service".  </p>
-<p id="rfc.section.8.3.p.2">Authorization is managed using "subscription", "push", "receipt subscription", and "receipt subscribe" capability URLs (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  </p>
+<h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#authorization" id="authorization">Authorization</a></h1>
+<p id="rfc.section.8.3.p.1">This protocol does not define how a push service establishes whether a user agent is permitted to create a subscription, or whether push messages can be delivered to the user agent.  A push service MAY choose to authorize requests based on any HTTP-compatible authorization method available, of which there are numerous options.  The authorization process and any associated credentials are expected to be configured in the user agent along with the URI for the push service.  </p>
+<p id="rfc.section.8.3.p.2">Authorization is managed using capability URLs for the push message subscription, push, and receipt subscription resources (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  </p>
 <p id="rfc.section.8.3.p.3">Capability URLs are used for their "easy onward sharing" and "easy client API" properties. These make it possible to avoid relying on relationships between push services and application servers, with the protocols necessary to build and support those relationships.  </p>
-<p id="rfc.section.8.3.p.4">A "subscription", "push", "receipt subscription", "receipt subscribe", or push message URI acts as a bearer token.  Knowledge of a "subscription" URI implies authorization to either receive push messages or delete the subscription. Knowledge of a "push" URI implies authorization to send push messages.  Knowledge of a "receipt subscription" URI implies authorization to receive push receipts.  Knowledge of a "receipt subscribe" URI implies authorization to create subscriptions for receipts. Knowledge of a push message URI allows for reading and acknowledging that specific message.  </p>
-<p id="rfc.section.8.3.p.5">Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid capability URL.  </p>
+<p id="rfc.section.8.3.p.4">Capability URLs act as bearer tokens.  Knowledge of a push message subscription URI implies authorization to either receive push messages or delete the subscription. Knowledge of a push URI implies authorization to send push messages.  Knowledge of a push message URI allows for reading and acknowledging that specific message.  Knowledge of a receipt subscription URI implies authorization to receive push receipts.  Knowledge of a receipt subscribe URI implies authorization to create subscriptions for receipts.  </p>
+<p id="rfc.section.8.3.p.5">Note that the same receipt subscribe URI could be returned for multiple push message subscriptions.  Using the same value for a large number of subscriptions allows application servers to reuse receipt subscriptions, which can provide a significant efficiency advantage.  A push service that uses a common receipt subscribe URI loses control over the creation of receipt subscriptions.  This can result in a potential exposure to denial of service; stateless resource creation can be used to mitigate the effects of this exposure.  </p>
+<p id="rfc.section.8.3.p.6">Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid capability URL.  </p>
 <h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> Denial of Service Considerations</h1>
 <p id="rfc.section.8.4.p.1">Discarding unwanted messages at the user agent based on message authentication doesn't protect against a denial of service attack on the user agent.  Even a relatively small volume of push messages can cause battery-powered devices to exhaust power reserves.  </p>
-<p id="rfc.section.8.4.p.2">An application can limit where valid push messages can originate by limiting the distribution of "push" URIs to authorized entities.  Ensuring that "push" URIs are hard to guess ensures that only application servers that have been given a "push" URI can use it.  </p>
-<p id="rfc.section.8.4.p.3">A malicious application with a valid "push" URI could use the greater resources of a push service to mount a denial of service attack on a user agent.  Push services SHOULD limit the rate at which push messages are sent to individual user agents.  A push service or user agent MAY <a href="#delete">terminate subscriptions</a> <cite title="NONE">[delete]</cite> that receive too many push messages.  </p>
-<p id="rfc.section.8.4.p.4">End-to-end confidentiality mechanisms, such as those in <a href="#API">[API]</a>, prevent an entity with a valid "subscription" URI from learning the contents of push messages.  Push messages that are not successfully authenticated will not be delivered by the API, but this can present a denial of service risk.  </p>
+<p id="rfc.section.8.4.p.2">An application can limit where valid push messages can originate by limiting the distribution of push URIs to authorized entities.  Ensuring that push URIs are hard to guess ensures that only application servers that have been given a push URI can use it.  </p>
+<p id="rfc.section.8.4.p.3">A malicious application with a valid push URI could use the greater resources of a push service to mount a denial of service attack on a user agent.  Push services SHOULD limit the rate at which push messages are sent to individual user agents.  A push service or user agent MAY <a href="#delete">terminate subscriptions</a> <cite title="NONE">[delete]</cite> that receive too many push messages.  </p>
+<p id="rfc.section.8.4.p.4">End-to-end confidentiality mechanisms, such as those in <a href="#API">[API]</a>, prevent an entity with a valid push message subscription URI from learning the contents of push messages.  Push messages that are not successfully authenticated will not be delivered by the API, but this can present a denial of service risk.  </p>
 <p id="rfc.section.8.4.p.5">Conversely, a push service is also able to deny service to user agents.  Intentional failure to deliver messages is difficult to distinguish from faults, which might occur due to transient network errors, interruptions in user agent availability, or genuine service outages.  </p>
 <h1 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a> Logging Risks</h1>
-<p id="rfc.section.8.5.p.1">Server request logs can reveal subscription-related URIs. Acquiring a "subscription" URI enables the receipt of messages or deletion of the subscription. Acquiring a "push" URI permits the sending of push messages.  Logging could also reveal relationships between different subscription-related URIs for the same user agent.  Encrypted message contents are not revealed to the push service.  </p>
+<p id="rfc.section.8.5.p.1">Server request logs can reveal subscription-related URIs. Acquiring a push message subscription URI enables the receipt of messages or deletion of the subscription. Acquiring a push URI permits the sending of push messages.  Logging could also reveal relationships between different subscription-related URIs for the same user agent.  Encrypted message contents are not revealed to the push service.  </p>
 <p id="rfc.section.8.5.p.2">Limitations on log retention and strong access control mechanisms can ensure that URIs are not learned by unauthorized entities.  </p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <p id="rfc.section.9.p.1">This protocol defines new HTTP header fields in <a href="#iana.header.fields">Section 9.1</a>.  New link relation types are identified using the URNs defined in <a href="#iana.urns">Section 9.2</a>.  </p>
@@ -953,7 +959,7 @@ HEADERS      [stream 4] +END_STREAM
 
 <dl>
   <dt>URN:</dt>
-  <dd style="margin-left: 8">urn:ietf:params:push:message</dd>
+  <dd style="margin-left: 8">urn:ietf:params:push</dd>
   <dt>Description:</dt>
   <dd style="margin-left: 8">This link relation type is used to identify a resource for sending push messages.</dd>
   <dt>Specification:</dt>
@@ -967,7 +973,7 @@ HEADERS      [stream 4] +END_STREAM
 
 <dl>
   <dt>URN:</dt>
-  <dd style="margin-left: 8">urn:ietf:params:push:receipt:subscribe</dd>
+  <dd style="margin-left: 8">urn:ietf:params:push:receipt</dd>
   <dt>Description:</dt>
   <dd style="margin-left: 8">This link relation type is used to identify a resource for creating new push message receipt subscriptions.  </dd>
   <dt>Specification:</dt>

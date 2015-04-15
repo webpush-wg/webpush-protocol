@@ -65,33 +65,33 @@ Table of Contents
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.1.  HTTP Resources  . . . . . . . . . . . . . . . . . . . . .   5
    3.  Subscribing for Push Messages . . . . . . . . . . . . . . . .   6
-   4.  Subscribing for Push Message Receipts . . . . . . . . . . . .   6
+   4.  Subscribing for Push Message Receipts . . . . . . . . . . . .   7
    5.  Requesting Push Message Delivery  . . . . . . . . . . . . . .   7
-     5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .   7
+     5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .   8
      5.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .   8
    6.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .   9
-     6.1.  Acknowledging Push Messages . . . . . . . . . . . . . . .  10
+     6.1.  Acknowledging Push Messages . . . . . . . . . . . . . . .  11
      6.2.  Receiving Push Message Receipts . . . . . . . . . . . . .  11
-   7.  Operational Considerations  . . . . . . . . . . . . . . . . .  11
+   7.  Operational Considerations  . . . . . . . . . . . . . . . . .  12
      7.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  12
      7.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  12
-     7.3.  Subscription Expiration . . . . . . . . . . . . . . . . .  12
-     7.4.  Implications for Application Reliability  . . . . . . . .  13
+     7.3.  Subscription Expiration . . . . . . . . . . . . . . . . .  13
+     7.4.  Implications for Application Reliability  . . . . . . . .  14
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
      8.1.  Confidentiality from Push Service Access  . . . . . . . .  14
-     8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  14
-     8.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  15
-     8.4.  Denial of Service Considerations  . . . . . . . . . . . .  16
-     8.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  16
+     8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  15
+     8.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  16
+     8.4.  Denial of Service Considerations  . . . . . . . . . . . .  17
+     8.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  17
    9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
-     9.1.  Header Field Registrations  . . . . . . . . . . . . . . .  17
-     9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  17
-   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
+     9.1.  Header Field Registrations  . . . . . . . . . . . . . . .  18
+     9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  18
+   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  19
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  20
-     11.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  20
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  21
+     11.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  21
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
 
 1.  Introduction
 
@@ -173,18 +173,18 @@ Internet-Draft                HTTP Web Push                   April 2015
    application server:  The component of an application that runs on a
       server and requests the delivery of a push message.
 
+   push message subscription:  A message delivery context that is
+      established between the user agent and the push service and shared
+      with the application server.  All push messages are associated
+      with a push message subscription.
+
    push message:  A message sent from an application server to a user
       agent via a push service.
 
-   push service:  A service that delivers push messages to user agents.
-
-   message subscription:  A message delivery context that is established
-      between the user agent and the push service and shared with the
-      application server.  All push messages are associated with a
-      message subscription.
-
    push message receipt:  A message delivery confirmation sent from the
       push server to the application server.
+
+   push service:  A service that delivers push messages to user agents.
 
    user agent:  A device and software that is the recipient of push
       messages.
@@ -208,7 +208,7 @@ Internet-Draft                HTTP Web Push                   April 2015
         |       Monitor        |                      |
         |<====================>|                      |
         |                      |                      |
-        |           Provide Subscription Write Access |
+        |          Distribute Push Resource           |
         |-------------------------------------------->|
         |                      |                      |
         :                      :                      :
@@ -234,15 +234,15 @@ Internet-Draft                HTTP Web Push                   April 2015
    To offer more control for authorization, a message subscription is
    modeled as two resources with different capabilities:
 
-   o  A "subscription" resource grants the rights to receive messages
-      from a subscription and to delete a subscription.  It is private
-      to the user agent.
+   o  A subscription resource is used to receive messages from a
+      subscription and to delete a subscription.  It is private to the
+      user agent.
 
-   o  A "push" resource grants the right to send messages to a
-      subscription.  It is public and shared by the user agent with its
-      application server.
+   o  A push resource is used to send messages to a subscription.  It is
+      public and shared by the the user agent with its application
+      server.
 
-   It is expected that a unique subscription will be provided to each
+   It is expected that a unique subscription will be distributed to each
    application; however, there are no inherent cardinality constraints
    in the protocol.  Multiple subscriptions might be created for the
    same application, or multiple applications could use the same
@@ -259,21 +259,21 @@ Internet-Draft                HTTP Web Push                   April 2015
    This protocol uses HTTP resources [RFC7230] and link relations
    [RFC5988].  The following resources are defined:
 
-   push service:  This resource is used to subscribe for push messages
-      (Section 3).  It is configured into user agents.
+   push service:  This resource is used to create push message
+      subscriptions (see Section 3).  A URL for the push service is
+      configured into user agents.
 
-   message subscription:  This resource provides read and delete access
-      for a message subscription.  A user agent receives push messages
-      (Section 6) using a message subscription.
+   push message subscription:  This resource provides read and delete
+      access for a message subscription.  A user agent receives push
+      messages (Section 6) using a push message subscription.  Every
+      push message subscription has exactly one push resource associated
+      with it.
 
-   push:  A link relation of type "urn:ietf:params:push:message" refers
-      to a resource with write access to a message subscription.  An
-      application server sends push messages (Section 5) using this
+   push:  A push resource is used by the application server to request
+      the delivery of a push message (see Section 5).  A link relation
+      of type "urn:ietf:params:push" is used to identify a push
       resource.
 
-   receipt subscribe:  A link relation of type
-      "urn:ietf:params:push:receipt:subscribe" refers to a resource used
-      to subscribe for push message receipts (Section 4).  An
 
 
 
@@ -282,11 +282,18 @@ Thomson, et al.         Expires October 17, 2015                [Page 5]
 Internet-Draft                HTTP Web Push                   April 2015
 
 
-      application server creates a receipt subscription using this
-      resource.
+   push message:  A push message resource is created to identify push
+      messages that have been accepted by the push service.  The push
+      message resource is also used to acknowledge receipt of a push
+      message.
 
-   receipt subscription:  This resource provides read access for a
-      receipt subscription.  An application server receives delivery
+   receipt subscribe:  A receipt subscribe resource is used by an
+      application server to create a receipt subscription (see
+      Section 4).  A link relation of type
+      "urn:ietf:params:push:receipt" is used to identity a receipt
+      subscribe resource.
+
+   receipt subscription:  An application server receives delivery
       confirmations (Section 5.1) for push messages using a receipt
       subscription.
 
@@ -299,37 +306,30 @@ Internet-Draft                HTTP Web Push                   April 2015
    Host: push.example.net
 
 
-   A response with a 201 (Created) status code MUST include a URI for
-   the new "subscription" resource in the Location header field.
+   A response with a 201 (Created) status code includes a URI for a new
+   push message subscription resource in the Location header field.
 
-   The push server MUST provide a URI for a new push resource that
-   corresponds to this subscription in a link relation of type
-   "urn:ietf:params:push:message".
+   The push server MUST provide a URI for the push resource
+   corresponding to the push message subscription using a link relation
+   of type "urn:ietf:params:push".
 
-   The push server MUST provide a URI for a new receipt subscribe
-   resource that corresponds to this subscription in a link relation of
-   type "urn:ietf:params:push:receipt:subscribe".
+   The push server MUST provide a URI for a receipt subscribe resource
+   in a link relation of type "urn:ietf:params:push:receipt".
 
-   The user agent SHOULD securely distribute both the "push" and
-   "receipt subscribe" URIs to its application server.  Details are
-   outside the scope of this document.
-
-
-   HTTP/1.1 201 Created
-   Date: Thu, 11 Dec 2014 23:56:52 GMT
-   Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
-           rel="urn:ietf:params:push:message"
-   Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-           rel="urn:ietf:params:push:receipt:subscribe"
-   Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
-   Cache-Control: max-age:864000, private
+   An application-specific method is used to distribute the push and
+   receipt subscribe URIs to the application server.  Confidentiality
+   protection and application server authentication MUST be used to
+   ensure that these URIs are not disclosed to unauthorized recipients
+   (see Section 8.3).
 
 
-4.  Subscribing for Push Message Receipts
 
-   An application server creates a new subscription for push message
-   receipts by sending a HTTP POST request to the "receipt subscribe"
-   resource distributed by its user agent.
+
+
+
+
+
+
 
 
 
@@ -338,14 +338,30 @@ Thomson, et al.         Expires October 17, 2015                [Page 6]
 Internet-Draft                HTTP Web Push                   April 2015
 
 
+   HTTP/1.1 201 Created
+   Date: Thu, 11 Dec 2014 23:56:52 GMT
+   Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+           rel="urn:ietf:params:push"
+   Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+           rel="urn:ietf:params:push:receipt"
+   Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+   Cache-Control: max-age:864000, private
+
+
+4.  Subscribing for Push Message Receipts
+
+   An application server requests the creation of a receipt subscription
+   by sending a HTTP POST request to the receipt subscribe resource
+   distributed to the application server by a user agent.
+
+
    POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
    Host: push.example.net
 
 
 
-   A successful response with a 201 (Created) status code MUST include a
-   URI for the "receipt subscription" resource in the Location header
-   field.
+   A successful response with a 201 (Created) status code includes a URI
+   for the receipt subscription resource in the Location header field.
 
 
    HTTP/1.1 201 Created
@@ -354,11 +370,29 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
+   A push service SHOULD provide the same receipt subscribe URI to user
+   agents.  An application MAY reuse a receipt subscription resource
+   with a push message request if the receipt subscribe URI provided
+   with the push resource is identical to the one used to create the
+   receipt subscription.
+
 5.  Requesting Push Message Delivery
 
    An application server requests the delivery of a push message by
-   sending a HTTP request to the "push" resource distributed by its user
-   agent.  The push message is included in the body of the request.
+   sending a HTTP request to a push resource distributed to the
+   application server by a user agent.  The push message is included in
+   the body of the request.
+
+
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015                [Page 7]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    POST /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx HTTP/1.1
    Host: push.example.net
@@ -367,9 +401,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
-   A 201 response indicates that the push message was accepted.  A URI
-   for the push message is included in the Location header field.  This
-   does not indicate that the message was delivered to the user agent.
+   A 201 (Created) response indicates that the push message was
+   accepted.  A URI for the push message resource that was created in
+   response to the request is included in the Location header field.
+   This does not indicate that the message was delivered to the user
+   agent.
 
    HTTP/1.1 201 Created
    Date: Thu, 11 Dec 2014 23:56:55 GMT
@@ -386,22 +422,17 @@ Internet-Draft                HTTP Web Push                   April 2015
    An application server can use the Push-Receipt header field to
    request a confirmation from the push server when a push message is
    delivered and acknowledged by the user agent.  The Push-Receipt
-
-
-
-Thomson, et al.         Expires October 17, 2015                [Page 7]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    header field is a URI-Reference as defined in Section 2.7 of
-   [RFC7230].  Its value is the "receipt subscription" URI returned from
-   the push server in response to the receipt subscription request
-   (Section 4) from the application server.
+   [RFC7230].
 
 
    Push-Receipt = URI-reference
 
+
+   The application sets the Push-Receipt header field value to a receipt
+   subscription URI.  This receipt subscription resource MUST be created
+   from the same receipt subscribe resource which was returned with the
+   push message subscription response (see Section 3).
 
 5.2.  Push Message Time-To-Live
 
@@ -409,6 +440,15 @@ Internet-Draft                HTTP Web Push                   April 2015
    considerably by storing push messages for a period.  User agents are
    often only intermittently connected, and so benefit from having short
    term message storage at the push service.
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015                [Page 8]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    Delaying delivery might also be used to batch communication with the
    user agent, thereby conserving radio resources.
@@ -427,28 +467,19 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    TTL = 1*DIGIT
 
-   Once the TTL period elapses, the push service MUST remove the push
-   message and cease any attempt to deliver it to the user agent.  A
-   push service might retain values for a short duration after the TTL
-   period to account for time accounting errors in processing.  For
-   instance, distributing a push message within a server cluster might
-   accrue errors due to clock variation, or processing and transit
-   delays.
+   Once the Time-To-Live (TTL) period elapses, the push service MUST
+   remove the push message and cease any attempt to deliver it to the
+   user agent.  A push service might retain values for a short duration
+   after the TTL period to account for time accounting errors in
+   processing.  For instance, distributing a push message within a
+   server cluster might accrue errors due to clock variation, or
+   processing and transit delays.
 
    A push service is not obligated to account for time spent by the
    application server in sending a push message to the push service, or
    delays incurred while sending a push message to the user agent.  An
    application server needs to account for transit delays in selecting a
    TTL header field value.
-
-
-
-
-
-Thomson, et al.         Expires October 17, 2015                [Page 8]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
    Absence of the TTL header field is interpreted as equivalent to a
    zero value.  Push messages with a zero TTL indicate that storage is
@@ -465,39 +496,8 @@ Internet-Draft                HTTP Web Push                   April 2015
 6.  Receiving Push Messages
 
    A user agent requests the delivery of new push messages by making a
-   GET request to a "subscription" resource.  The push service does not
-   respond to this request, it instead uses HTTP/2 server push
-   [I-D.ietf-httpbis-http2] to send the contents of push messages as
-   they are sent by application servers.
-
-   Each push message is pushed in response to a synthesized GET request.
-   The GET request is made to the same "push message" resource that was
-   created by the push server when the application server requested
-   message delivery.  The response body is the entity body from the most
-   recent request sent to the "push" resource.
-
-   The following example request is made over HTTP/2.
-
-   HEADERS      [stream 7] +END_STREAM +END_HEADERS
-     :method        = GET
-     :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
-     :authority     = push.example.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   GET request to a push message subscription resource.  The push
+   service does not respond to this request, it instead uses HTTP/2
 
 
 
@@ -505,6 +505,22 @@ Thomson, et al.         Expires October 17, 2015                [Page 9]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
+
+   server push [I-D.ietf-httpbis-http2] to send the contents of push
+   messages as they are sent by application servers.
+
+   Each push message is pushed in response to a synthesized GET request.
+   The GET request is made to the push message resource that was created
+   by the push server when the application server requested message
+   delivery.  The response body is the entity body from the most recent
+   request sent to the push resource.
+
+   The following example request is made over HTTP/2.
+
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :method        = GET
+     :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+     :authority     = push.example.net
 
    The push service permits the request to remain outstanding.  When a
    push message is sent by an application server, a server push is
@@ -527,17 +543,24 @@ Internet-Draft                HTTP Web Push                   April 2015
    DATA         [stream 4] +END_STREAM
      iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
-   A user agent can request the contents of the "subscription" resource
-   immediately by including a Prefer header field [RFC7240] with a
-   "wait" parameter set to "0".  The push server SHOULD return a link
-   reference to the "push" resource and expiration information in
-   response to this request.  This request also triggers the delivery of
-   all push messages that the push service has stored but not yet
-   delivered.  The server MUST generate a server push for all stored
-   messages that have not yet been delivered.
+   A user agent can request the contents of the push message
+   subscription resource immediately by including a Prefer header field
+   [RFC7240] with a "wait" parameter set to "0".  In response to this
+   request, the push service SHOULD return link references to the push
+   and receipt subscribe resources, plus expiration information.  In
+   response to this request, the push server MUST generate a server push
+   for all push messages that have not yet been delivered.
 
    A 204 (No Content) status code with no associated server pushes
-   indicates that no messages are presently available.
+   indicates that no messages are presently available.  This could be
+   because push messages have expired.
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 10]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 6.1.  Acknowledging Push Messages
 
@@ -553,26 +576,19 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    If the application has requested a delivery receipt, the push server
    MUST deliver a response to the application server monitoring the
-   "receipt subscription" resource.
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 10]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
+   receipt subscription resource.
 
 6.2.  Receiving Push Message Receipts
 
    The application server requests the delivery of receipts from the
-   push server by making a HTTP GET request to the "receipt
-   subscription" resource.  The push service does not respond to this
-   request, it instead uses HTTP/2 server push [I-D.ietf-httpbis-http2]
-   to send push receipts when messages are acknowledged (Section 6.1) by
-   the user agent.
+   push server by making a HTTP GET request to the receipt subscription
+   resource.  The push service does not respond to this request, it
+   instead uses HTTP/2 server push [I-D.ietf-httpbis-http2] to send push
+   receipts when messages are acknowledged (Section 6.1) by the user
+   agent.
 
    Each receipt is pushed in response to a synthesized GET request.  The
-   GET request is made to the same "push message" resource that was
+   GET request is made to the same push message resource that was
    created by the push server when the application server requested
    message delivery.  A successful response includes a 410 (GONE) status
    code with no data.
@@ -580,10 +596,26 @@ Internet-Draft                HTTP Web Push                   April 2015
    The following example request is made over HTTP/2.
 
 
-   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+   HEADERS      [stream 13] +END_STREAM +END_HEADERS
      :method        = GET
      :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
      :authority     = push.example.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 11]
+
+Internet-Draft                HTTP Web Push                   April 2015
 
 
    The push service permits the request to remain outstanding.  When the
@@ -592,7 +624,7 @@ Internet-Draft                HTTP Web Push                   April 2015
    confirms that the message was delivered and acknowledged.
 
 
-   PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+   PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
      :method        = GET
      :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
      :authority     = push.example.net
@@ -609,14 +641,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    A push service is likely to have to maintain a very large number of
    open TCP connections.  Effective management of those connections can
    depend on being able to move connections between server instances.
-
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 11]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
 
 7.1.  Load Management
 
@@ -642,15 +666,23 @@ Internet-Draft                HTTP Web Push                   April 2015
    A user agent that does not actively monitor for push messages will
    not receive messages that expire during that interval.
 
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 12]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
+
    Push messages that are stored and not delivered to a user agent are
    delivered when the user agent recommences monitoring.  Stored push
    messages SHOULD include a Last-Modified header field (see Section 2.2
    of [RFC7232]) indicating when delivery was requested by an
    application server.
 
-   A GET request to a "subscription" resource that has only expired
-   messages results in response as though no push message were ever
-   sent.
+   A GET request to a push message subscription resource that has only
+   expired messages results in response as though no push message were
+   ever sent.
 
    Push services might need to limit the size and number of stored push
    messages to avoid overloading.  In addition to using the 413 (Payload
@@ -662,18 +694,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 7.3.  Subscription Expiration
 
    In some cases, it may be necessary to terminate subscriptions so that
-   they can be refreshed.
+   they can be refreshed.  This applies to both push message
+   subscriptions and receipt subscriptions.
 
    A push service might choose to set a fixed expiration time.  If a
    resource has a known expiration time, expiration information is
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 12]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    included in responses to requests that create the resource, or in
    requests that retrieve a representation of the resource.
 
@@ -683,42 +708,17 @@ Internet-Draft                HTTP Web Push                   April 2015
    "private" directive.
 
    A push service can remove a subscription at any time.  If a user
-   agent has an outstanding request to a "subscription" resource (see
-   Section 6), this can be signaled by returning a 400-series status
-   code, such as 410 (Gone).
+   agent or application server has an outstanding request to a
+   subscription resource (see Section 6), this can be signaled by
+   returning a 400-series status code, such as 410 (Gone).
 
-   A user agent can request that a subscription be removed by sending a
-   DELETE request to its private "subscription" URI.
+   A user agent or application server can request that a subscription be
+   removed by sending a DELETE request to the push message subscription
+   or receipt subscription URI.
 
    A push service MUST return a 400-series status code, such as 404 (Not
    Found) or 410 (Gone) if an application server attempts to send a push
-   message to a removed or expired subscription.
-
-7.4.  Implications for Application Reliability
-
-   A push server that does not support reliable delivery over
-   intermittent network connections or failing applications on devices,
-   forces the device to acknowledge receipt directly to the application
-   server, incurring additional power drain in order to establish
-   (usually secure) connections to the individual application servers.
-
-   While reliability is not required for messages that expire in few
-   seconds (e.g. an incoming call) or collapsible ones (e.g. the current
-   number of unread emails), it is more important when messages contain
-   information that is longer lasting, e.g. a command to update a
-   configuration value, or the acknowledgement of a financial
-   transaction or workflow step.  In particular, in the case of power-
-   constrained devices, it is preferable to transmit the actual
-   information in the "pushed" message reliably, instead of forcing them
-   to reconnect periodically to get the current state.
-
-   The availability of push message delivery receipts in the protocol
-   ensures that the application developer is not tempted to create
-   alternative mechanisms for message delivery in case the push service
-   fails to deliver a critical message.  Setting up a polling mechanism
-   or a backup messaging channel in order to compensate for these
-   shortcomings negates almost all of the advantages a push service
-   provides.
+   message to a removed or expired push message subscription.
 
 
 
@@ -730,13 +730,38 @@ Thomson, et al.         Expires October 17, 2015               [Page 13]
 Internet-Draft                HTTP Web Push                   April 2015
 
 
+7.4.  Implications for Application Reliability
+
+   A push server that does not support reliable delivery over
+   intermittent network connections or failing applications on devices,
+   forces the device to acknowledge receipt directly to the application
+   server, incurring additional power drain in order to establish
+   (usually secure) connections to the individual application servers.
+
+   Push message reliability can be important if messages contain
+   information critical to the state of an application.  Repairing state
+   can be costly, particularly for devices with limited communications
+   capacity.  Knowing that a push message has been correctly received
+   avoids costly retransmissions, polling and state resynchronization.
+
+   The availability of push message delivery receipts ensures that the
+   application developer is not tempted to create alternative mechanisms
+   for message delivery in case the push service fails to deliver a
+   critical message.  Setting up a polling mechanism or a backup
+   messaging channel in order to compensate for these shortcomings
+   negates almost all of the advantages a push service provides.
+
+   However, reliability might not be necessary for messages that are
+   transient (e.g. an incoming call) or messages that are quickly
+   superceded (e.g. the current number of unread emails).
+
 8.  Security Considerations
 
-   This protocol MUST use HTTP over TLS [RFC2818]; this includes any
+   This protocol MUST use HTTP over TLS [RFC2818].  This includes any
    communications between user agent and push service, plus
-   communications between the application and the push service.  Thus,
-   all URIs use the "https" scheme.  This provides confidentiality and
-   integrity protection for subscriptions and push messages from
+   communications between the application and the push service.  All
+   URIs therefore use the "https" scheme.  This provides confidentiality
+   and integrity protection for subscriptions and push messages from
    external parties.
 
 8.1.  Confidentiality from Push Service Access
@@ -753,6 +778,13 @@ Internet-Draft                HTTP Web Push                   April 2015
    protocol is needed to establish a proper security context.  The
    process of providing the application server with subscription
    information provides a convenient medium for key agreement.
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 14]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    The Web Push API codifies this practice by requiring that each push
    subscription created by the browser be bound to a browser generated
@@ -773,18 +805,11 @@ Internet-Draft                HTTP Web Push                   April 2015
    is communicating and when they are communicating is protected.
    However, the amount of information that is exposed can be limited.
 
-   The URIs provided for "push" resources MUST NOT provide any basis to
+   The URIs provided for push resources MUST NOT provide any basis to
    correlate communications for a given user agent.  It MUST NOT be
-   possible to correlate any two "push" URIs based solely on their
-   contents.  This allows a user agent to control correlation across
-   different applications, or over time.
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 14]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
+   possible to correlate any two push resource URIs based solely on
+   their contents.  This allows a user agent to control correlation
+   across different applications, or over time.
 
    Similarly, the URIs provided by the push service to identify a push
    message MUST NOT provide any information that allows for correlation
@@ -792,21 +817,30 @@ Internet-Draft                HTTP Web Push                   April 2015
    MAY contain information that would allow correlation with the
    associated subscription or other push messages for that subscription.
 
-   User and device information MUST NOT be exposed through a "push" or
+   User and device information MUST NOT be exposed through a push or
    push message URI.
 
-   In addition, "push" URIs established by the same user agent or push
+   In addition, push URIs established by the same user agent or push
    message URIs for the same subscription MUST NOT include any
    information that allows them to be correlated with the user agent.
 
    Note:  This need not be perfect as long as the resulting anonymity
-      set (see [RFC6973], Section 6.1.1) is sufficiently large.  A
-      "push" URI necessarily identifies a push service or a single
-      server instance.  It is also possible that traffic analysis could
-      be used to correlate subscriptions.
+      set (see [RFC6973], Section 6.1.1) is sufficiently large.  A push
+      URI necessarily identifies a push service or a single server
+      instance.  It is also possible that traffic analysis could be used
+      to correlate subscriptions.
 
    A user agent MUST be able to create new subscriptions with new
    identifiers at any time.
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 15]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 8.3.  Authorization
 
@@ -816,11 +850,11 @@ Internet-Draft                HTTP Web Push                   April 2015
    choose to authorize requests based on any HTTP-compatible
    authorization method available, of which there are numerous options.
    The authorization process and any associated credentials are expected
-   to be configured in the user agent along with the URI for the "push
-   service".
+   to be configured in the user agent along with the URI for the push
+   service.
 
-   Authorization is managed using "subscription", "push", "receipt
-   subscription", and "receipt subscribe" capability URLs (see
+   Authorization is managed using capability URLs for the push message
+   subscription, push, and receipt subscription resources (see
    [CAP-URI]).  A capability URL grants access to a resource based
    solely on knowledge of the URL.
 
@@ -829,27 +863,40 @@ Internet-Draft                HTTP Web Push                   April 2015
    relationships between push services and application servers, with the
    protocols necessary to build and support those relationships.
 
-   A "subscription", "push", "receipt subscription", "receipt
-   subscribe", or push message URI acts as a bearer token.  Knowledge of
-   a "subscription" URI implies authorization to either receive push
-   messages or delete the subscription.  Knowledge of a "push" URI
-   implies authorization to send push messages.  Knowledge of a "receipt
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 15]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
-   subscription" URI implies authorization to receive push receipts.
-   Knowledge of a "receipt subscribe" URI implies authorization to
-   create subscriptions for receipts.  Knowledge of a push message URI
+   Capability URLs act as bearer tokens.  Knowledge of a push message
+   subscription URI implies authorization to either receive push
+   messages or delete the subscription.  Knowledge of a push URI implies
+   authorization to send push messages.  Knowledge of a push message URI
    allows for reading and acknowledging that specific message.
+   Knowledge of a receipt subscription URI implies authorization to
+   receive push receipts.  Knowledge of a receipt subscribe URI implies
+   authorization to create subscriptions for receipts.
+
+   Note that the same receipt subscribe URI could be returned for
+   multiple push message subscriptions.  Using the same value for a
+   large number of subscriptions allows application servers to reuse
+   receipt subscriptions, which can provide a significant efficiency
+   advantage.  A push service that uses a common receipt subscribe URI
+   loses control over the creation of receipt subscriptions.  This can
+   result in a potential exposure to denial of service; stateless
+   resource creation can be used to mitigate the effects of this
+   exposure.
 
    Encoding a large amount of random entropy (at least 120 bits) in the
    path component ensures that it is difficult to successfully guess a
    valid capability URL.
+
+
+
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 16]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 8.4.  Denial of Service Considerations
 
@@ -859,11 +906,11 @@ Internet-Draft                HTTP Web Push                   April 2015
    cause battery-powered devices to exhaust power reserves.
 
    An application can limit where valid push messages can originate by
-   limiting the distribution of "push" URIs to authorized entities.
-   Ensuring that "push" URIs are hard to guess ensures that only
-   application servers that have been given a "push" URI can use it.
+   limiting the distribution of push URIs to authorized entities.
+   Ensuring that push URIs are hard to guess ensures that only
+   application servers that have been given a push URI can use it.
 
-   A malicious application with a valid "push" URI could use the greater
+   A malicious application with a valid push URI could use the greater
    resources of a push service to mount a denial of service attack on a
    user agent.  Push services SHOULD limit the rate at which push
    messages are sent to individual user agents.  A push service or user
@@ -871,10 +918,10 @@ Internet-Draft                HTTP Web Push                   April 2015
    push messages.
 
    End-to-end confidentiality mechanisms, such as those in [API],
-   prevent an entity with a valid "subscription" URI from learning the
-   contents of push messages.  Push messages that are not successfully
-   authenticated will not be delivered by the API, but this can present
-   a denial of service risk.
+   prevent an entity with a valid push message subscription URI from
+   learning the contents of push messages.  Push messages that are not
+   successfully authenticated will not be delivered by the API, but this
+   can present a denial of service risk.
 
    Conversely, a push service is also able to deny service to user
    agents.  Intentional failure to deliver messages is difficult to
@@ -885,18 +932,11 @@ Internet-Draft                HTTP Web Push                   April 2015
 8.5.  Logging Risks
 
    Server request logs can reveal subscription-related URIs.  Acquiring
-   a "subscription" URI enables the receipt of messages or deletion of
-   the subscription.  Acquiring a "push" URI permits the sending of push
-   messages.  Logging could also reveal relationships between different
-   subscription-related URIs for the same user agent.  Encrypted message
-   contents are not revealed to the push service.
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 16]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
+   a push message subscription URI enables the receipt of messages or
+   deletion of the subscription.  Acquiring a push URI permits the
+   sending of push messages.  Logging could also reveal relationships
+   between different subscription-related URIs for the same user agent.
+   Encrypted message contents are not revealed to the push service.
 
    Limitations on log retention and strong access control mechanisms can
    ensure that URIs are not learned by unauthorized entities.
@@ -906,6 +946,13 @@ Internet-Draft                HTTP Web Push                   April 2015
    This protocol defines new HTTP header fields in Section 9.1.  New
    link relation types are identified using the URNs defined in
    Section 9.2.
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 17]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 9.1.  Header Field Registrations
 
@@ -946,14 +993,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    Repository:  [Editor/IANA note: please include a link to the final
       registry location.]
 
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 17]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    Index value:  Values in this registry are URNs or URN prefixes that
       start with the prefix "urn:ietf:params:push".  Each is registered
       independently.
@@ -962,6 +1001,14 @@ Internet-Draft                HTTP Web Push                   April 2015
    include the following information:
 
    URN:  A complete URN or URN prefix.
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 18]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    Description:  A summary description.
 
@@ -977,7 +1024,7 @@ Internet-Draft                HTTP Web Push                   April 2015
    These values are entered as the initial content of the "Web Push
    Identifiers" registry.
 
-   URN:  urn:ietf:params:push:message
+   URN:  urn:ietf:params:push
 
    Description:  This link relation type is used to identify a resource
       for sending push messages.
@@ -986,7 +1033,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
    Contact:  The Web Push WG (webpush@ietf.org)
 
-   URN:  urn:ietf:params:push:receipt:subscribe
+   URN:  urn:ietf:params:push:receipt
 
    Description:  This link relation type is used to identify a resource
       for creating new push message receipt subscriptions.
@@ -1001,15 +1048,6 @@ Internet-Draft                HTTP Web Push                   April 2015
    Costin Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and
    many others.
 
-
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 18]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
 11.  References
 
 11.1.  Normative References
@@ -1017,6 +1055,16 @@ Internet-Draft                HTTP Web Push                   April 2015
    [CAP-URI]  Tennison, J., "Good Practices for Capability URLs", FPWD
               capability-urls, February 2014,
               <http://www.w3.org/TR/capability-urls/>.
+
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 19]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
    [I-D.ietf-httpbis-alt-svc]
               Nottingham, M., McManus, P., and J. Reschke, "HTTP
@@ -1057,20 +1105,22 @@ Internet-Draft                HTTP Web Push                   April 2015
    [RFC7232]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Conditional Requests", RFC 7232, June 2014.
 
-
-
-
-
-Thomson, et al.         Expires October 17, 2015               [Page 19]
-
-Internet-Draft                HTTP Web Push                   April 2015
-
-
    [RFC7234]  Fielding, R., Nottingham, M., and J. Reschke, "Hypertext
               Transfer Protocol (HTTP/1.1): Caching", RFC 7234, June
               2014.
 
    [RFC7240]  Snell, J., "Prefer Header for HTTP", RFC 7240, June 2014.
+
+
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 20]
+
+Internet-Draft                HTTP Web Push                   April 2015
+
 
 11.2.  Informative References
 
@@ -1117,4 +1167,10 @@ Authors' Addresses
 
 
 
-Thomson, et al.         Expires October 17, 2015               [Page 20]
+
+
+
+
+
+
+Thomson, et al.         Expires October 17, 2015               [Page 21]
