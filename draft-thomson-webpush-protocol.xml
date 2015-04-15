@@ -230,7 +230,7 @@
           </t>
           <t>
             A push resource is used to send messages to a subscription. It is
-            public and shared by the the user agent with its application server.
+            public and shared by the user agent with its application server.
           </t>
         </list>
       </t>
