@@ -491,7 +491,7 @@ ul.toc a:first-child {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-thomson-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-4-14" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-4-15" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -515,7 +515,7 @@ ul.toc a:first-child {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 16, 2015</td>
+  <td class="left">Expires: October 17, 2015</td>
   <td class="right">B. Raymor</td>
 </tr>
 <tr>
@@ -524,7 +524,7 @@ ul.toc a:first-child {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 14, 2015</td>
+  <td class="right">April 15, 2015</td>
 </tr>
 
     	
@@ -544,7 +544,7 @@ ul.toc a:first-child {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 16, 2015.</p>
+<p>This Internet-Draft will expire on October 17, 2015.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -656,7 +656,7 @@ ul.toc a:first-child {
 
 <ul>
   <li>A &#8220;subscription&#8221; resource grants the rights to receive messages from a subscription and to delete a subscription. It is private to the user agent.  </li>
-  <li>A &#8220;push&#8221; resource grants the right to send messages to a subscription. It is public and shared by the the user agent with its application server.  </li>
+  <li>A &#8220;push&#8221; resource grants the right to send messages to a subscription. It is public and shared by the user agent with its application server.  </li>
 </ul>
 
 <p> </p>
@@ -841,7 +841,7 @@ HEADERS      [stream 4] +END_STREAM
 <p id="rfc.section.7.3.p.3">Expiration is indicated using either the Expires header field, or by setting a "max-age" parameter on a Cache-Control header field (see <a href="#RFC7234">[RFC7234]</a>).  The Cache-Control header field MUST also include the "private" directive.  </p>
 <p id="rfc.section.7.3.p.4">A push service can remove a subscription at any time. If a user agent has an outstanding request to a "subscription" resource (see <a href="#monitor">Section 6</a>), this can be signaled by returning a 400-series status code, such as 410 (Gone).  </p>
 <p id="rfc.section.7.3.p.5">A user agent can request that a subscription be removed by sending a DELETE request to its private "subscription" URI.  </p>
-<p id="rfc.section.7.3.p.6">A push service MUST return a 400-series status code, such as 404 (Not Found) or 410 (Gone) if an application server atttempts to send a push message to a removed or expired subscription.  </p>
+<p id="rfc.section.7.3.p.6">A push service MUST return a 400-series status code, such as 404 (Not Found) or 410 (Gone) if an application server attempts to send a push message to a removed or expired subscription.  </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Implications for Application Reliability</h1>
 <p id="rfc.section.7.4.p.1">A push server that does not support reliable delivery over intermittent network connections or failing applications on devices, forces the device to acknowledge receipt directly to the application server, incurring additional power drain in order to establish (usually secure) connections to the individual application servers.  </p>
 <p id="rfc.section.7.4.p.2">While reliability is not required for messages that expire in few seconds (e.g. an incoming call) or collapsible ones (e.g. the current number of unread emails), it is more important when messages contain information that is longer lasting, e.g. a command to update a configuration value, or the acknowledgement of a financial transaction or workflow step. In particular, in the case of power-constrained devices, it is preferable to transmit the actual information in the &#8220;pushed&#8221; message reliably, instead of forcing them to reconnect periodically to get the current state.  </p>
@@ -869,9 +869,9 @@ HEADERS      [stream 4] +END_STREAM
 <p id="rfc.section.8.2.p.6">A user agent MUST be able to create new subscriptions with new identifiers at any time.  </p>
 <h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> Authorization</h1>
 <p id="rfc.section.8.3.p.1">This protocol does not define how a push service establishes whether a user agent is permitted to create a subscription, or whether push messages can be delivered to the user agent.  A push service MAY choose to authorize requests based on any HTTP-compatible authorization method available, of which there are numerous options.  The authorization process and any associated credentials are expected to be configured in the user agent along with the URI for the "push service".  </p>
-<p id="rfc.section.8.3.p.2">Authorization is managed using "subscription", "push", "receipt subscription", and "receipt subcribe" capability URLs (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  </p>
+<p id="rfc.section.8.3.p.2">Authorization is managed using "subscription", "push", "receipt subscription", and "receipt subscribe" capability URLs (see <a href="#CAP-URI">[CAP-URI]</a>).  A capability URL grants access to a resource based solely on knowledge of the URL.  </p>
 <p id="rfc.section.8.3.p.3">Capability URLs are used for their "easy onward sharing" and "easy client API" properties. These make it possible to avoid relying on relationships between push services and application servers, with the protocols necessary to build and support those relationships.  </p>
-<p id="rfc.section.8.3.p.4">A "subscription", "push", "receipt subscription", "receipt subcribe", or push message URI acts as a bearer token.  Knowledge of a "subscription" URI implies authorization to either receive push messages or delete the subscription. Knowledge of a "push" URI implies authorization to send push messages.  Knowledge of a "receipt subscription" URI implies authorization to receive push receipts.  Knowledge of a "receipt subscribe" URI implies authorization to create subscriptions for receipts. Knowledge of a push message URI allows for reading and acknowledging that specific message.  </p>
+<p id="rfc.section.8.3.p.4">A "subscription", "push", "receipt subscription", "receipt subscribe", or push message URI acts as a bearer token.  Knowledge of a "subscription" URI implies authorization to either receive push messages or delete the subscription. Knowledge of a "push" URI implies authorization to send push messages.  Knowledge of a "receipt subscription" URI implies authorization to receive push receipts.  Knowledge of a "receipt subscribe" URI implies authorization to create subscriptions for receipts. Knowledge of a push message URI allows for reading and acknowledging that specific message.  </p>
 <p id="rfc.section.8.3.p.5">Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid capability URL.  </p>
 <h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> Denial of Service Considerations</h1>
 <p id="rfc.section.8.4.p.1">Discarding unwanted messages at the user agent based on message authentication doesn't protect against a denial of service attack on the user agent.  Even a relatively small volume of push messages can cause battery-powered devices to exhaust power reserves.  </p>

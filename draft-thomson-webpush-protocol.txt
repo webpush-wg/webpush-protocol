@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: October 16, 2015                                      B. Raymor
+Expires: October 17, 2015                                      B. Raymor
                                                                Microsoft
-                                                          April 14, 2015
+                                                          April 15, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 16, 2015.
+   This Internet-Draft will expire on October 17, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 1]
+Thomson, et al.         Expires October 17, 2015                [Page 1]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 2]
+Thomson, et al.         Expires October 17, 2015                [Page 2]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 3]
+Thomson, et al.         Expires October 17, 2015                [Page 3]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 4]
+Thomson, et al.         Expires October 17, 2015                [Page 4]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -239,8 +239,8 @@ Internet-Draft                HTTP Web Push                   April 2015
       to the user agent.
 
    o  A "push" resource grants the right to send messages to a
-      subscription.  It is public and shared by the the user agent with
-      its application server.
+      subscription.  It is public and shared by the user agent with its
+      application server.
 
    It is expected that a unique subscription will be provided to each
    application; however, there are no inherent cardinality constraints
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 5]
+Thomson, et al.         Expires October 17, 2015                [Page 5]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 6]
+Thomson, et al.         Expires October 17, 2015                [Page 6]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 7]
+Thomson, et al.         Expires October 17, 2015                [Page 7]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 8]
+Thomson, et al.         Expires October 17, 2015                [Page 8]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015                [Page 9]
+Thomson, et al.         Expires October 17, 2015                [Page 9]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 10]
+Thomson, et al.         Expires October 17, 2015               [Page 10]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 11]
+Thomson, et al.         Expires October 17, 2015               [Page 11]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 12]
+Thomson, et al.         Expires October 17, 2015               [Page 12]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -691,8 +691,8 @@ Internet-Draft                HTTP Web Push                   April 2015
    DELETE request to its private "subscription" URI.
 
    A push service MUST return a 400-series status code, such as 404 (Not
-   Found) or 410 (Gone) if an application server atttempts to send a
-   push message to a removed or expired subscription.
+   Found) or 410 (Gone) if an application server attempts to send a push
+   message to a removed or expired subscription.
 
 7.4.  Implications for Application Reliability
 
@@ -725,7 +725,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 13]
+Thomson, et al.         Expires October 17, 2015               [Page 13]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 14]
+Thomson, et al.         Expires October 17, 2015               [Page 14]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -820,7 +820,7 @@ Internet-Draft                HTTP Web Push                   April 2015
    service".
 
    Authorization is managed using "subscription", "push", "receipt
-   subscription", and "receipt subcribe" capability URLs (see
+   subscription", and "receipt subscribe" capability URLs (see
    [CAP-URI]).  A capability URL grants access to a resource based
    solely on knowledge of the URL.
 
@@ -829,15 +829,15 @@ Internet-Draft                HTTP Web Push                   April 2015
    relationships between push services and application servers, with the
    protocols necessary to build and support those relationships.
 
-   A "subscription", "push", "receipt subscription", "receipt subcribe",
-   or push message URI acts as a bearer token.  Knowledge of a
-   "subscription" URI implies authorization to either receive push
+   A "subscription", "push", "receipt subscription", "receipt
+   subscribe", or push message URI acts as a bearer token.  Knowledge of
+   a "subscription" URI implies authorization to either receive push
    messages or delete the subscription.  Knowledge of a "push" URI
    implies authorization to send push messages.  Knowledge of a "receipt
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 15]
+Thomson, et al.         Expires October 17, 2015               [Page 15]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 16]
+Thomson, et al.         Expires October 17, 2015               [Page 16]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 17]
+Thomson, et al.         Expires October 17, 2015               [Page 17]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 18]
+Thomson, et al.         Expires October 17, 2015               [Page 18]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                   April 2015
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 19]
+Thomson, et al.         Expires October 17, 2015               [Page 19]
 
 Internet-Draft                HTTP Web Push                   April 2015
 
@@ -1117,4 +1117,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.         Expires October 16, 2015               [Page 20]
+Thomson, et al.         Expires October 17, 2015               [Page 20]
