@@ -373,11 +373,20 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
         </artwork>
       </figure>
       <t>
-        A push service SHOULD provide the same receipt subscribe URI to user
-        agents.  An application MAY reuse a receipt subscription resource with a
-        push message request if the receipt subscribe URI provided with the push
-        resource is identical to the one used to create the receipt
-        subscription.
+        An application server that sends push messages to a large population of
+        user agents incurs a significant load if it has to monitor a receipt
+        subscription for each user agent.  Reuse of receipt subscriptions is
+        critical in reducing load on application servers.  A receipt
+        subscription can be used for all resources that have the same receipt
+        subscribe URI.
+      </t>
+      <t>
+        A push service SHOULD provide the same receipt subscribe URI to all user
+        agents.  Application servers SHOULD reuse receipt subscription URIs if
+        the receipt subscribe URI provided with the push resource is identical
+        to the one used to create the receipt subscription.  Checking that the
+        receipt subscribe URI is identical allows the application server to
+        avoid creating unnecessary receipt subscriptions.
       </t>
     </section>
 
@@ -422,7 +431,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
       <section anchor="request_receipt" title="Requesting Push Message Receipts">
         <t>
           An application server can use the Push-Receipt header field to request
-          a confirmation from the push server when a push message is delivered
+          a confirmation from the push service when a push message is delivered
           and acknowledged by the user agent. The Push-Receipt header field is a
           URI-Reference as defined in Section 2.7 of
           <xref target="RFC7230"/>.
