@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: December 17, 2015                                     B. Raymor
+Expires: December 26, 2015                                     B. Raymor
                                                                Microsoft
-                                                           June 15, 2015
+                                                           June 24, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 17, 2015.
+   This Internet-Draft will expire on December 26, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 1]
+Thomson, et al.         Expires December 26, 2015               [Page 1]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -74,21 +74,21 @@ Table of Contents
      6.2.  Receiving Push Message Receipts . . . . . . . . . . . . .  11
    7.  Operational Considerations  . . . . . . . . . . . . . . . . .  12
      7.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  12
-     7.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  12
+     7.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  13
      7.3.  Subscription Expiration . . . . . . . . . . . . . . . . .  13
      7.4.  Implications for Application Reliability  . . . . . . . .  14
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-     8.1.  Confidentiality from Push Service Access  . . . . . . . .  14
+     8.1.  Confidentiality from Push Service Access  . . . . . . . .  15
      8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  15
      8.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  16
      8.4.  Denial of Service Considerations  . . . . . . . . . . . .  17
      8.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  17
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
      9.1.  Header Field Registrations  . . . . . . . . . . . . . . .  18
      9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  18
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  19
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  20
      11.2.  Informative References . . . . . . . . . . . . . . . . .  21
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 2]
+Thomson, et al.         Expires December 26, 2015               [Page 2]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 3]
+Thomson, et al.         Expires December 26, 2015               [Page 3]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 4]
+Thomson, et al.         Expires December 26, 2015               [Page 4]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 5]
+Thomson, et al.         Expires December 26, 2015               [Page 5]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 6]
+Thomson, et al.         Expires December 26, 2015               [Page 6]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 7]
+Thomson, et al.         Expires December 26, 2015               [Page 7]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 8]
+Thomson, et al.         Expires December 26, 2015               [Page 8]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015               [Page 9]
+Thomson, et al.         Expires December 26, 2015               [Page 9]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
@@ -557,15 +557,16 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 17, 2015              [Page 10]
+Thomson, et al.         Expires December 26, 2015              [Page 10]
 
 Internet-Draft                HTTP Web Push                    June 2015
 
 
    request, the push service SHOULD return link references to the push
-   and receipt subscribe resources, plus expiration information.  In
-   response to this request, the push server MUST generate a server push
-   for all push messages that have not yet been delivered.
+   and receipt subscribe resources, plus expiration information for the
+   subscription.  In response to this request, the push server MUST
+   generate a server push for all push messages that have not yet been
+   delivered.
 
    A 204 (No Content) status code with no associated server pushes
    indicates that no messages are presently available.  This could be
@@ -602,6 +603,21 @@ Internet-Draft                HTTP Web Push                    June 2015
    message delivery.  A successful response includes a 410 (GONE) status
    code with no data.
 
+
+
+
+
+
+
+
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 11]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    The following example request is made over HTTP/2.
 
 
@@ -609,13 +625,6 @@ Internet-Draft                HTTP Web Push                    June 2015
      :method        = GET
      :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
      :authority     = push.example.net
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 11]
-
-Internet-Draft                HTTP Web Push                    June 2015
 
 
    The push service permits the request to remain outstanding.  When the
@@ -656,6 +665,15 @@ Internet-Draft                HTTP Web Push                    June 2015
    A server that wishes to redistribute load can do so using alternative
    services [I-D.ietf-httpbis-alt-svc].  Alternative services allows for
    redistribution of load whilst maintaining the same URIs for various
+
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 12]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    resources.  User agents can ensure a graceful transition by using the
    GOAWAY frame once it has established a replacement connection.
 
@@ -665,15 +683,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    potentially significant amount of storage for a push service.  A push
    service is not obligated to store messages indefinitely.  A push
    service is able to indicate how long it intends to retain a message
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 12]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
-
    to an application server using the TTL header field (see
    Section 5.2).
 
@@ -713,6 +722,14 @@ Internet-Draft                HTTP Web Push                    June 2015
    [RFC7234]).  The Cache-Control header field MUST also include the
    "private" directive.
 
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 13]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    A push service can remove a subscription at any time.  If a user
    agent or application server has an outstanding request to a
    subscription resource (see Section 6), this can be signaled by
@@ -721,14 +738,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    A user agent or application server can request that a subscription be
    removed by sending a DELETE request to the push message subscription
    or receipt subscription URI.
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 13]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
    A push service MUST return a 400-series status code, such as 404 (Not
    Found) or 410 (Gone) if an application server attempts to send a push
@@ -768,6 +777,15 @@ Internet-Draft                HTTP Web Push                    June 2015
    and integrity protection for subscriptions and push messages from
    external parties.
 
+
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 14]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
 8.1.  Confidentiality from Push Service Access
 
    The protection afforded by TLS does not protect content from the push
@@ -778,14 +796,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    integrity or authentication mechanisms within the push message
    itself.  The application server sending the push message and the
    application on the user agent that receives it are frequently just
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 14]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
-
    different instances of the same application, so no standardized
    protocol is needed to establish a proper security context.  The
    process of providing the application server with subscription
@@ -825,6 +835,13 @@ Internet-Draft                HTTP Web Push                    June 2015
    User and device information MUST NOT be exposed through a push or
    push message URI.
 
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 15]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    In addition, push URIs established by the same user agent or push
    message URIs for the same subscription MUST NOT include any
    information that allows them to be correlated with the user agent.
@@ -834,13 +851,6 @@ Internet-Draft                HTTP Web Push                    June 2015
       URI necessarily identifies a push service or a single server
       instance.  It is also possible that traffic analysis could be used
       to correlate subscriptions.
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 15]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
    A user agent MUST be able to create new subscriptions with new
    identifiers at any time.
@@ -880,6 +890,14 @@ Internet-Draft                HTTP Web Push                    June 2015
    large number of subscriptions allows application servers to reuse
    receipt subscriptions, which can provide a significant efficiency
    advantage.  A push service that uses a common receipt subscribe URI
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 16]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    loses control over the creation of receipt subscriptions.  This can
    result in a potential exposure to denial of service; stateless
    resource creation can be used to mitigate the effects of this
@@ -888,15 +906,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    Encoding a large amount of random entropy (at least 120 bits) in the
    path component ensures that it is difficult to successfully guess a
    valid capability URL.
-
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 16]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
 8.4.  Denial of Service Considerations
 
@@ -938,6 +947,13 @@ Internet-Draft                HTTP Web Push                    June 2015
    between different subscription-related URIs for the same user agent.
    Encrypted message contents are not revealed to the push service.
 
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 17]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    Limitations on log retention and strong access control mechanisms can
    ensure that URIs are not learned by unauthorized entities.
 
@@ -946,13 +962,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    This protocol defines new HTTP header fields in Section 9.1.  New
    link relation types are identified using the URNs defined in
    Section 9.2.
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 17]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
 9.1.  Header Field Registrations
 
@@ -994,6 +1003,13 @@ Internet-Draft                HTTP Web Push                    June 2015
    Repository:  [Editor/IANA note: please include a link to the final
       registry location.]
 
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 18]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    Index value:  Values in this registry are URNs or URN prefixes that
       start with the prefix "urn:ietf:params:push".  Each is registered
       independently.
@@ -1002,13 +1018,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    include the following information:
 
    URN:  A complete URN or URN prefix.
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 18]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
    Description:  A summary description.
 
@@ -1048,6 +1057,15 @@ Internet-Draft                HTTP Web Push                    June 2015
    Costin Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and
    many others.
 
+
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 19]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
 11.  References
 
 11.1.  Normative References
@@ -1055,16 +1073,6 @@ Internet-Draft                HTTP Web Push                    June 2015
    [CAP-URI]  Tennison, J., "Good Practices for Capability URLs", FPWD
               capability-urls, February 2014,
               <http://www.w3.org/TR/capability-urls/>.
-
-
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 19]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
    [I-D.ietf-httpbis-alt-svc]
               Nottingham, M., McManus, P., and J. Reschke, "HTTP
@@ -1105,22 +1113,20 @@ Internet-Draft                HTTP Web Push                    June 2015
    [RFC7232]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Conditional Requests", RFC 7232, June 2014.
 
+
+
+
+
+Thomson, et al.         Expires December 26, 2015              [Page 20]
+
+Internet-Draft                HTTP Web Push                    June 2015
+
+
    [RFC7234]  Fielding, R., Nottingham, M., and J. Reschke, "Hypertext
               Transfer Protocol (HTTP/1.1): Caching", RFC 7234, June
               2014.
 
    [RFC7240]  Snell, J., "Prefer Header for HTTP", RFC 7240, June 2014.
-
-
-
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 20]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
 
 11.2.  Informative References
 
@@ -1167,10 +1173,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-Thomson, et al.         Expires December 17, 2015              [Page 21]
+Thomson, et al.         Expires December 26, 2015              [Page 21]
