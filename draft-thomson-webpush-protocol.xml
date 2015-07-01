@@ -572,14 +572,15 @@ DATA         [stream 4] +END_STREAM
       </figure>
 
       <t>
+        In response to this request, the push server MUST generate a server push
+        for all push messages that have not yet been delivered.  In addition,
+        the push service SHOULD return link references to the push and receipt
+        subscribe resources, plus expiration information for the subscription.
+      </t>
+      <t>
         A user agent can request the contents of the push message subscription
         resource immediately by including a <xref target="RFC7240">Prefer header
-        field</xref> with a "wait" parameter set to "0".  In response to this
-        request, the push service SHOULD return link references to the push and
-        receipt subscribe resources, plus expiration information for the
-        subscription.  In response to this request, the push server MUST
-        generate a server push for all push messages that have not yet been
-        delivered.
+        field</xref> with a "wait" parameter set to "0".
       </t>
       <t>
         A 204 (No Content) status code with no associated server pushes
