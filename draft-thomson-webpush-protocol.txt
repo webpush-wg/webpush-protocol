@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: December 26, 2015                                     B. Raymor
+Expires: January 2, 2016                                       B. Raymor
                                                                Microsoft
-                                                           June 24, 2015
+                                                            July 1, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 26, 2015.
+   This Internet-Draft will expire on January 2, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 1]
+Thomson, et al.          Expires January 2, 2016                [Page 1]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 2]
+Thomson, et al.          Expires January 2, 2016                [Page 2]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    Uncoordinated use of persistent connections or sessions from multiple
@@ -165,9 +165,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 3]
+Thomson, et al.          Expires January 2, 2016                [Page 3]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    application server:  The component of an application that runs on a
@@ -221,9 +221,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 4]
+Thomson, et al.          Expires January 2, 2016                [Page 4]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    At the very beginning of the process, a new message subscription is
@@ -277,9 +277,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 5]
+Thomson, et al.          Expires January 2, 2016                [Page 5]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    push message:  A push message resource is created to identify push
@@ -333,9 +333,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 6]
+Thomson, et al.          Expires January 2, 2016                [Page 6]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    HTTP/1.1 201 Created
@@ -389,9 +389,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 7]
+Thomson, et al.          Expires January 2, 2016                [Page 7]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
 5.  Requesting Push Message Delivery
@@ -445,9 +445,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 8]
+Thomson, et al.          Expires January 2, 2016                [Page 8]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
 5.2.  Push Message Time-To-Live
@@ -501,9 +501,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015               [Page 9]
+Thomson, et al.          Expires January 2, 2016                [Page 9]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    value MUST be less than or equal to the value provided by the
@@ -551,22 +551,23 @@ Internet-Draft                HTTP Web Push                    June 2015
    DATA         [stream 4] +END_STREAM
      iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
+   In response to this request, the push server MUST generate a server
+   push for all push messages that have not yet been delivered.  In
+   addition, the push service SHOULD return link references to the push
+
+
+
+Thomson, et al.          Expires January 2, 2016               [Page 10]
+
+Internet-Draft                HTTP Web Push                    July 2015
+
+
+   and receipt subscribe resources, plus expiration information for the
+   subscription.
+
    A user agent can request the contents of the push message
    subscription resource immediately by including a Prefer header field
-   [RFC7240] with a "wait" parameter set to "0".  In response to this
-
-
-
-Thomson, et al.         Expires December 26, 2015              [Page 10]
-
-Internet-Draft                HTTP Web Push                    June 2015
-
-
-   request, the push service SHOULD return link references to the push
-   and receipt subscribe resources, plus expiration information for the
-   subscription.  In response to this request, the push server MUST
-   generate a server push for all push messages that have not yet been
-   delivered.
+   [RFC7240] with a "wait" parameter set to "0".
 
    A 204 (No Content) status code with no associated server pushes
    indicates that no messages are presently available.  This could be
@@ -612,10 +613,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-
-Thomson, et al.         Expires December 26, 2015              [Page 11]
+Thomson, et al.          Expires January 2, 2016               [Page 11]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    The following example request is made over HTTP/2.
@@ -669,9 +669,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 12]
+Thomson, et al.          Expires January 2, 2016               [Page 12]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    resources.  User agents can ensure a graceful transition by using the
@@ -725,9 +725,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 13]
+Thomson, et al.          Expires January 2, 2016               [Page 13]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    A push service can remove a subscription at any time.  If a user
@@ -781,9 +781,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 14]
+Thomson, et al.          Expires January 2, 2016               [Page 14]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
 8.1.  Confidentiality from Push Service Access
@@ -837,9 +837,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 15]
+Thomson, et al.          Expires January 2, 2016               [Page 15]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    In addition, push URIs established by the same user agent or push
@@ -893,9 +893,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 16]
+Thomson, et al.          Expires January 2, 2016               [Page 16]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    loses control over the creation of receipt subscriptions.  This can
@@ -949,9 +949,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 17]
+Thomson, et al.          Expires January 2, 2016               [Page 17]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    Limitations on log retention and strong access control mechanisms can
@@ -1005,9 +1005,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 18]
+Thomson, et al.          Expires January 2, 2016               [Page 18]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    Index value:  Values in this registry are URNs or URN prefixes that
@@ -1061,9 +1061,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 19]
+Thomson, et al.          Expires January 2, 2016               [Page 19]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
 11.  References
@@ -1117,9 +1117,9 @@ Internet-Draft                HTTP Web Push                    June 2015
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 20]
+Thomson, et al.          Expires January 2, 2016               [Page 20]
 
-Internet-Draft                HTTP Web Push                    June 2015
+Internet-Draft                HTTP Web Push                    July 2015
 
 
    [RFC7234]  Fielding, R., Nottingham, M., and J. Reschke, "Hypertext
@@ -1173,4 +1173,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.         Expires December 26, 2015              [Page 21]
+Thomson, et al.          Expires January 2, 2016               [Page 21]
