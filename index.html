@@ -489,9 +489,9 @@ ul.toc a:first-child {
   <meta name="generator" content="xml2rfc version 2.5.0 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-thomson-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-7-1" />
+  <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-7-19" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -515,8 +515,8 @@ ul.toc a:first-child {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: January 2, 2016</td>
-  <td class="right">B. Raymor</td>
+  <td class="left">Expires: January 20, 2016</td>
+  <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
   <td class="left"></td>
@@ -524,7 +524,7 @@ ul.toc a:first-child {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">July 1, 2015</td>
+  <td class="right">July 19, 2015</td>
 </tr>
 
     	
@@ -532,7 +532,7 @@ ul.toc a:first-child {
   </table>
 
   <p class="title">Generic Event Delivery Using HTTP Push <br />
-  <span class="filename">draft-thomson-webpush-protocol-latest</span></p>
+  <span class="filename">draft-ietf-webpush-protocol-latest</span></p>
   
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
@@ -544,7 +544,7 @@ ul.toc a:first-child {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 2, 2016.</p>
+<p>This Internet-Draft will expire on January 20, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -629,7 +629,7 @@ ul.toc a:first-child {
 </dl>
 
 <p> </p>
-<p id="rfc.section.1.1.p.3">Examples in this document use the <a href="#RFC7230">HTTP/1.1 message format</a> <cite title="NONE">[RFC7230]</cite>.  Many of the exchanges can be completed using HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format from <a href="#I-D.ietf-httpbis-http2">[I-D.ietf-httpbis-http2]</a> is used.  </p>
+<p id="rfc.section.1.1.p.3">Examples in this document use the <a href="#RFC7230">HTTP/1.1 message format</a> <cite title="NONE">[RFC7230]</cite>.  Many of the exchanges can be completed using HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format from <a href="#RFC7540">[RFC7540]</a> is used.  </p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> Overview</h1>
 <p id="rfc.section.2.p.1">A general model for push services includes three basic actors: a user agent, a push service, and an application (server).  </p>
 <pre>
@@ -727,8 +727,9 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#send" id="send">Requesting Push Message Delivery</a></h1>
 <p id="rfc.section.5.p.1">An application server requests the delivery of a push message by sending a HTTP request to a push resource distributed to the application server by a user agent. The push message is included in the body of the request.  </p>
 <pre>
-POST /p/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx HTTP/1.1
+POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
+Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
 
@@ -763,7 +764,7 @@ TTL = 1*DIGIT
 <p id="rfc.section.5.2.p.7">Absence of the TTL header field is interpreted as equivalent to a zero value.  Push messages with a zero TTL indicate that storage is not needed and that the message can be dropped if the user agent isn't immediately available to receive the message.  Push messages with a zero TTL can be delivered very efficiently.  </p>
 <p id="rfc.section.5.2.p.8">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor" id="monitor">Receiving Push Messages</a></h1>
-<p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send the contents of push messages as they are sent by application servers.  </p>
+<p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.6.p.2">Each push message is pushed in response to a synthesized GET request.  The GET request is made to the push message resource that was created by the push server when the application server requested message delivery.  The response body is the entity body from the most recent request sent to the push resource.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
@@ -804,7 +805,7 @@ Host: push.example.net
           </pre>
 <p id="rfc.section.6.1.p.2">If the application has requested a delivery receipt, the push server MUST deliver a response to the application server monitoring the receipt subscription resource.  </p>
 <h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#receive_receipt" id="receive_receipt">Receiving Push Message Receipts</a></h1>
-<p id="rfc.section.6.2.p.1">The application server requests the delivery of receipts from the push server by making a HTTP GET request to the receipt subscription resource. The push service does not respond to this request, it instead uses <a href="#I-D.ietf-httpbis-http2">HTTP/2 server push</a> <cite title="NONE">[I-D.ietf-httpbis-http2]</cite> to send push receipts when messages are acknowledged (<a href="#acknowledge_message">Section 6.1</a>) by the user agent.  </p>
+<p id="rfc.section.6.2.p.1">The application server requests the delivery of receipts from the push server by making a HTTP GET request to the receipt subscription resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send push receipts when messages are acknowledged (<a href="#acknowledge_message">Section 6.1</a>) by the user agent.  </p>
 <p id="rfc.section.6.2.p.2">Each receipt is pushed in response to a synthesized GET request.  The GET request is made to the same push message resource that was created by the push server when the application server requested message delivery. A successful response includes a 410 (GONE) status code with no data.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
@@ -1002,13 +1003,7 @@ HEADERS      [stream 4] +END_STREAM
       <td class="reference">
         <b id="I-D.ietf-httpbis-alt-svc">[I-D.ietf-httpbis-alt-svc]</b>
       </td>
-      <td class="top"><a>Nottingham, M.</a>, <a>McManus, P.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-06">HTTP Alternative Services</a>", Internet-Draft draft-ietf-httpbis-alt-svc-06, February 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="I-D.ietf-httpbis-http2">[I-D.ietf-httpbis-http2]</b>
-      </td>
-      <td class="top"><a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-http2-17">Hypertext Transfer Protocol version 2</a>", Internet-Draft draft-ietf-httpbis-http2-17, February 2015.</td>
+      <td class="top"><a>Nottingham, M.</a>, <a>McManus, P.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-07">HTTP Alternative Services</a>", Internet-Draft draft-ietf-httpbis-alt-svc-07, May 2015.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1075,6 +1070,12 @@ HEADERS      [stream 4] +END_STREAM
         <b id="RFC7240">[RFC7240]</b>
       </td>
       <td class="top"><a>Snell, J.</a>, "<a href="http://tools.ietf.org/html/rfc7240">Prefer Header for HTTP</a>", RFC 7240, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7540">[RFC7540]</b>
+      </td>
+      <td class="top"><a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="http://tools.ietf.org/html/rfc7540">Hypertext Transfer Protocol Version 2</a>", RFC 7540, May 2015.</td>
     </tr>
   </tbody>
 </table>
@@ -1145,7 +1146,7 @@ HEADERS      [stream 4] +END_STREAM
 </div><div class="avoidbreak">
   <address class="vcard">
 	<span class="vcardline">
-	  <span class="fn">Brian Raymor</span> 
+	  <span class="fn">Brian Raymor</span> (editor)
 	  <span class="n hidden">
 		<span class="family-name">Raymor</span>
 	  </span>
