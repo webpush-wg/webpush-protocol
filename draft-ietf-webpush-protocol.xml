@@ -1,0 +1,1362 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+
+<rfc category="std" ipr="trust200902" docName="draft-ietf-webpush-protocol-latest">
+  <front>
+    <title abbrev="HTTP Web Push">
+      Generic Event Delivery Using HTTP Push
+    </title>
+
+    <author initials="M." surname="Thomson" fullname="Martin Thomson">
+      <organization>Mozilla</organization>
+      <address>
+        <postal>
+          <street>331 E Evelyn Street</street>
+          <city>Mountain View</city>
+          <region>CA</region>
+          <code>94041</code>
+          <country>US</country>
+        </postal>
+        <email>martin.thomson@gmail.com</email>
+      </address>
+    </author>
+
+    <author initials="E." surname="Damaggio" fullname="Elio Damaggio">
+      <organization>Microsoft</organization>
+      <address>
+        <postal>
+          <street>One Microsoft Way</street>
+          <city>Redmond</city>
+          <region>WA</region>
+          <code>98052</code>
+          <country>US</country>
+        </postal>
+        <email>elioda@microsoft.com</email>
+      </address>
+    </author>
+
+    <author initials="B." surname="Raymor" fullname="Brian Raymor" role="editor">
+      <organization>Microsoft</organization>
+      <address>
+        <postal>
+          <street>One Microsoft Way</street>
+          <city>Redmond</city>
+          <region>WA</region>
+          <code>98052</code>
+          <country>US</country>
+        </postal>
+        <email>brian.raymor@microsoft.com</email>
+      </address>
+    </author>
+
+    <date year="2015"/>
+    <area>RAI</area>
+    <workgroup>WEBPUSH</workgroup>
+    <keyword>Internet-Draft</keyword>
+    <keyword>HTTP</keyword>
+    <keyword>HTTP2</keyword>
+    <keyword>Push</keyword>
+    <keyword>WebPush</keyword>
+
+    <abstract>
+      <t>
+        A simple protocol for the delivery of realtime events to user agents is
+        described.  This scheme uses HTTP/2 server push.
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t>
+        Many applications on mobile and embedded devices require continuous
+        access to network communications so that real-time events - such as
+        incoming calls or messages - can be delivered (or "pushed") in a timely
+        fashion. These devices typically have limited power reserves, so finding
+        more efficient ways to serve application requirements greatly benefits
+        the application ecosystem.
+      </t>
+      <t>
+        One significant contributor to power usage is the radio.  Radio
+        communications consume a significant portion of the energy budget
+        on a wireless device.
+      </t>
+      <t>
+        Uncoordinated use of persistent connections or sessions from multiple
+        applications can contribute to unnecessary use of the device radio,
+        since each independent session independently incurs overheads.  In
+        particular, keep alive traffic used to ensure that middleboxes do not
+        prematurely time out sessions, can result in significant waste.
+        Maintenance traffic tends to dominate over the long term, since events
+        are relatively rare.
+      </t>
+      <t>
+        Consolidating all real-time events into a single session ensures more
+        efficient use of network and radio resources.  A single service
+        consolidates all events, distributing those events to applications as
+        they arrive.  This requires just one session, avoiding duplicated
+        overhead costs.
+      </t>
+      <t>
+        The <xref target="API">W3C Web Push API</xref> describes an API that
+        enables the use of a consolidated push service from web applications.
+        This expands on that work by describing a protocol that can be used to:
+        <list style="symbols">
+          <t>
+            request the delivery of a push message to a user agent,
+          </t>
+          <t>
+            create new push message delivery subscriptions, and
+          </t>
+          <t>
+            monitor for new push messages.
+          </t>
+        </list>
+      </t>
+      <t>
+        Requesting the delivery of events is particularly important for the Web
+        Push API.  The subscription, management and monitoring functions are
+        currently fulfilled by proprietary protocols; these are adequate, but do
+        not offer any of the advantages that standardization affords.
+      </t>
+      <t>
+        This document intentionally does not describe how a push service is
+        discovered.  Discovery of push services is left for future efforts, if
+        it turns out to be necessary at all.  User agents are expected to be
+        configured with a URL for a push service.
+      </t>
+
+      <section anchor="terminology" title="Conventions and Terminology">
+        <t>
+          In cases where normative language needs to be emphasized, this
+          document falls back on established shorthands for expressing
+          interoperability requirements on implementations: the capitalized
+          words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these is
+          described in <xref target="RFC2119"/>.
+        </t>
+
+        <t>
+          This document defines the following terms:
+          <list style="hanging">
+            <t hangText="application:">
+              Both the sender and ultimate consumer of push messages.  Many
+              applications have components that are run on a user agent and
+              other components that run on servers.
+            </t>
+            <t hangText="application server:">
+              The component of an application that runs on a server and requests
+              the delivery of a push message.
+            </t>
+            <t hangText="push message subscription:">
+              A message delivery context that is established between the user
+              agent and the push service and shared with the application server.
+              All push messages are associated with a push message subscription.
+            </t>
+            <t hangText="push message:">
+              A message sent from an application server to a user agent via a
+              push service.
+            </t>
+            <t hangText="push message receipt:">
+              A message delivery confirmation sent from the push server to the
+              application server.
+            </t>
+            <t hangText="push service:">
+              A service that delivers push messages to user agents.
+            </t>
+            <t hangText="user agent:">
+              A device and software that is the recipient of push messages.
+            </t>
+          </list>
+        </t>
+
+        <t>
+          Examples in this document use the <xref target="RFC7230">HTTP/1.1
+          message format</xref>.  Many of the exchanges can be completed using
+          HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format
+          from <xref target="RFC7540"/> is used.
+        </t>
+      </section>
+    </section>
+
+    <section title="Overview">
+      <t>
+        A general model for push services includes three basic actors: a user
+        agent, a push service, and an application (server).
+      </t>
+      <figure>
+          <artwork><![CDATA[
+ +-------+           +--------------+       +-------------+
+ |  UA   |           | Push Service |       | Application |
+ +-------+           +--------------+       +-------------+
+     |                      |                      |
+     |      Subscribe       |                      |
+     |--------------------->|                      |
+     |       Monitor        |                      |
+     |<====================>|                      |
+     |                      |                      |
+     |          Distribute Push Resource           |
+     |-------------------------------------------->|
+     |                      |                      |
+     :                      :                      :
+     |                      |     Push Message     |
+     |    Push Message      |<---------------------|
+     |<---------------------|                      |
+     |                      |                      |
+]]></artwork>
+      </figure>
+      <t>
+        At the very beginning of the process, a new  message subscription is
+        created by the user agent and then distributed to its application
+        server. This subscription is the basis of all future interactions between
+        the actors.
+      </t>
+      <t>
+        To offer more control for authorization, a message subscription is
+        modeled as two resources with different capabilities:
+        <list style="symbols">
+          <t>
+            A subscription resource is used to receive messages from a
+            subscription and to delete a subscription. It is private to the user
+            agent.
+          </t>
+          <t>
+            A push resource is used to send messages to a subscription. It is
+            public and shared by the user agent with its application server.
+          </t>
+        </list>
+      </t>
+      <t>
+        It is expected that a unique subscription will be distributed to each
+        application; however, there are no inherent cardinality constraints in
+        the protocol.  Multiple subscriptions might be created for the same
+        application, or multiple applications could use the same subscription.
+        Note however that sharing subscriptions has security and privacy
+        implications.
+      </t>
+      <t>
+        Subscriptions have a limited lifetime.  They can also be terminated by
+        either the push service or user agent at any time. User agents and
+        application servers must be prepared to manage changes in subscription
+        state.
+      </t>
+
+      <section anchor="resources" title="HTTP Resources">
+        <t>
+          This protocol uses <xref target="RFC7230">HTTP resources</xref> and
+          <xref target="RFC5988">link relations</xref>.  The following resources
+          are defined:
+          <list style="hanging">
+            <t hangText="push service:">
+              This resource is used to create push message subscriptions (see
+              <xref target="message_subscription"/>).  A URL for the push
+              service is configured into user agents.
+            </t>
+            <t hangText="push message subscription:">
+              This resource provides read and delete access for a message
+              subscription. A user agent <xref target="monitor">receives push
+              messages</xref> using a push message subscription.  Every push
+              message subscription has exactly one push resource associated with
+              it.
+            </t>
+            <t hangText="push:">
+              A push resource is used by the application server to request the
+              delivery of a push message (see <xref target="send"/>).  A link
+              relation of type "urn:ietf:params:push" is used to identify a push
+              resource.
+            </t>
+            <t hangText="push message:">
+              A push message resource is created to identify push messages that
+              have been accepted by the push service.  The push message resource
+              is also used to acknowledge receipt of a push message.
+            </t>
+            <t hangText="receipt subscribe:">
+              A receipt subscribe resource is used by an application server to
+              create a receipt subscription (see <xref
+              target="receipt_subscription"/>).  A link relation of type
+              "urn:ietf:params:push:receipt" is used to identity a receipt
+              subscribe resource.
+            </t>
+            <t hangText="receipt subscription:">
+              An application server <xref target="request_receipt">receives
+              delivery confirmations</xref> for push messages using a receipt
+              subscription.
+            </t>
+          </list>
+        </t>
+      </section>
+    </section>
+
+    <section anchor="message_subscription" title="Subscribing for Push Messages">
+      <t>
+        A user agent sends a POST request to its configured push service
+        resource to create a new subscription.
+      </t>
+      <figure>
+        <artwork type="inline"><![CDATA[
+POST /subscribe/ HTTP/1.1
+Host: push.example.net
+
+]]></artwork>
+      </figure>
+      <t>
+        A response with a 201 (Created) status code includes a URI for a new
+        push message subscription resource in the Location header field.
+      </t>
+      <t>
+        The push server MUST provide a URI for the push resource corresponding
+        to the push message subscription using a link relation of type
+        "urn:ietf:params:push".
+      </t>
+      <t>
+        The push server MUST provide a URI for a receipt subscribe resource in a
+        link relation of type "urn:ietf:params:push:receipt".
+      </t>
+      <t>
+        An application-specific method is used to distribute the push and
+        receipt subscribe URIs to the application server.  Confidentiality
+        protection and application server authentication MUST be used to ensure
+        that these URIs are not disclosed to unauthorized recipients (see <xref
+        target="authorization"/>).
+      </t>
+      <figure>
+        <artwork type="inline">
+  <![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:52 GMT
+Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+        rel="urn:ietf:params:push"
+Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+        rel="urn:ietf:params:push:receipt"
+Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+Cache-Control: max-age:864000, private
+
+]]></artwork>
+      </figure>
+    </section>
+    <section anchor="receipt_subscription"
+             title="Subscribing for Push Message Receipts">
+      <t>
+        An application server requests the creation of a receipt subscription by
+        sending a HTTP POST request to the receipt subscribe resource
+        distributed to the application server by a user agent.
+      </t>
+      <figure>
+        <artwork type="inline">
+          <![CDATA[
+POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
+Host: push.example.net
+
+]]>
+        </artwork>
+      </figure>
+      <t>
+        A successful response with a 201 (Created) status code includes a URI
+        for the receipt subscription resource in the Location header field.
+      </t>
+      <figure>
+        <artwork type="inline">
+          <![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:52 GMT
+Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+
+]]>
+        </artwork>
+      </figure>
+      <t>
+        An application server that sends push messages to a large population of
+        user agents incurs a significant load if it has to monitor a receipt
+        subscription for each user agent.  Reuse of receipt subscriptions is
+        critical in reducing load on application servers.  A receipt
+        subscription can be used for all resources that have the same receipt
+        subscribe URI.
+      </t>
+      <t>
+        A push service SHOULD provide the same receipt subscribe URI to all user
+        agents.  Application servers SHOULD reuse receipt subscription URIs if
+        the receipt subscribe URI provided with the push resource is identical
+        to the one used to create the receipt subscription.  Checking that the
+        receipt subscribe URI is identical allows the application server to
+        avoid creating unnecessary receipt subscriptions.
+      </t>
+    </section>
+
+    <section anchor="send" title="Requesting Push Message Delivery">
+      <t>
+        An application server requests the delivery of a push message by sending
+        a HTTP request to a push resource distributed to the application server
+        by a user agent. The push message is included in the body of the
+        request.
+      </t>
+      <figure>
+        <artwork type="inline"><![CDATA[
+POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+Host: push.example.net
+Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+Content-Type: text/plain;charset=utf8
+Content-Length: 36
+
+iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+]]></artwork>
+      </figure>
+      <figure>
+        <preamble>
+          A 201 (Created) response indicates that the push message was accepted.
+          A URI for the push message resource that was created in response to
+          the request is included in the Location header field.  This does not
+          indicate that the message was delivered to the user agent.
+        </preamble>
+        <artwork type="inline"><![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:55 GMT
+Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+
+]]></artwork>
+      </figure>
+      <t>
+        A push service MAY generate a 413 (Payload Too Large) status code in
+        response to requests that include an entity body that is too large.
+        Push services MUST NOT generate a 413 status code in responses to an
+        entity body that is 4k (4096 bytes) or less in size.
+      </t>
+
+      <section anchor="request_receipt" title="Requesting Push Message Receipts">
+        <t>
+          An application server can use the Push-Receipt header field to request
+          a confirmation from the push service when a push message is delivered
+          and acknowledged by the user agent. The Push-Receipt header field is a
+          URI-Reference as defined in Section 2.7 of
+          <xref target="RFC7230"/>.
+        </t>
+        <figure>
+          <artwork type="abnf">
+            <![CDATA[
+Push-Receipt = URI-reference
+          ]]>
+          </artwork>
+        </figure>
+        <t>
+          The application sets the Push-Receipt header field value to a receipt
+          subscription URI.  This receipt subscription resource MUST be created
+          from the same receipt subscribe resource which was returned with the
+          push message subscription response (see <xref
+          target="message_subscription"/>).
+        </t>
+      </section>
+
+      <section anchor="ttl" title="Push Message Time-To-Live">
+        <t>
+          A push service can improve the reliability of push message delivery
+          considerably by storing push messages for a period.  User agents are
+          often only intermittently connected, and so benefit from having short
+          term message storage at the push service.
+        </t>
+        <t>
+          Delaying delivery might also be used to batch communication with the
+          user agent, thereby conserving radio resources.
+        </t>
+        <t>
+          Some push messages are not useful once a certain period of time
+          elapses.  Delivery of messages after they have ceased to be relevant
+          is wasteful.  For example, if the push message contains a call
+          notification, receiving a message after the caller has abandoned the
+          call is of no value; the application at the user agent is forced to
+          suppress the message so that it does not generate a useless alert.
+        </t>
+        <t>
+          An application server can use the TTL header field to limit the time
+          that a push message is retained by a push service.  The TTL header
+          field contains a value in seconds that describes how long a push
+          message is retained by the push service.
+        </t>
+        <figure>
+          <artwork type="abnf"><![CDATA[
+TTL = 1*DIGIT
+          ]]></artwork>
+        </figure>
+        <t>
+          Once the Time-To-Live (TTL) period elapses, the push service MUST
+          remove the push message and cease any attempt to deliver it to the
+          user agent.  A push service might retain values for a short duration
+          after the TTL period to account for time accounting errors in
+          processing.  For instance, distributing a push message within a server
+          cluster might accrue errors due to clock variation, or processing and
+          transit delays.
+        </t>
+        <t>
+          A push service is not obligated to account for time spent by the
+          application server in sending a push message to the push service, or
+          delays incurred while sending a push message to the user agent.  An
+          application server needs to account for transit delays in selecting a
+          TTL header field value.
+        </t>
+        <t>
+          Absence of the TTL header field is interpreted as equivalent to a zero
+          value.  Push messages with a zero TTL indicate that storage is not
+          needed and that the message can be dropped if the user agent isn't
+          immediately available to receive the message.  Push messages with a
+          zero TTL can be delivered very efficiently.
+          <!-- But we need to determine if they can be acknowledged.  Decoupling
+               of delivery and acknowledgment makes this tricky. -->
+        </t>
+        <t>
+          A push service MAY choose to retain a push message for a shorter
+          duration than that requested.  It indicates this by including a TTL
+          header field in the response that includes the actual TTL.  This TTL
+          value MUST be less than or equal to the value provided by the
+          application server.
+        </t>
+      </section>
+    </section>
+
+    <section anchor="monitor" title="Receiving Push Messages">
+      <t>
+        A user agent requests the delivery of new push messages by making a GET
+        request to a push message subscription resource.  The push service does
+        not respond to this request, it instead uses <xref
+        target="RFC7540">HTTP/2 server push</xref> to send the
+        contents of push messages as they are sent by application servers.
+      </t>
+      <t>
+        Each push message is pushed in response to a synthesized GET request.
+        The GET request is made to the push message resource that was created by
+        the push server when the application server requested message delivery.
+        The response body is the entity body from the most recent request sent
+        to the push resource.
+      </t>
+
+      <figure>
+        <preamble>
+          The following example request is made over HTTP/2.
+        </preamble>
+        <artwork><![CDATA[
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :method        = GET
+  :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+  :authority     = push.example.net
+]]></artwork>
+      </figure>
+
+      <figure>
+        <preamble>
+          The push service permits the request to remain outstanding.  When a
+          push message is sent by an application server, a server push is
+          associated with the initial request.  The response includes the push
+          message.
+        </preamble>
+        <artwork><![CDATA[
+PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+  :method        = GET
+  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :authority     = push.example.net
+
+HEADERS      [stream 4] +END_HEADERS
+  :status        = 200
+  date           = Thu, 11 Dec 2014 23:56:56 GMT
+  last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+  cache-control  = private
+  content-type   = text/plain;charset=utf8
+  content-length = 36
+
+DATA         [stream 4] +END_STREAM
+  iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+]]></artwork>
+      </figure>
+
+      <t>
+        In response to this request, the push server MUST generate a server push
+        for all push messages that have not yet been delivered.  In addition,
+        the push service SHOULD return link references to the push and receipt
+        subscribe resources, plus expiration information for the subscription.
+      </t>
+      <t>
+        A user agent can request the contents of the push message subscription
+        resource immediately by including a <xref target="RFC7240">Prefer header
+        field</xref> with a "wait" parameter set to "0".
+      </t>
+      <t>
+        A 204 (No Content) status code with no associated server pushes
+        indicates that no messages are presently available.  This could be
+        because push messages have expired.
+      </t>
+
+      <section anchor="acknowledge_message"
+               title="Acknowledging Push Messages">
+        <t>
+          To ensure that a push message is properly delivered to the user agent
+          at least once, the user agent MUST acknowledge receipt of the message
+          by performing a HTTP DELETE on the push message resource.
+        </t>
+
+        <figure>
+          <artwork type="inline">
+            <![CDATA[
+DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
+Host: push.example.net
+
+]]>
+          </artwork>
+        </figure>
+
+        <t>
+          If the application has requested a delivery receipt, the push server
+          MUST deliver a response to the application server monitoring the
+          receipt subscription resource.
+        </t>
+      </section>
+
+      <section anchor="receive_receipt" title="Receiving Push Message Receipts">
+        <t>
+          The application server requests the delivery of receipts from the push
+          server by making a HTTP GET request to the receipt subscription
+          resource. The push service does not respond to this request, it
+          instead uses <xref target="RFC7540">HTTP/2 server
+          push</xref> to send push receipts when messages are acknowledged
+          (<xref target="acknowledge_message"></xref>) by the user agent.
+        </t>
+        <t>
+          Each receipt is pushed in response to a synthesized GET request.  The
+          GET request is made to the same push message resource that was created
+          by the push server when the application server requested message
+          delivery. A successful response includes a 410 (GONE) status code with
+          no data.
+        </t>
+
+        <figure>
+          <preamble>
+            The following example request is made over HTTP/2.
+          </preamble>
+          <artwork>
+            <![CDATA[
+HEADERS      [stream 13] +END_STREAM +END_HEADERS
+  :method        = GET
+  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+  :authority     = push.example.net
+]]>
+          </artwork>
+        </figure>
+
+        <figure>
+          <preamble>
+            The push service permits the request to remain outstanding.  When
+            the user agent acknowledges the message, the push server pushes a
+            delivery receipt to the application server. A 410 (Gone) status code
+            confirms that the message was delivered and acknowledged.
+          </preamble>
+          <artwork>
+            <![CDATA[
+PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
+  :method        = GET
+  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :authority     = push.example.net
+
+HEADERS      [stream 4] +END_STREAM
+                        +END_HEADERS
+  :status        = 410
+  date           = Thu, 11 Dec 2014 23:56:56 GMT
+
+]]>
+          </artwork>
+        </figure>
+        <t>
+          The push server MUST push a response with a status code of 5XX (TBD)
+          if the user agent fails to acknowledge the receipt of the push message
+          or the push server fails to deliver the message prior to its expiration.
+        </t>
+      </section>
+    </section>
+
+    <section anchor="operational" title="Operational Considerations">
+      <t>
+        A push service is likely to have to maintain a very large number of open
+        TCP connections.  Effective management of those connections can depend
+        on being able to move connections between server instances.
+      </t>
+
+      <section anchor="load" title="Load Management">
+        <t>
+          A user agent MUST support the 307 (Temporary Redirect) status code
+          <xref target="RFC7231"/>, which can be used by a push service to
+          redistribute load at the time that a new subscription is requested.
+        </t>
+        <t>
+          A server that wishes to redistribute load can do so using alternative
+          services <xref target="I-D.ietf-httpbis-alt-svc"/>.  Alternative
+          services allows for redistribution of load whilst maintaining the same
+          URIs for various resources.  User agents can ensure a graceful
+          transition by using the GOAWAY frame once it has established a
+          replacement connection.
+        </t>
+      </section>
+
+      <section anchor="storage" title="Push Message Expiration">
+        <t>
+          Storage of push messages based on the TTL header field comprises a
+          potentially significant amount of storage for a push service.  A push
+          service is not obligated to store messages indefinitely.  A push
+          service is able to indicate how long it intends to retain a message to
+          an application server using the TTL header field (see <xref
+          target="ttl"/>).
+        </t>
+        <t>
+          A user agent that does not actively monitor for push messages will not
+          receive messages that expire during that interval.
+        </t>
+        <t>
+          Push messages that are stored and not delivered to a user agent are
+          delivered when the user agent recommences monitoring.  Stored push
+          messages SHOULD include a Last-Modified header field (see Section 2.2
+          of <xref target="RFC7232"/>) indicating when delivery was requested by
+          an application server.
+        </t>
+        <t>
+          A GET request to a push message subscription resource that has only
+          expired messages results in response as though no push message were
+          ever sent.
+        </t>
+        <t>
+          Push services might need to limit the size and number of stored push
+          messages to avoid overloading.  In addition to using the 413 (Payload
+          Too Large) status code for too large push messages, a push service MAY
+          expire push messages prior to any advertised expiration time.  A push
+          service can reduce the impact push message retention by reducing the
+          time-to-live of push messages.
+        </t>
+      </section>
+
+      <section anchor="delete" title="Subscription Expiration">
+        <t>
+          In some cases, it may be necessary to terminate subscriptions so that
+          they can be refreshed.  This applies to both push message
+          subscriptions and receipt subscriptions.
+        </t>
+        <t>
+          A push service might choose to set a fixed expiration time.  If a
+          resource has a known expiration time, expiration information is
+          included in responses to requests that create the resource, or in
+          requests that retrieve a representation of the resource.
+        </t>
+        <t>
+          Expiration is indicated using either the Expires header field, or by
+          setting a "max-age" parameter on a Cache-Control header field (see
+          <xref target="RFC7234"/>).  The Cache-Control header field MUST also
+          include the "private" directive.
+        </t>
+        <t>
+          A push service can remove a subscription at any time. If a user agent
+          or application server has an outstanding request to a subscription
+          resource (see <xref target="monitor"/>), this can be signaled by
+          returning a 400-series status code, such as 410 (Gone).
+        </t>
+        <t>
+          A user agent or application server can request that a subscription be
+          removed by sending a DELETE request to the push message subscription
+          or receipt subscription URI.
+        </t>
+        <t>
+          A push service MUST return a 400-series status code, such as 404 (Not
+          Found) or 410 (Gone) if an application server attempts to send a push
+          message to a removed or expired push message subscription.
+        </t>
+      </section>
+
+      <section title="Implications for Application Reliability">
+        <t>
+          A push server that does not support reliable delivery over
+          intermittent network connections or failing applications on devices,
+          forces the device to acknowledge receipt directly to the application
+          server, incurring additional power drain in order to establish
+          (usually secure) connections to the individual application servers.
+        </t>
+        <t>
+          Push message reliability can be important if messages contain
+          information critical to the state of an application.  Repairing state
+          can be costly, particularly for devices with limited communications
+          capacity.  Knowing that a push message has been correctly received
+          avoids costly retransmissions, polling and state resynchronization.
+        </t>
+        <t>
+          The availability of push message delivery receipts ensures that the
+          application developer is not tempted to create alternative mechanisms
+          for message delivery in case the push service fails to deliver a
+          critical message. Setting up a polling mechanism or a backup messaging
+          channel in order to compensate for these shortcomings negates almost
+          all of the advantages a push service provides.
+        </t>
+        <t>
+          However, reliability might not be necessary for messages that are
+          transient (e.g. an incoming call) or messages that are quickly
+          superceded (e.g. the current number of unread emails).
+        </t>
+      </section>
+    </section>
+
+    <section anchor="security" title="Security Considerations">
+      <t>
+        This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>.
+        This includes any communications between user agent and push service,
+        plus communications between the application and the push service.  All
+        URIs therefore use the "https" scheme.  This provides confidentiality
+        and integrity protection for subscriptions and push messages from
+        external parties.
+      </t>
+
+      <section title="Confidentiality from Push Service Access">
+        <t>
+          The protection afforded by TLS does not protect content from the push
+          service.  Without additional safeguards, a push service is able to see
+          and modify the content of the messages.
+        </t>
+        <t>
+          Applications are able to provide additional confidentiality, integrity
+          or authentication mechanisms within the push message itself.  The
+          application server sending the push message and the application on the
+          user agent that receives it are frequently just different instances of
+          the same application, so no standardized protocol is needed to
+          establish a proper security context.  The process of providing the
+          application server with subscription information provides a convenient
+          medium for key agreement.
+        </t>
+        <t>
+          <!-- Scrub references to specific API(s) -->
+          The Web Push API codifies this practice by requiring that each push
+          subscription created by the browser be bound to a browser generated
+          encryption key.  Pushed messages are authenticated and decrypted by
+          the browser before delivery to applications.  This scheme ensures that
+          the push service is unable to examine the contents of push messages.
+        </t>
+        <t>
+          The public key for a subscription ensures that applications using that
+          subscription can identify messages from unknown sources and discard
+          them.  This depends on the public key only being disclosed to entities
+          that are authorized to send messages on the channel.  The push server
+          does not require access to this public key.
+        </t>
+     </section>
+
+     <section title="Privacy Considerations">
+       <t>
+         Push message confidentiality does not ensure that the identity of who
+         is communicating and when they are communicating is protected.
+         However, the amount of information that is exposed can be limited.
+       </t>
+       <t>
+         The URIs provided for push resources MUST NOT provide any basis to
+         correlate communications for a given user agent.  It MUST NOT be
+         possible to correlate any two push resource URIs based solely on their
+         contents.  This allows a user agent to control correlation across
+         different applications, or over time.
+       </t>
+       <t>
+         Similarly, the URIs provided by the push service to identify a push
+         message MUST NOT provide any information that allows for correlation
+         across subscriptions.  Push message URIs for the same subscription MAY
+         contain information that would allow correlation with the associated
+         subscription or other push messages for that subscription.
+       </t>
+       <t>
+         User and device information MUST NOT be exposed through a push or push
+         message URI.
+       </t>
+       <t>
+         In addition, push URIs established by the same user agent or push
+         message URIs for the same subscription MUST NOT include any information
+         that allows them to be correlated with the user agent.
+         <list style="hanging">
+           <t hangText="Note:">
+             This need not be perfect as long as the resulting anonymity set
+             (see <xref target="RFC6973"/>, Section 6.1.1) is sufficiently
+             large.  A push URI necessarily identifies a push service or a
+             single server instance.  It is also possible that traffic analysis
+             could be used to correlate subscriptions.
+           </t>
+         </list>
+       </t>
+       <t>
+         A user agent MUST be able to create new subscriptions with new
+         identifiers at any time.
+       </t>
+     </section>
+
+     <section anchor="authorization" title="Authorization">
+       <t>
+         This protocol does not define how a push service establishes whether a
+         user agent is permitted to create a subscription, or whether push
+         messages can be delivered to the user agent.  A push service MAY choose
+         to authorize requests based on any HTTP-compatible authorization method
+         available, of which there are numerous options.  The authorization
+         process and any associated credentials are expected to be configured in
+         the user agent along with the URI for the push service.
+       </t>
+       <t>
+         Authorization is managed using capability URLs for the push message
+         subscription, push, and receipt subscription resources (see <xref
+         target="CAP-URI"/>).  A capability URL grants access to a resource
+         based solely on knowledge of the URL.
+       </t>
+       <t>
+         Capability URLs are used for their "easy onward sharing" and "easy
+         client API" properties. These make it possible to avoid relying on
+         relationships between push services and application servers, with the
+         protocols necessary to build and support those relationships.
+       </t>
+       <t>
+         Capability URLs act as bearer tokens.  Knowledge of a push message
+         subscription URI implies authorization to either receive push messages
+         or delete the subscription. Knowledge of a push URI implies
+         authorization to send push messages.  Knowledge of a push message URI
+         allows for reading and acknowledging that specific message.  Knowledge
+         of a receipt subscription URI implies authorization to receive push
+         receipts.  Knowledge of a receipt subscribe URI implies authorization
+         to create subscriptions for receipts.
+       </t>
+       <t>
+         Note that the same receipt subscribe URI could be returned for multiple
+         push message subscriptions.  Using the same value for a large number of
+         subscriptions allows application servers to reuse receipt
+         subscriptions, which can provide a significant efficiency advantage.  A
+         push service that uses a common receipt subscribe URI loses control
+         over the creation of receipt subscriptions.  This can result in a
+         potential exposure to denial of service; stateless resource creation
+         can be used to mitigate the effects of this exposure.
+       </t>
+       <t>
+         Encoding a large amount of random entropy (at least 120 bits) in the
+         path component ensures that it is difficult to successfully guess a
+         valid capability URL.
+       </t>
+     </section>
+
+     <section title="Denial of Service Considerations">
+       <t>
+         Discarding unwanted messages at the user agent based on message
+         authentication doesn't protect against a denial of service attack on
+         the user agent.  Even a relatively small volume of push messages can
+         cause battery-powered devices to exhaust power reserves.
+       </t>
+       <t>
+         An application can limit where valid push messages can originate by
+         limiting the distribution of push URIs to authorized entities.
+         Ensuring that push URIs are hard to guess ensures that only application
+         servers that have been given a push URI can use it.
+       </t>
+       <t>
+         A malicious application with a valid push URI could use the greater
+         resources of a push service to mount a denial of service attack on a
+         user agent.  Push services SHOULD limit the rate at which push messages
+         are sent to individual user agents.  A push service or user agent MAY
+         <xref target="delete">terminate subscriptions</xref> that receive too
+         many push messages.
+       </t>
+       <t>
+         End-to-end confidentiality mechanisms, such as those in <xref
+         target="API"/>, prevent an entity with a valid push message
+         subscription URI from learning the contents of push messages.  Push
+         messages that are not successfully authenticated will not be delivered
+         by the API, but this can present a denial of service risk.
+       </t>
+       <t>
+         Conversely, a push service is also able to deny service to user agents.
+         Intentional failure to deliver messages is difficult to distinguish
+         from faults, which might occur due to transient network errors,
+         interruptions in user agent availability, or genuine service outages.
+       </t>
+     </section>
+
+     <section title="Logging Risks">
+       <t>
+         Server request logs can reveal subscription-related URIs. Acquiring a
+         push message subscription URI enables the receipt of messages or
+         deletion of the subscription. Acquiring a push URI permits the sending
+         of push messages.  Logging could also reveal relationships between
+         different subscription-related URIs for the same user agent.  Encrypted
+         message contents are not revealed to the push service.
+       </t>
+       <t>
+         Limitations on log retention and strong access control mechanisms can
+         ensure that URIs are not learned by unauthorized entities.
+       </t>
+     </section>
+
+    </section>
+
+    <section anchor="iana" title="IANA Considerations">
+      <t>
+        This protocol defines new HTTP header fields in <xref
+        target="iana.header.fields"/>.  New link relation types are identified
+        using the URNs defined in <xref target="iana.urns"/>.
+      </t>
+
+      <section anchor="iana.header.fields" title="Header Field Registrations">
+        <t>
+          HTTP header fields are registered within the "Message Headers"
+          registry maintained at <eref
+          target="https://www.iana.org/assignments/message-headers/"/>.
+        </t>
+        <t>
+          This document defines the following HTTP header fields, so their
+          associated registry entries shall be added according to the permanent
+          registrations below (see <xref target="RFC3864"/>):
+        </t>
+        <texttable align="left" suppress-title="true"
+                   anchor="iana.header.registration.table">
+          <ttcol>Header Field Name</ttcol>
+          <ttcol>Protocol</ttcol>
+          <ttcol>Status</ttcol>
+          <ttcol>Reference</ttcol>
+
+          <c>TTL</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="ttl"/>
+          </c>
+          <c>Push-Receipt</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="request_receipt"/>
+          </c>
+        </texttable>
+        <t>
+          The change controller is: "IETF (iesg@ietf.org) - Internet
+          Engineering Task Force".
+        </t>
+      </section>
+
+      <section anchor="iana.urns" title="Link Relation URNs">
+        <t>
+          This document registers URNs for use in identifying link relation
+          types.  These are added to a new "Web Push Identifiers" registry
+          according to the procedures in Section 4 of <xref target="RFC3553"/>;
+          the corresponding "push" sub-namespace is entered in the "IETF URN
+          Sub-namespace for Registered Protocol Parameter Identifiers"
+          registry.
+        </t>
+        <t>
+          The "Web Push Identifiers" registry operates under the <xref
+          target="RFC5226">IETF Review policy</xref>.
+          <list style="hanging">
+            <t hangText="Registry name:">Web Push Identifiers</t>
+            <t hangText="URN Prefix:">urn:ietf:params:push</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Repository:">[Editor/IANA note: please include a link
+            to the final registry location.]</t>
+            <t hangText="Index value:">Values in this registry are URNs or URN
+            prefixes that start with the prefix <spanx
+            style="verb">urn:ietf:params:push</spanx>.  Each is registered
+            independently.</t>
+          </list>
+        </t>
+        <t>
+          New registrations in the "Web Push Identifiers" are encouraged to
+          include the following information:
+          <list style="hanging">
+            <t hangText="URN:">A complete URN or URN prefix.</t>
+            <t hangText="Description:">A summary description.</t>
+            <t hangText="Specification:">A reference to a specification
+            describing the semantics of the URN or URN prefix.</t>
+            <t hangText="Contact:">Email for the person or group making the
+            registration.</t>
+            <t hangText="Index value:">As described in <xref target="RFC3553"/>,
+            URN prefixes that are registered include a description of how the
+            URN is constructed.  This is not applicable for specific URNs.</t>
+          </list>
+        </t>
+        <t>
+          These values are entered as the initial content of the "Web Push
+          Identifiers" registry.
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push</t>
+            <t hangText="Description:">This link relation type is used to
+            identify a resource for sending push messages.</t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:receipt</t>
+            <t hangText="Description:">
+              This link relation type is used to identify a resource for
+              creating new push message receipt subscriptions.
+            </t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+      </section>
+    </section>
+
+    <section anchor="ack" title="Acknowledgements">
+      <t>
+        Significant technical input to this document has been provided by Costin
+        Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and many
+        others.
+      </t>
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references title="Normative References">
+      <reference anchor="RFC2119">
+        <front>
+          <title>
+            Key words for use in RFCs to Indicate Requirement Levels
+          </title>
+          <author initials="S." surname="Bradner" fullname="Scott Bradner">
+            <organization>Harvard University</organization>
+            <address><email>sob@harvard.edu</email></address>
+          </author>
+          <date month="March" year="1997"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="2119"/>
+      </reference>
+
+     <reference anchor="RFC2818">
+        <front>
+          <title>
+            HTTP Over TLS
+          </title>
+          <author initials="E." surname="Rescorla" fullname="Eric Rescorla"/>
+          <date month="May" year="2000"/>
+        </front>
+        <seriesInfo name="RFC" value="2818"/>
+      </reference>
+
+      <reference anchor="RFC3553">
+        <front>
+          <title>An IETF URN Sub-namespace for Registered Protocol Parameters</title>
+          <author initials="M." surname="Mealling" fullname="M. Mealling">
+          <organization /></author>
+          <author initials="L." surname="Masinter" fullname="L. Masinter">
+          <organization /></author>
+          <author initials="T." surname="Hardie" fullname="T. Hardie">
+          <organization /></author>
+          <author initials="G." surname="Klyne" fullname="G. Klyne">
+          <organization /></author>
+          <date year="2003" month="June" />
+        </front>
+
+        <seriesInfo name="BCP" value="73" />
+        <seriesInfo name="RFC" value="3553" />
+        <format type="TXT" octets="14815" target="http://www.rfc-editor.org/rfc/rfc3553.txt" />
+      </reference>
+
+      <reference anchor="RFC3864">
+        <front>
+          <title>Registration Procedures for Message Header Fields</title>
+          <author initials="G." surname="Klyne" fullname="G. Klyne">
+          <organization /></author>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <author initials="J." surname="Mogul" fullname="J. Mogul">
+          <organization /></author>
+          <date year="2004" month="September" />
+        </front>
+        <seriesInfo name="BCP" value="90" />
+        <seriesInfo name="RFC" value="3864" />
+        <format type="TXT" octets="36231" target="http://www.rfc-editor.org/rfc/rfc3864.txt" />
+      </reference>
+
+      <reference anchor="RFC5226">
+        <front>
+          <title>Guidelines for Writing an IANA Considerations Section in RFCs</title>
+          <author initials="T." surname="Narten" fullname="T. Narten">
+          <organization /></author>
+          <author initials="H." surname="Alvestrand" fullname="H. Alvestrand">
+          <organization /></author>
+          <date year="2008" month="May" />
+        </front>
+        <seriesInfo name="BCP" value="26" />
+        <seriesInfo name="RFC" value="5226" />
+        <format type="TXT" octets="66160" target="http://www.rfc-editor.org/rfc/rfc5226.txt" />
+      </reference>
+
+      <reference anchor="RFC5988">
+        <front>
+          <title>Web Linking</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <date year="2010" month="October" />
+        </front>
+        <seriesInfo name="RFC" value="5988" />
+        <format type="TXT" octets="46834" target="http://www.rfc-editor.org/rfc/rfc5988.txt" />
+      </reference>
+
+      <reference anchor="RFC7230">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7230" />
+        <format type="TXT" octets="205947" target="http://www.rfc-editor.org/rfc/rfc7230.txt" />
+      </reference>
+
+      <reference anchor="RFC7231">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7231" />
+        <format type="TXT" octets="235053" target="http://www.rfc-editor.org/rfc/rfc7231.txt" />
+      </reference>
+
+      <reference anchor="RFC7232">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7232" />
+        <format type="TXT" octets="56696" target="http://www.rfc-editor.org/rfc/rfc7232.txt" />
+      </reference>
+
+      <reference anchor="RFC7234">
+        <front>
+          <title>Hypertext Transfer Protocol (HTTP/1.1): Caching</title>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <author initials="J." surname="Reschke" fullname="J. Reschke">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7234" />
+        <format type="TXT" octets="90647" target="http://www.rfc-editor.org/rfc/rfc7234.txt" />
+      </reference>
+
+      <reference anchor="RFC7240">
+        <front>
+          <title>Prefer Header for HTTP</title>
+          <author initials="J." surname="Snell" fullname="J. Snell">
+          <organization /></author>
+          <date year="2014" month="June" />
+        </front>
+        <seriesInfo name="RFC" value="7240" />
+        <format type="TXT" octets="32796" target="http://www.rfc-editor.org/rfc/rfc7240.txt" />
+      </reference>
+
+      <reference anchor="RFC7540">
+        <front>
+          <title>Hypertext Transfer Protocol Version 2</title>
+          <author initials="M" surname="Belshe" fullname="Mike Belshe">
+            <organization />
+          </author>
+          <author initials="R" surname="Peon" fullname="Roberto Peon">
+            <organization />
+          </author>
+          <author initials="M" surname="Thomson" fullname="Martin Thomson">
+            <organization />
+          </author>
+          <date year="2015" month="May" />
+        </front>
+        <seriesInfo name="RFC" value="7540" />
+        <format type="TXT"
+                target="http://www.rfc-editor.org/rfc/rfc7540.txt" />
+      </reference>
+
+      <reference anchor="I-D.ietf-httpbis-alt-svc">
+        <front>
+          <title>HTTP Alternative Services</title>
+          <author initials="M" surname="Nottingham" fullname="Mark Nottingham">
+            <organization />
+          </author>
+          <author initials="P" surname="McManus" fullname="Patrick McManus">
+            <organization />
+          </author>
+          <author initials="J" surname="Reschke" fullname="Julian Reschke">
+            <organization />
+          </author>
+          <date month="May" day="15" year="2015" />
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-07" />
+        <format type="TXT"
+                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-07.txt" />
+      </reference>
+
+      <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
+        <front>
+          <title>Good Practices for Capability URLs</title>
+          <author initials="J." surname="Tennison" fullname="Jeni Tennison"/>
+          <date month="February" year="2014"/>
+        </front>
+        <seriesInfo name="FPWD" value="capability-urls"/>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      <reference anchor="API" target="https://w3c.github.io/push-api/">
+        <front>
+          <title>Web Push API</title>
+          <author initials="B." surname="Sullivan" fullname="Bryan Sullivan"/>
+          <author initials="E." surname="Fullea" fullname="Eduardo Fullea"/>
+          <author initials="M." surname="van Ouwerkerk" fullname="Michael van Ouwerkerk"/>
+          <date month="February" year="2015" />
+        </front>
+        <seriesInfo name="ED" value="push-api" />
+      </reference>
+
+      <reference anchor="RFC6973">
+        <front>
+          <title>Privacy Considerations for Internet Protocols</title>
+          <author initials="A." surname="Cooper" fullname="A. Cooper">
+          <organization /></author>
+          <author initials="H." surname="Tschofenig" fullname="H. Tschofenig">
+          <organization /></author>
+          <author initials="B." surname="Aboba" fullname="B. Aboba">
+          <organization /></author>
+          <author initials="J." surname="Peterson" fullname="J. Peterson">
+          <organization /></author>
+          <author initials="J." surname="Morris" fullname="J. Morris">
+          <organization /></author>
+          <author initials="M." surname="Hansen" fullname="M. Hansen">
+          <organization /></author>
+          <author initials="R." surname="Smith" fullname="R. Smith">
+          <organization /></author>
+          <date year="2013" month="July" />
+        </front>
+        <seriesInfo name="RFC" value="6973" />
+        <format type="TXT" octets="89198" target="http://www.rfc-editor.org/rfc/rfc6973.txt" />
+      </reference>
+
+    </references>
+
+    <!--
+        <section title="Change Log">
+        <t>[[The RFC Editor is requested to remove this section at publication.]]</t>
+        <t>Changes since -0-1:
+        <list style="symbols">
+        <t>Document created.</t>
+        </list>
+        </t>
+        </section>
+    -->
+  </back>
+</rfc>
