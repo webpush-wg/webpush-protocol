@@ -1,10 +1,10 @@
 # Web Push Protocol
 
-This is the working area for the proposed Web Push Protocol.  This is intended
-for the [IETF Web Push Working Group](https://tools.ietf.org/wg/webpush).
+This is the Web Push Protocol.  This is a product of the [IETF Web Push Working
+Group](https://tools.ietf.org/wg/webpush).
 
-* [Editor's copy](https://unicorn-wg.github.io/webpush-protocol/)
-
+* [Editor's copy](https://webpush-wg.github.io/webpush-protocol/)
+* [Working group draft](https://tools.ietf.org/html/draft-ietf-webpush-protocol) ([Datatracker](https://datatracker.ietf.org/doc/draft-ietf-webpush-protocol))
 
 ## Contributing
 
