@@ -500,17 +500,16 @@ TTL = 1*DIGIT
         <t>
           Absence of the TTL header field is interpreted as equivalent to a zero
           value.  A Push message with a zero TTL is immediately delivered if the
-          user agent is available to receive the message.
+          user agent is available to receive the message. After delivery, the push
+          service is permitted to immediately remove a push message with a zero TTL.
+          This might occur before the user agent acknowledges receipt of the message
+          by performing a HTTP DELETE on the push message resource. Consequently, an
+          application server cannot rely on receiving acknowledgement receipts for
+          zero TTL push messages.
         </t>
         <t>
-          The push service is then permitted to immediately remove the push message
-          resource which might occur before the user agent acknowledges receipt of the
-          message by performing a HTTP DELETE on the resource. Consequently, an
-          application server cannot rely on receiving acknowledgement receipts for zero
-          TTL push messages.
-        </t>
-        <t>
-          If the user agent is unavailable, the message expires and is never delivered.
+          If the user agent is unavailable, a push message with a zero TTL expires and
+          is never delivered.
         </t> 
         <t>
           A push service MAY choose to retain a push message for a shorter
