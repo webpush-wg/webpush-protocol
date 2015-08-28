@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: January 30, 2016                                 B. Raymor, Ed.
+Expires: February 29, 2016                                B. Raymor, Ed.
                                                                Microsoft
-                                                           July 29, 2015
+                                                         August 28, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 30, 2016.
+   This Internet-Draft will expire on February 29, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 1]
+Thomson, et al.         Expires February 29, 2016               [Page 1]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
 Table of Contents
@@ -69,7 +69,7 @@ Table of Contents
    5.  Requesting Push Message Delivery  . . . . . . . . . . . . . .   7
      5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .   8
      5.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .   8
-   6.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .   9
+   6.  Receiving Push Messages . . . . . . . . . . . . . . . . . . .  10
      6.1.  Acknowledging Push Messages . . . . . . . . . . . . . . .  11
      6.2.  Receiving Push Message Receipts . . . . . . . . . . . . .  11
    7.  Operational Considerations  . . . . . . . . . . . . . . . . .  12
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 2]
+Thomson, et al.         Expires February 29, 2016               [Page 2]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    Uncoordinated use of persistent connections or sessions from multiple
@@ -165,9 +165,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 3]
+Thomson, et al.         Expires February 29, 2016               [Page 3]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    application server:  The component of an application that runs on a
@@ -221,9 +221,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 4]
+Thomson, et al.         Expires February 29, 2016               [Page 4]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    server.  This subscription is the basis of all future interactions
@@ -277,9 +277,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 5]
+Thomson, et al.         Expires February 29, 2016               [Page 5]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
       message resource is also used to acknowledge receipt of a push
@@ -333,9 +333,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 6]
+Thomson, et al.         Expires February 29, 2016               [Page 6]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
 4.  Subscribing for Push Message Receipts
@@ -389,9 +389,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 7]
+Thomson, et al.         Expires February 29, 2016               [Page 7]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -445,9 +445,9 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
 
 
-Thomson, et al.         Expires January 30, 2016                [Page 8]
+Thomson, et al.         Expires February 29, 2016               [Page 8]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    Delaying delivery might also be used to batch communication with the
@@ -467,13 +467,12 @@ Internet-Draft                HTTP Web Push                    July 2015
 
    TTL = 1*DIGIT
 
-   Once the Time-To-Live (TTL) period elapses, the push service MUST
-   remove the push message and cease any attempt to deliver it to the
-   user agent.  A push service might retain values for a short duration
-   after the TTL period to account for time accounting errors in
-   processing.  For instance, distributing a push message within a
-   server cluster might accrue errors due to clock variation, or
-   processing and transit delays.
+   Once the Time-To-Live (TTL) period elapses, the push service MUST NOT
+   attempt to deliver the push message to the user agent.  A push
+   service might adjust the TTL value to account for time accounting
+   errors in processing.  For instance, distributing a push message
+   within a server cluster might accrue errors due to clock skew or
+   propagation delays.
 
    A push service is not obligated to account for time spent by the
    application server in sending a push message to the push service, or
@@ -482,10 +481,17 @@ Internet-Draft                HTTP Web Push                    July 2015
    TTL header field value.
 
    Absence of the TTL header field is interpreted as equivalent to a
-   zero value.  Push messages with a zero TTL indicate that storage is
-   not needed and that the message can be dropped if the user agent
-   isn't immediately available to receive the message.  Push messages
-   with a zero TTL can be delivered very efficiently.
+   zero value.  A Push message with a zero TTL is immediately delivered
+   if the user agent is available to receive the message.  After
+   delivery, the push service is permitted to immediately remove a push
+   message with a zero TTL.  This might occur before the user agent
+   acknowledges receipt of the message by performing a HTTP DELETE on
+   the push message resource.  Consequently, an application server
+   cannot rely on receiving acknowledgement receipts for zero TTL push
+   messages.
+
+   If the user agent is unavailable, a push message with a zero TTL
+   expires and is never delivered.
 
    A push service MAY choose to retain a push message for a shorter
    duration than that requested.  It indicates this by including a TTL
@@ -493,19 +499,18 @@ Internet-Draft                HTTP Web Push                    July 2015
    value MUST be less than or equal to the value provided by the
    application server.
 
+
+
+Thomson, et al.         Expires February 29, 2016               [Page 9]
+
+Internet-Draft                HTTP Web Push                  August 2015
+
+
 6.  Receiving Push Messages
 
    A user agent requests the delivery of new push messages by making a
    GET request to a push message subscription resource.  The push
    service does not respond to this request, it instead uses HTTP/2
-
-
-
-Thomson, et al.         Expires January 30, 2016                [Page 9]
-
-Internet-Draft                HTTP Web Push                    July 2015
-
-
    server push [RFC7540] to send the contents of push messages as they
    are sent by application servers.
 
@@ -549,18 +554,17 @@ Internet-Draft                HTTP Web Push                    July 2015
    and receipt subscribe resources, plus expiration information for the
    subscription.
 
+
+
+
+Thomson, et al.         Expires February 29, 2016              [Page 10]
+
+Internet-Draft                HTTP Web Push                  August 2015
+
+
    A user agent can request the contents of the push message
    subscription resource immediately by including a Prefer header field
    [RFC7240] with a "wait" parameter set to "0".
-
-
-
-
-
-Thomson, et al.         Expires January 30, 2016               [Page 10]
-
-Internet-Draft                HTTP Web Push                    July 2015
-
 
    A 204 (No Content) status code with no associated server pushes
    indicates that no messages are presently available.  This could be
@@ -609,13 +613,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-
-
-
-
-Thomson, et al.         Expires January 30, 2016               [Page 11]
+Thomson, et al.         Expires February 29, 2016              [Page 11]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    The push service permits the request to remain outstanding.  When the
@@ -669,9 +669,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 12]
+Thomson, et al.         Expires February 29, 2016              [Page 12]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    to an application server using the TTL header field (see
@@ -725,9 +725,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 13]
+Thomson, et al.         Expires February 29, 2016              [Page 13]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    A push service MUST return a 400-series status code, such as 404 (Not
@@ -781,9 +781,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 14]
+Thomson, et al.         Expires February 29, 2016              [Page 14]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    different instances of the same application, so no standardized
@@ -837,9 +837,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 15]
+Thomson, et al.         Expires February 29, 2016              [Page 15]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    A user agent MUST be able to create new subscriptions with new
@@ -893,9 +893,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 16]
+Thomson, et al.         Expires February 29, 2016              [Page 16]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
 8.4.  Denial of Service Considerations
@@ -949,9 +949,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 17]
+Thomson, et al.         Expires February 29, 2016              [Page 17]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
 9.1.  Header Field Registrations
@@ -1005,9 +1005,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 18]
+Thomson, et al.         Expires February 29, 2016              [Page 18]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    Description:  A summary description.
@@ -1061,9 +1061,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 19]
+Thomson, et al.         Expires February 29, 2016              [Page 19]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    [I-D.ietf-httpbis-alt-svc]
@@ -1117,9 +1117,9 @@ Internet-Draft                HTTP Web Push                    July 2015
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 20]
+Thomson, et al.         Expires February 29, 2016              [Page 20]
 
-Internet-Draft                HTTP Web Push                    July 2015
+Internet-Draft                HTTP Web Push                  August 2015
 
 
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
@@ -1173,4 +1173,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.         Expires January 30, 2016               [Page 21]
+Thomson, et al.         Expires February 29, 2016              [Page 21]
