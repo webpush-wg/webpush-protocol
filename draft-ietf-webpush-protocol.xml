@@ -553,7 +553,7 @@ QPZq5QmSsbuQKIpo-hGtPBJN8Qrh_G-Z_Lo3
           to treat an update for a removed push message as though the message
           were still present and consequently send the push message to the user
           agent.  Permitting an update avoids the additional request required to
-          reretry and the associated delays.
+          retry and the associated delays.
         </t>
       </section>
     </section>
