@@ -337,7 +337,6 @@ Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
 Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
         rel="urn:ietf:params:push:receipt"
 Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
-Cache-Control: max-age:864000, private
 
 ]]></artwork>
       </figure>
@@ -566,7 +565,6 @@ HEADERS      [stream 4] +END_HEADERS
   :status        = 200
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
-  cache-control  = private
   content-type   = text/plain;charset=utf8
   content-length = 36
 
@@ -579,7 +577,7 @@ DATA         [stream 4] +END_STREAM
         In response to this request, the push server MUST generate a server push
         for all push messages that have not yet been delivered.  In addition,
         the push service SHOULD return link references to the push and receipt
-        subscribe resources, plus expiration information for the subscription.
+        subscribe resources.
       </t>
       <t>
         A user agent can request the contents of the push message subscription
@@ -741,18 +739,6 @@ HEADERS      [stream 4] +END_STREAM
           In some cases, it may be necessary to terminate subscriptions so that
           they can be refreshed.  This applies to both push message
           subscriptions and receipt subscriptions.
-        </t>
-        <t>
-          A push service might choose to set a fixed expiration time.  If a
-          resource has a known expiration time, expiration information is
-          included in responses to requests that create the resource, or in
-          requests that retrieve a representation of the resource.
-        </t>
-        <t>
-          Expiration is indicated using either the Expires header field, or by
-          setting a "max-age" parameter on a Cache-Control header field (see
-          <xref target="RFC7234"/>).  The Cache-Control header field MUST also
-          include the "private" directive.
         </t>
         <t>
           A push service can remove a subscription at any time. If a user agent
@@ -1238,21 +1224,6 @@ HEADERS      [stream 4] +END_STREAM
         </front>
         <seriesInfo name="RFC" value="7232" />
         <format type="TXT" octets="56696" target="http://www.rfc-editor.org/rfc/rfc7232.txt" />
-      </reference>
-
-      <reference anchor="RFC7234">
-        <front>
-          <title>Hypertext Transfer Protocol (HTTP/1.1): Caching</title>
-          <author initials="R." surname="Fielding" fullname="R. Fielding">
-          <organization /></author>
-          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
-          <organization /></author>
-          <author initials="J." surname="Reschke" fullname="J. Reschke">
-          <organization /></author>
-          <date year="2014" month="June" />
-        </front>
-        <seriesInfo name="RFC" value="7234" />
-        <format type="TXT" octets="90647" target="http://www.rfc-editor.org/rfc/rfc7234.txt" />
       </reference>
 
       <reference anchor="RFC7240">
