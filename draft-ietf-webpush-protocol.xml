@@ -599,21 +599,32 @@ DATA         [stream 4] +END_STREAM
           at least once, the user agent MUST acknowledge receipt of the message
           by performing a HTTP DELETE on the push message resource.
         </t>
-
         <figure>
           <artwork type="inline">
             <![CDATA[
 DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
 Host: push.example.net
-
 ]]>
           </artwork>
         </figure>
-
         <t>
-          If the application has requested a delivery receipt, the push server
-          MUST deliver a response to the application server monitoring the
-          receipt subscription resource.
+          If the push server receives the acknowledgement and the application
+          has requested a delivery receipt, the push server MUST deliver a success
+          response to the application server monitoring the receipt subscription
+          resource.
+        </t>
+        <t>
+          If the push server does not receive the acknowledgement within a
+          reasonable amount of time, then the message is considered to be not yet
+          delivered. The push server SHOULD continue to retry delivery of the message
+          until its advertised expiration.
+        </t>
+        <t>
+          If the push server ceases to retry delivery of the message prior to its
+          advertised expiration (perhaps due to an unresponsive user agent) and the
+          application has requested a delivery receipt, then the push server MUST deliver
+          a failure response to the application server monitoring the receipt subscription
+          resource.
         </t>
       </section>
 
@@ -633,7 +644,6 @@ Host: push.example.net
           delivery. A successful response includes a 410 (GONE) status code with
           no data.
         </t>
-
         <figure>
           <preamble>
             The following example request is made over HTTP/2.
@@ -647,7 +657,6 @@ HEADERS      [stream 13] +END_STREAM +END_HEADERS
 ]]>
           </artwork>
         </figure>
-
         <figure>
           <preamble>
             The push service permits the request to remain outstanding.  When
@@ -671,9 +680,10 @@ HEADERS      [stream 4] +END_STREAM
           </artwork>
         </figure>
         <t>
-          The push server MUST push a response with a status code of 5XX (TBD)
-          if the user agent fails to acknowledge the receipt of the push message
-          or the push server fails to deliver the message prior to its expiration.
+          If the user agent fails to acknowledge the receipt of the push message and
+          the push server ceases to retry delivery of the message prior to its advertised
+          expiration, then the push server MUST push a failure response with a status code
+          of 5XX (TBD).
         </t>
       </section>
     </section>
@@ -728,11 +738,11 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           Push services might need to limit the size and number of stored push
-          messages to avoid overloading.  In addition to using the 413 (Payload
-          Too Large) status code for too large push messages, a push service MAY
-          expire push messages prior to any advertised expiration time.  A push
-          service can reduce the impact push message retention by reducing the
-          time-to-live of push messages.
+          messages to avoid overloading.  To limit the size of messages, the 
+          push service MAY return the 413 (Payload Too Large) status code for messages
+          that are too large. To limit the number of stored push messages, the
+          push service MAY either expire messages prior to their advertised Time-To-Live
+          or reduce their advertised Time-To-Live.
         </t>
       </section>
 
