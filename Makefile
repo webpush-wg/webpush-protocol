@@ -22,83 +22,62 @@ idnits ?= idnits
 
 # For diff:
 #   https://tools.ietf.org/tools/rfcdiff/
-rfcdiff ?= rfcdiff --browse
+rfcdiff ?= rfcdiff
 
 # For generating PDF:
 #   https://www.gnu.org/software/enscript/
 enscript ?= enscript
 #   http://www.ghostscript.com/
-ps2pdf ?= ps2pdf 
+ps2pdf ?= ps2pdf
+
+# Where to get references
+XML_RESOURCE_ORG_PREFIX ?= http://unicorn-wg.github.io/idrefs
 
 
 ## Work out what to build
 
-draft := $(basename $(lastword $(sort $(wildcard draft-*.xml)) $(sort $(wildcard draft-*.org)) $(sort $(wildcard draft-*.md))))
+drafts := $(sort $(basename $(wildcard $(foreach pattern,? *-[-a-z]? *-?[a-z] *[a-z0-9]??,$(foreach ext,xml org md,draft-$(pattern).$(ext))))))
 
-ifeq (,$(draft))
+ifeq (,$(drafts))
 $(warning No file named draft-*.md or draft-*.xml or draft-*.org)
 $(error Read README.md for setup instructions)
 endif
 
-draft_type := $(suffix $(firstword $(wildcard $(draft).md $(draft).org $(draft).xml)))
+draft_types := $(foreach draft,$(drafts),$(suffix $(firstword $(wildcard $(draft).md $(draft).org $(draft).xml))))
 
-current_ver := $(shell git tag | grep '$(draft)-[0-9][0-9]' | tail -1 | sed -e"s/.*-//")
-ifeq (,$(current_ver))
-next_ver ?= 00
+f_prev_tag = $(shell git tag | grep '$(draft)-[0-9][0-9]' | tail -1 | sed -e"s/.*-//")
+f_next_tag = $(if $(f_prev_tag),$(shell printf "%.2d" $$(( 1$(f_prev_tag) - 99)) ),00)
+drafts_next := $(foreach draft,$(drafts),$(draft)-$(f_next_tag))
+drafts_prev := $(foreach draft,$(drafts),$(draft)-$(f_prev_tag))
+
+drafts_txt := $(addsuffix .txt,$(drafts))
+drafts_html := $(addsuffix .html,$(drafts))
+drafts_next_txt := $(addsuffix .txt,$(drafts_next))
+drafts_prev_txt := $(addsuffix .txt,$(drafts_prev))
+
+# CI config
+CI_BRANCH = $(TRAVIS_BRANCH)$(CIRCLE_BRANCH)
+CI_USER = $(patsubst /%,,$(TRAVIS_BRANCH))$(CIRCLE_PROJECT_USERNAME)
+CI_REPO = $(patsubst %/,,$(TRAVIS_BRANCH))$(CIRCLE_PROJECT_REPONAME)
+CI_REPO_FULL = $(CI_USER)/$(CI_REPO)
+ifneq (,$(TRAVIS_PULL_REQUEST)$(CI_PULL_REQUESTS))
+  CI_IS_PR = true
 else
-next_ver ?= $(shell printf "%.2d" $$((1$(current_ver)-99)))
+  CI_IS_PR = false
 endif
-next := $(draft)-$(next_ver)
-diff_ver := $(draft)-$(current_ver)
 
-
-## Targets
-
-.PHONY: latest txt html pdf submit diff clean update ghpages
-
+## Basic Targets
+.PHONY: latest txt html pdf
 latest: txt html
-txt: $(draft).txt
-html: $(draft).html
-pdf: $(draft).pdf
+txt: $(drafts_txt)
+html: $(drafts_html)
+pdf: $(addsuffix .pdf,$(drafts))
 
-submit: $(next).txt
-
-idnits: $(next).txt
-	$(idnits) $<
-
-## If you'd like the main github page to show the draft text.
-readme: $(next).txt
-	@echo '```' > README.md
-	@cat $(next).txt >> README.md
-	@echo '```' >> README.md
-
-clean:
-	-rm -f $(draft).{txt,html,pdf} index.html
-	-rm -f $(draft)-[0-9][0-9].{xml,md,org,txt,html,pdf}
-	-rm -f *.diff.html
-ifneq (.xml,$(draft_type))
-	-rm -f $(draft).xml
-endif
-
-## diff
-
-$(next).xml: $(draft).xml
-	sed -e"s/$(basename $<)-latest/$(basename $@)/" $< > $@
-
-ifneq (,$(current_ver))
-.INTERMEDIATE: $(addprefix $(draft)-$(current_ver),.txt $(draft_type))
-diff: $(draft).txt $(draft)-$(current_ver).txt
-	-$(rfcdiff) $^
-
-$(draft)-$(current_ver)$(draft_type):
-	git show $(draft)-$(current_ver):$(draft)$(draft_type) > $@
-endif
-
-## Recipes
-
-.INTERMEDIATE: $(draft).xml
+## Basic Recipes
+.INTERMEDIATE: $(filter-out $(join $(drafts),$(draft_types)),$(addsuffix .xml,$(drafts)))
 %.xml: %.md
-	$(kramdown-rfc2629) $< > $@
+	XML_RESOURCE_ORG_PREFIX=$(XML_RESOURCE_ORG_PREFIX) \
+	  $(kramdown-rfc2629) $< > $@
 
 %.xml: %.org
 	$(oxtradoc) -m outline-to-xml -n "$@" $< > $@
@@ -108,17 +87,103 @@ endif
 
 %.htmltmp: %.xml
 	$(xml2rfc) $< -o $@ --html
-%.html: %.htmltmp
+%.html: %.htmltmp lib/addstyle.sed lib/style.css
+ifeq (,$(CI_FULL_REPO))
 	sed -f lib/addstyle.sed $< > $@
+else
+	sed -f lib/addstyle.sed $< -f lib/addribbon.sed | \
+	  sed -e 's~{SLUG}~$(CI_FULL_REPO)~' > $@
+endif
 
 %.pdf: %.txt
-	$(enscript) --margins 76::76: -B -q -p - $^ | $(ps2pdf) - $@
+	$(enscript) --margins 76::76: -B -q -p - $< | $(ps2pdf) - $@
+
+## Turns the drafts into README.md
+.PHONY: readme
+readme: README.md
+README.md: $(drafts_txt)
+	@echo '```' > README.md
+	@cat $^ >> README.md
+	@echo '```' >> README.md
+
+## Build copies of drafts for submission
+.PHONY: submit
+submit: $(drafts_next_txt)
+
+define makerule_submit_xml =
+$(1)
+	sed -e"s/$$(basename $$<)-latest/$$(basename $$@)/" $$< > $$@
+endef
+submit_deps := $(join $(addsuffix .xml: ,$(drafts_next)),$(addsuffix .xml,$(drafts)))
+$(foreach rule,$(submit_deps),$(eval $(call makerule_submit_xml,$(rule))))
+
+## Check for validity
+.PHONY: check idnits
+check: idnits
+idnits: $(drafts_next_txt)
+	echo $^ | xargs -n 1 sh -c '$(idnits) $$0'
+
+## Build diffs between the current draft versions and any previous version
+# This is makefile magic that requires Make 4.0
+
+draft_diffs := $(addprefix diff-,$(addsuffix .html,$(drafts)))
+.PHONY: diff
+diff: $(draft_diffs)
+
+.INTERMEDIATE: $(join $(drafts_prev),$(draft_types))
+define makerule_diff =
+$$(word 1,$$(subst ~, ,$(1))): $$(word 2,$$(subst ~, ,$(1))) $$(word 3,$$(subst ~, ,$(1)))
+	-$(rfcdiff) --html --stdout $$^ > $$@
+endef
+concat = $(join $(1),$(addprefix ~,$(2)))
+diff_deps := $(call concat,$(draft_diffs),$(call concat,$(drafts_next_txt),$(drafts_prev_txt)))
+$(foreach rule,$(diff_deps),$(eval $(call makerule_diff,$(rule))))
+
+define makerule_prev =
+.INTERMEDIATE: $$(word 1,$$(subst ~, ,$(1)))
+$$(word 1,$$(subst ~, ,$(1))):
+	git show $$(word 2,$$(subst ~, ,$(1))):$$(word 3,$$(subst ~, ,$(1))) > $$@
+endef
+drafts_prev_out := $(join $(drafts_prev),$(draft_types))
+drafts_prev_in := $(join $(drafts),$(draft_types))
+prev_versions := $(call concat,$(drafts_prev_out),$(call concat,$(drafts_prev),$(drafts_prev_in)))
+$(foreach args,$(prev_versions),$(eval $(call makerule_prev,$(args))))
+
+## Store a copy of any github issues
+
+ifndef CI_REPO_FULL
+GITHUB_REPO_FULL := $(shell git ls-remote --get-url | sed -e 's/^.*github\.com.//;s/\.git$$//')
+GITHUB_USER := $(word 1,$(subst /, ,$(GITHUB_REPO_FULL)))
+GITHUB_REPO := $(word 2,$(subst /, ,$(GITHUB_REPO_FULL)))
+else
+GITHUB_REPO_FULL := $(CI_REPO_FULL)
+GITHUB_USER := $(CI_USER)
+GITHUB_REPO:= $(CI_REPO)
+endif
+
+.PHONY: issues
+issues:
+	curl https://api.github.com/repos/$(GITHUB_REPO_FULL)/issues?state=open > $@.json
+
+## Cleanup
+
+COMMA := ,
+.PHONY: clean
+clean:
+	-rm -f $(addsuffix .{txt$(COMMA)html$(COMMA)pdf},$(drafts)) index.html
+	-rm -f $(addsuffix -[0-9][0-9].{xml$(COMMA)md$(COMMA)org$(COMMA)txt$(COMMA)html$(COMMA)pdf},$(drafts))
+	-rm -f $(draft_diffs)
+	-rm -f  $(filter-out $(join $(drafts),$(draft_types)),$(addsuffix .xml,$(drafts)))
 
 ## Update this Makefile
 
 # The prerequisites here are what is updated
 .INTERMEDIATE: .i-d-template.diff
-update: Makefile lib .gitignore SUBMITTING.md
+.PHONY: update
+UPDATE_FILES := Makefile lib .gitignore SUBMITTING.md .travis.yml circle.yml 
+$(UPDATE_FILES):
+	[ ! -f $@ ] && touch $@
+update: $(UPDATE_FILES)
 	git diff --quiet -- $^ || \
 	  (echo "You have uncommitted changes to:" $^ 1>&2; exit 1)
 	-if [ -f .i-d-template ]; then \
@@ -131,7 +196,7 @@ update: Makefile lib .gitignore SUBMITTING.md
 	[ -f .i-d-template ] && [ $$(git rev-parse i-d-template/master) = $$(cat .i-d-template) ] || \
 	  git checkout i-d-template/master $^
 	git diff --quiet -- $^ && rm -f .i-d-template.diff || \
-	  git commit -m "Update of $^ from i-d-template/$$(git rev-parse i-d-template/master)" $^
+	  git add $^ && git commit -m "Update of $^ from i-d-template/$$(git rev-parse i-d-template/master)" $^
 	if [ -f .i-d-template.diff ]; then \
 	  git apply .i-d-template.diff && \
 	  git commit -m "Restoring local changes to $$(git diff --name-only $^ | paste -s -d ' ' -)" $^; \
@@ -142,28 +207,43 @@ update: Makefile lib .gitignore SUBMITTING.md
 
 GHPAGES_TMP := /tmp/ghpages$(shell echo $$$$)
 .INTERMEDIATE: $(GHPAGES_TMP)
-ifeq (,$(TRAVIS_COMMIT))
+ifneq (,$(CI_BRANCH))
+GIT_ORIG := $(CI_BRANCH)
+else
 GIT_ORIG := $(shell git branch | grep '*' | cut -c 3-)
+endif
 ifneq (,$(findstring detached from,$(GIT_ORIG)))
 GIT_ORIG := $(shell git show -s --format='format:%H')
 endif
-else
-GIT_ORIG := $(TRAVIS_COMMIT)
-endif
 
 # Only run upload if we are local or on the master branch
-IS_LOCAL := $(if $(TRAVIS),,true)
-ifeq (master,$(TRAVIS_BRANCH))
-IS_MASTER := $(findstring false,$(TRAVIS_PULL_REQUEST))
+IS_LOCAL := $(if $(CI),,true)
+ifeq (master,$(CI_BRANCH))
+IS_MASTER := $(findstring false,$(CI_IS_PR))
 else
 IS_MASTER :=
 endif
 
-index.html: $(draft).html
-	cp $< $@
+define INDEX_HTML =
+<!DOCTYPE html>\n\
+<html>\n\
+<head><title>$(GITHUB_REPO) drafts</title></head>\n\
+<body><ul>\n\
+$(foreach draft,$(drafts),<li><a href="$(draft).html">$(draft)</a> (<a href="$(draft).txt">txt</a>)</li>\n)\
+</ul></body>\n\
+</html>
+endef
 
-ghpages: index.html $(draft).txt
-ifneq (true,$(TRAVIS))
+index.html: $(drafts_html) $(drafts_txt)
+ifeq (1,$(words $(drafts)))
+	cp $< $@
+else
+	echo -e '$(INDEX_HTML)' >$@
+endif
+
+.PHONY: ghpages
+ghpages: index.html $(drafts_html) $(drafts_txt)
+ifneq (true,$(CI))
 	@git show-ref refs/heads/gh-pages > /dev/null 2>&1 || \
 	  ! echo 'Error: No gh-pages branch, run `make setup-ghpages` to initialize it.'
 endif
@@ -171,9 +251,9 @@ ifneq (,$(or $(IS_LOCAL),$(IS_MASTER)))
 	mkdir $(GHPAGES_TMP)
 	cp -f $^ $(GHPAGES_TMP)
 	git clean -qfdX
-ifeq (true,$(TRAVIS))
+ifeq (true,$(CI))
 	git config user.email "ci-bot@example.com"
-	git config user.name "Travis CI Bot"
+	git config user.name "CI Bot"
 	git checkout -q --orphan gh-pages
 	git rm -qr --cached .
 	git clean -qfd
@@ -186,15 +266,47 @@ endif
 	git add $^
 	if test `git status -s | wc -l` -gt 0; then git commit -m "Script updating gh-pages."; fi
 ifneq (,$(GH_TOKEN))
-	@echo git push https://github.com/$(TRAVIS_REPO_SLUG).git gh-pages
-	@git push https://$(GH_TOKEN)@github.com/$(TRAVIS_REPO_SLUG).git gh-pages
+	@echo git push -q https://github.com/$(CI_REPO_FULL).git gh-pages
+	@git push -q https://$(GH_TOKEN)@github.com/$(CI_REPO_FULL).git gh-pages
 endif
 	-git checkout -qf "$(GIT_ORIG)"
 	-rm -rf $(GHPAGES_TMP)
 endif
 
+.PHONY: setup
+setup: setup-readme setup-ghpages
+
+.PHONY: setup-readme
+setup-readme: $(addsuffix .xml,$(drafts))
+ifneq (1,$(words $(drafts)))
+	@! echo "Error: This setup only works with a single draft"
+endif
+	git add $(addsuffix $(firstword $(draft_types)),$(basename $<))
+	git rm README.md WG-SETUP.md
+	-git rm template.md
+	-git rm template.xml
+	git mv README-template.md README.md
+	DRAFT_NAME=$$(echo $< | cut -f 1 -d . -); \
+	  AUTHOR_LABEL=$$(echo $< | cut -f 2 -d - -); \
+	  WG_NAME=$$(echo $< | cut -f 3 -d - -); \
+	  DRAFT_STATUS=$$(test "$$AUTHOR_LABEL" = ietf && echo Working Group || echo Individual); \
+	  GITHUB_USER=$(GITHUB_USER); GITHUB_REPO=$(GITHUB_REPO); \
+	  DRAFT_TITLE=$$(sed -e '/<title[^>]*>[^<]*$$/{s/.*>//g;H};/<\/title>/{H;x;s/.*<title/</g;s/<[^>]*>//g;q};d' $<); \
+	  sed -i~ $(foreach label,DRAFT_NAME DRAFT_TITLE DRAFT_STATUS GITHUB_USER GITHUB_REPO WG_NAME,-e 's~{$(label)}~'"$$$(label)"'~g') README.md CONTRIBUTING.md
+	git add README.md CONTRIBUTING.md
+ifneq (xml,$(firstword $(draft_types)))
+	echo $< >> .gitignore
+	git add .gitignore
+endif
+	git commit -m "Setup repository for $(basename $<)"
+
 .PHONY: setup-ghpages
 setup-ghpages:
+# Abort if there are local changes
+	@test `git status -s | wc -l` -eq 0 || \
+	  ! echo "Error: Uncommitted changes on branch"
+	@git remote show -n origin >/dev/null 2>&1 || \
+	  ! echo "Error: No remote named 'origin' configured"
 # Check if the gh-pages branch already exists locally
 	@if git show-ref refs/heads/gh-pages >/dev/null 2>&1; then \
 	  ! echo "Error: gh-pages branch already exists"; \
