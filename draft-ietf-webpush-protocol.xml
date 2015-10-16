@@ -1334,15 +1334,19 @@ HEADERS      [stream 4] +END_STREAM
 
     </references>
 
-    <!--
         <section title="Change Log">
         <t>[[The RFC Editor is requested to remove this section at publication.]]</t>
-        <t>Changes since -0-1:
-        <list style="symbols">
-        <t>Document created.</t>
-        </list>
-        </t>
+          <section title="Since draft-ietf-webpush-protocol-00" anchor="changes.since.draft-ietf-webpush-protocol-00">
+            <t>
+              Editorial changes for Push Message Time-To-Live
+            </t>
+            <t>
+              Editorial changes for Push Acknowledgements
+            </t>
+            <t>
+              Removed subscription expiration based on HTTP cache headers
+            </t>
+          </section>
         </section>
-    -->
   </back>
 </rfc>
