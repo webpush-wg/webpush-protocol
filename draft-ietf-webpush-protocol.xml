@@ -143,7 +143,6 @@
           words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these is
           described in <xref target="RFC2119"/>.
         </t>
-
         <t>
           This document defines the following terms:
           <list style="hanging">
@@ -160,6 +159,11 @@
               A message delivery context that is established between the user
               agent and the push service and shared with the application server.
               All push messages are associated with a push message subscription.
+            </t>
+            <t hangText="push message subscription set:">
+              A message delivery context that is established between the user 
+              agent and the push service that collects multiple push message
+              subscriptions into a set.
             </t>
             <t hangText="push message:">
               A message sent from an application server to a user agent via a
@@ -262,10 +266,17 @@
             </t>
             <t hangText="push message subscription:">
               This resource provides read and delete access for a message
-              subscription. A user agent <xref target="monitor">receives push
+              subscription. A user agent <xref target="monitor-subscription">receives push
               messages</xref> using a push message subscription.  Every push
               message subscription has exactly one push resource associated with
               it.
+            </t>
+            <t hangText="push message subscription set:">
+              This resource provides read and delete access for a collection of push
+              message subscriptions. A user agent <xref target="monitor-set">receives
+              push messages</xref> for all the push message subscriptions in the set. A
+              link relation of type "urn:ietf:params:push:set" identifies a push message
+              subscription set.
             </t>
             <t hangText="push:">
               A push resource is used by the application server to request the
@@ -327,6 +338,16 @@ Host: push.example.net
         that these URIs are not disclosed to unauthorized recipients (see <xref
         target="authorization"/>).
       </t>
+      <t>
+        The push service MAY provide a URI for a subscription set resource in a
+        link relation of type "urn:ietf:params:push:set". If provided, the push
+        service supports subscription sets.
+      </t>
+      <t>
+        The push service MAY return new subscription sets in response to different
+        subscription requests from the same user agent. This allows the push service to
+        control the grouping of the push message subscriptions.
+      </t>
       <figure>
         <artwork type="inline">
   <![CDATA[
@@ -336,10 +357,17 @@ Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
         rel="urn:ietf:params:push"
 Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
         rel="urn:ietf:params:push:receipt"
+Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
+        rel="urn:ietf:params:push:set"
 Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 
 ]]></artwork>
       </figure>
+      <section anchor="subscription_sets" title="Subscription Sets">
+        <t>
+          TODO: Discuss correlation either based on authentication or connection
+        </t>
+      </section>
     </section>
     <section anchor="receipt_subscription"
              title="Subscribing for Push Message Receipts">
@@ -520,7 +548,7 @@ TTL = 1*DIGIT
       </section>
     </section>
 
-    <section anchor="monitor" title="Receiving Push Messages">
+    <section anchor="monitor-subscription" title="Receiving Push Messages for a Subscription">
       <t>
         A user agent requests the delivery of new push messages by making a GET
         request to a push message subscription resource.  The push service does
@@ -530,10 +558,11 @@ TTL = 1*DIGIT
       </t>
       <t>
         Each push message is pushed in response to a synthesized GET request.
-        The GET request is made to the push message resource that was created by
+        This GET request is made to the push message resource that was created by
         the push service when the application server requested message delivery.
-        The response body is the entity body from the most recent request sent
-        to the push resource.
+        The push service MUST include the link references to the push and receipt
+        subscribe resources in the request. The response body is the entity body
+        from the most recent request sent to the push resource.
       </t>
 
       <figure>
@@ -561,6 +590,10 @@ PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
   :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
+  :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+                    rel="urn:ietf:params:push"
+  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                    rel="urn:ietf:params:push:receipt"
 
 HEADERS      [stream 4] +END_HEADERS
   :status        = 200
@@ -574,24 +607,100 @@ DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 ]]></artwork>
       </figure>
-
       <t>
-        In response to this request, the push service MUST generate a server push
-        for all push messages that have not yet been delivered.  In addition,
-        the push service SHOULD return link references to the push and receipt
-        subscribe resources.
-      </t>
-      <t>
-        A user agent can request the contents of the push message subscription
+        A user agent can also request the contents of the push message subscription
         resource immediately by including a <xref target="RFC7240">Prefer header
         field</xref> with a "wait" parameter set to "0".
+      </t>
+      <t>
+        In response to this request, the push service MUST generate a server push
+        for all push messages that have not yet been delivered.
       </t>
       <t>
         A 204 (No Content) status code with no associated server pushes
         indicates that no messages are presently available.  This could be
         because push messages have expired.
       </t>
+      <section anchor="monitor-set" title="Receiving Push Messages for a Subscription Set">
+        <t>
+          A user agent requests the delivery of new push messages for a collection of
+          push message subscriptions by making a GET request to a push message subscription
+          set resource. The push service does not respond to this request, it instead uses
+          <xref target="RFC7540">HTTP/2 server push</xref> to send the contents of push
+          messages as they are sent by application servers.
+        </t>
+        <t>
+          Each push message is pushed in response to a synthesized GET request.
+          This GET request is made to the push message resource that was created by
+          the push service when the application server requested message delivery.
+          The push service MUST include the link references to the push and receipt
+          subscribe resources in the request.  The response body is the entity body
+          from the most recent request sent to the push resource.
+        </t>
 
+        <figure>
+          <preamble>
+            The following example request is made over HTTP/2.
+          </preamble>
+          <artwork>
+            <![CDATA[
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :method        = GET
+  :path          = /set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy
+  :authority     = push.example.net
+]]>
+          </artwork>
+        </figure>
+
+        <figure>
+          <preamble>
+            The push service permits the request to remain outstanding.  When a
+            push message is sent by an application server, a server push is
+            associated with the initial request.  The response includes the push
+            message.
+          </preamble>
+          <artwork>
+            <![CDATA[
+PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
+  :method        = GET
+  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :authority     = push.example.net
+  :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+                    rel="urn:ietf:params:push"
+  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                    rel="urn:ietf:params:push:receipt"
+
+HEADERS      [stream 4] +END_HEADERS
+  :status        = 200
+  date           = Thu, 11 Dec 2014 23:56:56 GMT
+  last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+  cache-control  = private
+  content-type   = text/plain;charset=utf8
+  content-length = 36
+
+DATA         [stream 4] +END_STREAM
+  iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+]]>
+          </artwork>
+        </figure>
+
+
+        <t>
+          A user agent can request the contents of the push message subscription
+          set resource immediately by including a <xref target="RFC7240">Prefer header
+          field</xref> with a "wait" parameter set to "0".
+        </t>
+        <t>
+          In response to this request, the push service MUST generate a server push
+          for all push messages that have not yet been delivered.
+        </t>
+        <t>
+          A 204 (No Content) status code with no associated server pushes
+          indicates that no messages are presently available.  This could be
+          because push messages have expired.
+        </t> 
+      </section>
+      
       <section anchor="acknowledge_message"
                title="Acknowledging Push Messages">
         <t>
@@ -638,7 +747,7 @@ Host: push.example.net
           (<xref target="acknowledge_message"></xref>) by the user agent.
         </t>
         <t>
-          Each receipt is pushed in response to a synthesized GET request.  The
+          Each receipt is pushed in response to a synthesized GET request.  This
           GET request is made to the same push message resource that was created
           by the push service when the application server requested message
           delivery. A successful response includes a 410 (GONE) status code with
@@ -755,7 +864,7 @@ HEADERS      [stream 4] +END_STREAM
         <t>
           A push service can remove a subscription at any time. If a user agent
           or application server has an outstanding request to a subscription
-          resource (see <xref target="monitor"/>), this can be signaled by
+          resource (see <xref target="monitor-subscription"/>), this can be signaled by
           returning a 400-series status code, such as 410 (Gone).
         </t>
         <t>
@@ -768,6 +877,23 @@ HEADERS      [stream 4] +END_STREAM
           Found) or 410 (Gone) if an application server attempts to send a push
           message to a removed or expired push message subscription.
         </t>
+        <section title="Subscription Set Expiration">
+          <t>
+            A push service MAY expire a subscription set at any time which MUST also
+            expire all push message subscriptions in the set. If a user agent has an
+            outstanding request to a push subscription set (see <xref target="monitor-set"/>)
+            this can be signaled by returning a 400-series status code, such as 410 (Gone).
+          </t>
+          <t>
+            A user agent can request that a subscription set be removed by sending a DELETE
+            request to the subscription set URI. This MUST also remove all push message
+            subscriptions in the set. 
+          </t>
+          <t>
+            If a specific push message subscription that is a member of a subscription set is
+            expired or removed, then it MUST also be removed from its subscription set.
+          </t>
+        </section>
       </section>
 
       <section title="Implications for Application Reliability">
@@ -797,6 +923,16 @@ HEADERS      [stream 4] +END_STREAM
           However, reliability might not be necessary for messages that are
           transient (e.g. an incoming call) or messages that are quickly
           superceded (e.g. the current number of unread emails).
+        </t>
+      </section>
+      <section anchor="sets-streams" title="Subscription Sets and Concurrent HTTP/2 streams">
+        <t>
+          If the push service requires that the user agent use push message subscription sets,
+          then it SHOULD limit the number of concurrently active streams with the
+          SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <xref target="RFC7540"/>. 
+          
+          The user agent SHOULD be limited to one concurrent stream to manage push message
+          subscriptions and one concurrent stream per subscription set returned by the push service.
         </t>
       </section>
     </section>
@@ -1088,7 +1224,18 @@ HEADERS      [stream 4] +END_STREAM
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:receipt</t>
+            <t hangText="URN:">urn:ietf:params:push:set</t>
+            <t hangText="Description:">
+              This link relation type is used to identify a collection of push
+              message subscriptions.
+            </t>
+            <t hangText="Specification:">(this document)</t>
+            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
+          </list>
+        </t>
+        <t>
+          <list style="hanging">
+            <t hangText="URN:">urn:ietf:params:push:receipts</t>
             <t hangText="Description:">
               This link relation type is used to identify a resource for
               creating new push message receipt subscriptions.
