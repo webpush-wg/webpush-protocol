@@ -341,7 +341,9 @@ Host: push.example.net
       <t>
         The push service MAY provide a URI for a subscription set resource in a
         link relation of type "urn:ietf:params:push:set". If provided, the push
-        service supports subscription sets.
+        service supports subscription sets. If available, the user agent SHOULD
+        use the subscription set to receive push messages rather than individual
+        push message subscriptions.
       </t>
       <t>
         The push service MAY return new subscription sets in response to different
@@ -363,9 +365,10 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 
 ]]></artwork>
       </figure>
-      <section anchor="subscription_sets" title="Subscription Sets">
+      <section anchor="set-correlate" title="Correlating Subscriptions">
         <t>
-          TODO: Discuss correlation either based on authentication or connection
+          PENDING: Discuss how two different subscriptions are correlated based on 
+          either authentication or connection
         </t>
       </section>
     </section>
@@ -557,12 +560,15 @@ TTL = 1*DIGIT
         contents of push messages as they are sent by application servers.
       </t>
       <t>
-        Each push message is pushed in response to a synthesized GET request.
-        This GET request is made to the push message resource that was created by
-        the push service when the application server requested message delivery.
-        The push service MUST include the link references to the push and receipt
-        subscribe resources in the request. The response body is the entity body
-        from the most recent request sent to the push resource.
+        Each push message is pushed as the response to a synthesized GET request
+        in a PUSH_PROMISE.  This GET request is made to the push message resource
+        that was created by the push service when the application server requested
+        message delivery.  The response headers SHOULD provide a URI for the push
+        resource corresponding to the push message subscription in a link relation
+        of type "urn:ietf:params:push" and a URI for the receipt subscribe resource
+        in a link relation of type "urn:ietf:params:push:receipt". The response body
+        is the entity body from the most recent request sent to the push resource by
+        the application server.
       </t>
 
       <figure>
@@ -590,16 +596,16 @@ PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
   :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
-  :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
-                    rel="urn:ietf:params:push"
-  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                    rel="urn:ietf:params:push:receipt"
 
 HEADERS      [stream 4] +END_HEADERS
   :status        = 200
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
   cache-control  = private
+  :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+                    rel="urn:ietf:params:push"
+  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                    rel="urn:ietf:params:push:receipt"
   content-type   = text/plain;charset=utf8
   content-length = 36
 
@@ -610,11 +616,9 @@ DATA         [stream 4] +END_STREAM
       <t>
         A user agent can also request the contents of the push message subscription
         resource immediately by including a <xref target="RFC7240">Prefer header
-        field</xref> with a "wait" parameter set to "0".
-      </t>
-      <t>
-        In response to this request, the push service MUST generate a server push
-        for all push messages that have not yet been delivered.
+        field</xref> with a "wait" parameter set to "0". In response to this request,
+        the push service MUST generate a server push for all push messages that have not yet
+        been delivered.
       </t>
       <t>
         A 204 (No Content) status code with no associated server pushes
@@ -623,6 +627,10 @@ DATA         [stream 4] +END_STREAM
       </t>
       <section anchor="monitor-set" title="Receiving Push Messages for a Subscription Set">
         <t>
+          There are minor differences between receiving push messages for a subscription and
+          a subscripion set.
+        </t>
+        <t>
           A user agent requests the delivery of new push messages for a collection of
           push message subscriptions by making a GET request to a push message subscription
           set resource. The push service does not respond to this request, it instead uses
@@ -630,12 +638,16 @@ DATA         [stream 4] +END_STREAM
           messages as they are sent by application servers.
         </t>
         <t>
-          Each push message is pushed in response to a synthesized GET request.
-          This GET request is made to the push message resource that was created by
-          the push service when the application server requested message delivery.
-          The push service MUST include the link references to the push and receipt
-          subscribe resources in the request.  The response body is the entity body
-          from the most recent request sent to the push resource.
+          Each push message is pushed as the response to a synthesized GET request
+          sent in a PUSH_PROMISE. This GET request is made to the push message resource
+          that was created by the push service when the application server requested
+          message delivery. The synthetic request MUST provide a URI for the push resource
+          corresponding to the push message subscription in a link relation of type
+          "urn:ietf:params:push". This enables the user agent to differentiate the source
+          of the message. The response headers SHOULD provide a URI for the receipt
+          subscribe resource in a link relation of type "urn:ietf:params:push:receipt".
+          The response body is the entity body from the most recent request sent to the
+          push resource by an application server.
         </t>
 
         <figure>
@@ -667,14 +679,14 @@ PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :authority     = push.example.net
   :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
                     rel="urn:ietf:params:push"
-  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                    rel="urn:ietf:params:push:receipt"
 
 HEADERS      [stream 4] +END_HEADERS
   :status        = 200
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
   cache-control  = private
+  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                    rel="urn:ietf:params:push:receipt"
   content-type   = text/plain;charset=utf8
   content-length = 36
 
@@ -683,16 +695,12 @@ DATA         [stream 4] +END_STREAM
 ]]>
           </artwork>
         </figure>
-
-
         <t>
           A user agent can request the contents of the push message subscription
           set resource immediately by including a <xref target="RFC7240">Prefer header
-          field</xref> with a "wait" parameter set to "0".
-        </t>
-        <t>
-          In response to this request, the push service MUST generate a server push
-          for all push messages that have not yet been delivered.
+          field</xref> with a "wait" parameter set to "0".  In response to this request,
+          the push service MUST generate a server push for all push messages that have not
+          yet been delivered.
         </t>
         <t>
           A 204 (No Content) status code with no associated server pushes
@@ -747,11 +755,10 @@ Host: push.example.net
           (<xref target="acknowledge_message"></xref>) by the user agent.
         </t>
         <t>
-          Each receipt is pushed in response to a synthesized GET request.  This
-          GET request is made to the same push message resource that was created
-          by the push service when the application server requested message
-          delivery. A successful response includes a 410 (GONE) status code with
-          no data.
+          Each receipt is pushed as the response to a synthesized GET request sent in a 
+          PUSH_PROMISE.  This GET request is made to the same push message resource that
+          was created by the push service when the application server requested message
+          delivery. A successful response includes a 410 (GONE) status code with no data.
         </t>
         <figure>
           <preamble>
@@ -928,11 +935,12 @@ HEADERS      [stream 4] +END_STREAM
       <section anchor="sets-streams" title="Subscription Sets and Concurrent HTTP/2 streams">
         <t>
           If the push service requires that the user agent use push message subscription sets,
-          then it SHOULD limit the number of concurrently active streams with the
+          then it MAY limit the number of concurrently active streams with the
           SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <xref target="RFC7540"/>. 
-          
-          The user agent SHOULD be limited to one concurrent stream to manage push message
-          subscriptions and one concurrent stream per subscription set returned by the push service.
+          The user agent MAY be limited to one concurrent stream to manage push message
+          subscriptions and one concurrent stream for each subscription set returned by the push service.
+          This could force the user agent to serialize subscription requests to the push
+          service.
         </t>
       </section>
     </section>
