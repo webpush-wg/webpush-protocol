@@ -545,6 +545,12 @@ Content-Length: 36
 QPZq5QmSsbuQKIpo-hGtPBJN8Qrh_G-Z_Lo3
 ]]></artwork>
         </figure>
+        <t>
+          A PUT request replaces the contents of a push message.  It also causes
+          other information that is stored for the push message to be updated.
+          In particular, the Push-Receipt header field is replaced and the
+          time-to-live for the message is refreshed.
+        </t>
 
         <t>
           If the previous push message has been <xref target="storage">removed
