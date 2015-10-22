@@ -630,8 +630,8 @@ If-Match: "xyzzy"
         </t>
         <t>
           If a push message contains an ETag header field, the user agent SHOULD
-          issue a conditional DELETE when acknowledging.  That is, the user
-          agent SHOULD include the If-Match header field.
+          issue a conditional DELETE when acknowledging by including an If-Match
+          header field.
         </t>
       </section>
 
