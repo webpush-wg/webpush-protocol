@@ -432,9 +432,9 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         <t>
           An application server can use the Push-Receipt header field to request
           a confirmation from the push service when a push message is delivered
-          and acknowledged by the user agent. The Push-Receipt header field is a
-          URI-Reference as defined in Section 2.7 of
-          <xref target="RFC7230"/>.
+          and acknowledged by the user agent. The push server MUST forward the
+          Push-Receipt header field with the message. The Push-Receipt header
+          field is a URI-Reference as defined in Section 2.7 of <xref target="RFC7230"/>.
         </t>
         <figure>
           <artwork type="abnf">
@@ -604,6 +604,7 @@ DATA         [stream 4] +END_STREAM
             <![CDATA[
 DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
 Host: push.example.net
+Acknowledgement-Data: aGVsbG8gd29ybGQ=
 ]]>
           </artwork>
         </figure>
@@ -626,8 +627,28 @@ Host: push.example.net
           then the push service MUST deliver a failure response to the application server
           monitoring the receipt subscription resource.
         </t>
+        <section anchor="acknowledgement-data" title="Acknowledgement-Data Header Field">
+          <t>
+            If a push message has a Push-Receipt header field, the user agent MAY include
+            exactly one “Acknowledgement-Data” header field in its acknowledgement request.
+            The content of the Acknowledgement-Data header field is opaque diagnostic data
+            encoded as a base64url string. The ABNF [RFC5234] production for "token68" is
+            defined in Section 2.1 of [RFC7235].
+          <figure>
+            <artwork type="abnf">
+<![CDATA[
+Acknowledgement-Data = token68
+]]>
+            </artwork>
+          </figure>
+          </t>
+          <t>
+            If the application has requested a delivery receipt, the push server MUST include
+            the Acknowledgement-Data header field with the response to the application server
+            monitoring the receipt subscription resource.
+          </t>
+        </section>
       </section>
-
       <section anchor="receive_receipt" title="Receiving Push Message Receipts">
         <t>
           The application server requests the delivery of receipts from the push
@@ -662,7 +683,10 @@ HEADERS      [stream 13] +END_STREAM +END_HEADERS
             The push service permits the request to remain outstanding.  When
             the user agent acknowledges the message, the push service pushes a
             delivery receipt to the application server. A 410 (Gone) status code
-            confirms that the message was delivered and acknowledged.
+            confirms that the message was delivered and acknowledged. If the user
+            agent included the optional Acknowledgement-Data header field in its
+            acknowledgement request, then the push server MUST include it in the
+            response.
           </preamble>
           <artwork>
             <![CDATA[
@@ -675,7 +699,7 @@ HEADERS      [stream 4] +END_STREAM
                         +END_HEADERS
   :status        = 410
   date           = Thu, 11 Dec 2014 23:56:56 GMT
-
+  acknowledgement-data = aGVsbG8gd29ybGQ=
 ]]>
           </artwork>
         </figure>
@@ -1026,6 +1050,12 @@ HEADERS      [stream 4] +END_STREAM
           <c>standard</c>
           <c>
             <xref target="request_receipt"/>
+          </c>
+          <c>Acknowledgement-Data</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="acknowledgement-data"/>
           </c>
         </texttable>
         <t>
