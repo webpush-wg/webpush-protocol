@@ -433,6 +433,7 @@ POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 Content-Type: text/plain;charset=utf8
+TTL: 600
 Content-Length: 36
 
 iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
@@ -449,6 +450,7 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+TTL: 300
 
 ]]></artwork>
       </figure>
@@ -540,13 +542,55 @@ TTL = 1*DIGIT
         <t>
           If the user agent is unavailable, a push message with a zero TTL expires and
           is never delivered.
-        </t> 
+        </t>
         <t>
           A push service MAY choose to retain a push message for a shorter
           duration than that requested.  It indicates this by including a TTL
           header field in the response that includes the actual TTL.  This TTL
           value MUST be less than or equal to the value provided by the
           application server.
+        </t>
+      </section>
+
+      <section anchor="update" title="Updating Push Messages">
+        <t>
+          A message that has been stored by the push service can be replaced
+          with new content.  If the user agent is offline during the time that
+          the push messages are sent, updating a push message avoids the
+          situation where obsolete or redundant messages are sent to the user
+          agent.
+        </t>
+        <t>
+          The application server updates a message by sending an HTTP PUT
+          request with the updated message contents to the message URL provided
+          by the push service.
+        </t>
+        <figure>
+          <artwork type="inline"><![CDATA[
+PUT /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
+Host: push.example.net
+TTL: 600
+Content-Type: text/plain;charset=utf8
+Content-Length: 36
+
+QPZq5QmSsbuQKIpo-hGtPBJN8Qrh_G-Z_Lo3
+]]></artwork>
+        </figure>
+        <t>
+          A PUT request replaces the contents of a push message.  It also causes
+          other information that is stored for the push message to be updated.
+          In particular, the Push-Receipt header field is replaced and the
+          time-to-live for the message is refreshed.
+        </t>
+
+        <t>
+          If the previous push message has been <xref target="storage">removed
+          by the push service</xref> or acknowledged by the user agent the push
+          service MAY reject the request.  However, a push service is encouraged
+          to treat an update for a removed push message as though the message
+          were still present and consequently send the push message to the user
+          agent.  Permitting an update avoids the additional request required to
+          retry and the associated delays.
         </t>
       </section>
     </section>
