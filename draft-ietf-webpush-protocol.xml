@@ -565,10 +565,8 @@ TTL = 1*DIGIT
         that was created by the push service when the application server requested
         message delivery.  The response headers SHOULD provide a URI for the push
         resource corresponding to the push message subscription in a link relation
-        of type "urn:ietf:params:push" and a URI for the receipt subscribe resource
-        in a link relation of type "urn:ietf:params:push:receipt". The response body
-        is the entity body from the most recent request sent to the push resource by
-        the application server.
+        of type "urn:ietf:params:push". The response body is the entity body from
+        the most recent request sent to the push resource by the application server.
       </t>
 
       <figure>
@@ -604,14 +602,29 @@ HEADERS      [stream 4] +END_HEADERS
   cache-control  = private
   :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
                     rel="urn:ietf:params:push"
-  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                    rel="urn:ietf:params:push:receipt"
   content-type   = text/plain;charset=utf8
   content-length = 36
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 ]]></artwork>
+      </figure>
+      <t>
+        
+      </t>
+      <figure>
+        <preamble>
+          The push service response for the GET request to the push message subscription resource
+          SHOULD provide a URI for the receipt subscribe resource in a link relation of type
+          "urn:ietf:params:push:receipt" in the response headers.
+        </preamble>
+        <artwork>
+<![CDATA[
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :status        = 200
+  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                    rel="urn:ietf:params:push:receipt"
+]]>     </artwork>
       </figure>
       <t>
         A user agent can also request the contents of the push message subscription
@@ -644,10 +657,8 @@ DATA         [stream 4] +END_STREAM
           message delivery. The synthetic request MUST provide a URI for the push resource
           corresponding to the push message subscription in a link relation of type
           "urn:ietf:params:push". This enables the user agent to differentiate the source
-          of the message. The response headers SHOULD provide a URI for the receipt
-          subscribe resource in a link relation of type "urn:ietf:params:push:receipt".
-          The response body is the entity body from the most recent request sent to the
-          push resource by an application server.
+          of the message. The response body is the entity body from the most recent request
+          sent to the push resource by an application server.
         </t>
 
         <figure>
@@ -685,13 +696,26 @@ HEADERS      [stream 4] +END_HEADERS
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
   cache-control  = private
-  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                    rel="urn:ietf:params:push:receipt"
   content-type   = text/plain;charset=utf8
   content-length = 36
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+]]>
+          </artwork>
+        </figure>
+        <figure>
+          <preamble>
+            The push service response for the GET request to the push message subscription set
+            resource SHOULD provide a URI for the receipt subscribe resource in a link relation
+            of type "urn:ietf:params:push:receipt" in the response headers.
+          </preamble>
+          <artwork>
+            <![CDATA[
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :status        = 200
+  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                    rel="urn:ietf:params:push:receipt"
 ]]>
           </artwork>
         </figure>
@@ -787,7 +811,7 @@ PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
   :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
 
-HEADERS      [stream 4] +END_STREAM
+HEADERS      [stream 82] +END_STREAM
                         +END_HEADERS
   :status        = 410
   date           = Thu, 11 Dec 2014 23:56:56 GMT
