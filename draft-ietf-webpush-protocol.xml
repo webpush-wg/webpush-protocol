@@ -616,7 +616,7 @@ DATA         [stream 4] +END_STREAM
         <preamble>
           The push service response for the GET request to the push message subscription resource
           SHOULD provide a URI for the receipt subscribe resource in a link relation of type
-          "urn:ietf:params:push:receipt" in the response headers.
+          "urn:ietf:params:push:receipt".
         </preamble>
         <artwork>
 <![CDATA[
@@ -708,7 +708,7 @@ DATA         [stream 4] +END_STREAM
           <preamble>
             The push service response for the GET request to the push message subscription set
             resource SHOULD provide a URI for the receipt subscribe resource in a link relation
-            of type "urn:ietf:params:push:receipt" in the response headers.
+            of type "urn:ietf:params:push:receipt".
           </preamble>
           <artwork>
             <![CDATA[
