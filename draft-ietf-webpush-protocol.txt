@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: May 6, 2016                                      B. Raymor, Ed.
+Expires: May 14, 2016                                     B. Raymor, Ed.
                                                                Microsoft
-                                                        November 3, 2015
+                                                       November 11, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 6, 2016.
+   This Internet-Draft will expire on May 14, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 1]
+Thomson, et al.           Expires May 14, 2016                  [Page 1]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 2]
+Thomson, et al.           Expires May 14, 2016                  [Page 2]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 3]
+Thomson, et al.           Expires May 14, 2016                  [Page 3]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 4]
+Thomson, et al.           Expires May 14, 2016                  [Page 4]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 5]
+Thomson, et al.           Expires May 14, 2016                  [Page 5]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 6]
+Thomson, et al.           Expires May 14, 2016                  [Page 6]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 7]
+Thomson, et al.           Expires May 14, 2016                  [Page 7]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 8]
+Thomson, et al.           Expires May 14, 2016                  [Page 8]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -501,7 +501,7 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
 
 
-Thomson, et al.            Expires May 6, 2016                  [Page 9]
+Thomson, et al.           Expires May 14, 2016                  [Page 9]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 10]
+Thomson, et al.           Expires May 14, 2016                 [Page 10]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -576,10 +576,9 @@ Internet-Draft                HTTP Web Push                November 2015
    application server requested message delivery.  The response headers
    SHOULD provide a URI for the push resource corresponding to the push
    message subscription in a link relation of type
-   "urn:ietf:params:push" and a URI for the receipt subscribe resource
-   in a link relation of type "urn:ietf:params:push:receipt".  The
-   response body is the entity body from the most recent request sent to
-   the push resource by the application server.
+   "urn:ietf:params:push".  The response body is the entity body from
+   the most recent request sent to the push resource by the application
+   server.
 
    The following example request is made over HTTP/2.
 
@@ -587,36 +586,6 @@ Internet-Draft                HTTP Web Push                November 2015
      :method        = GET
      :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
      :authority     = push.example.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Thomson, et al.            Expires May 6, 2016                 [Page 11]
-
-Internet-Draft                HTTP Web Push                November 2015
-
 
    The push service permits the request to remain outstanding.  When a
    push message is sent by an application server, a server push is
@@ -636,13 +605,28 @@ Internet-Draft                HTTP Web Push                November 2015
      cache-control  = private
      :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
                        rel="urn:ietf:params:push"
-     :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                       rel="urn:ietf:params:push:receipt"
      content-type   = text/plain;charset=utf8
      content-length = 36
 
    DATA         [stream 4] +END_STREAM
      iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+
+
+
+Thomson, et al.           Expires May 14, 2016                 [Page 11]
+
+Internet-Draft                HTTP Web Push                November 2015
+
+
+   The push service response for the GET request to the push message
+   subscription resource SHOULD provide a URI for the receipt subscribe
+   resource in a link relation of type "urn:ietf:params:push:receipt".
+
+
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :status        = 200
+     :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                       rel="urn:ietf:params:push:receipt"
 
    A user agent can also request the contents of the push message
    subscription resource immediately by including a Prefer header field
@@ -666,14 +650,6 @@ Internet-Draft                HTTP Web Push                November 2015
    to send the contents of push messages as they are sent by application
    servers.
 
-
-
-
-Thomson, et al.            Expires May 6, 2016                 [Page 12]
-
-Internet-Draft                HTTP Web Push                November 2015
-
-
    Each push message is pushed as the response to a synthesized GET
    request sent in a PUSH_PROMISE.  This GET request is made to the push
    message resource that was created by the push service when the
@@ -681,11 +657,22 @@ Internet-Draft                HTTP Web Push                November 2015
    MUST provide a URI for the push resource corresponding to the push
    message subscription in a link relation of type
    "urn:ietf:params:push".  This enables the user agent to differentiate
-   the source of the message.  The response headers SHOULD provide a URI
-   for the receipt subscribe resource in a link relation of type
-   "urn:ietf:params:push:receipt".  The response body is the entity body
-   from the most recent request sent to the push resource by an
-   application server.
+   the source of the message.  The response body is the entity body from
+   the most recent request sent to the push resource by an application
+   server.
+
+
+
+
+
+
+
+
+
+Thomson, et al.           Expires May 14, 2016                 [Page 12]
+
+Internet-Draft                HTTP Web Push                November 2015
+
 
    The following example request is made over HTTP/2.
 
@@ -714,8 +701,6 @@ Internet-Draft                HTTP Web Push                November 2015
      date           = Thu, 11 Dec 2014 23:56:56 GMT
      last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
      cache-control  = private
-     :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                       rel="urn:ietf:params:push:receipt"
      content-type   = text/plain;charset=utf8
      content-length = 36
 
@@ -723,15 +708,28 @@ Internet-Draft                HTTP Web Push                November 2015
      iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
 
+   The push service response for the GET request to the push message
+   subscription set resource SHOULD provide a URI for the receipt
+   subscribe resource in a link relation of type
+   "urn:ietf:params:push:receipt".
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 13]
-
-Internet-Draft                HTTP Web Push                November 2015
+   HEADERS      [stream 7] +END_STREAM +END_HEADERS
+     :status        = 200
+     :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+                       rel="urn:ietf:params:push:receipt"
 
 
    A user agent can request the contents of the push message
    subscription set resource immediately by including a Prefer header
+
+
+
+Thomson, et al.           Expires May 14, 2016                 [Page 13]
+
+Internet-Draft                HTTP Web Push                November 2015
+
+
    field [RFC7240] with a "wait" parameter set to "0".  In response to
    this request, the push service MUST generate a server push for all
    push messages that have not yet been delivered.
@@ -778,15 +776,16 @@ Internet-Draft                HTTP Web Push                November 2015
 
    Each receipt is pushed as the response to a synthesized GET request
    sent in a PUSH_PROMISE.  This GET request is made to the same push
+   message resource that was created by the push service when the
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 14]
+
+Thomson, et al.           Expires May 14, 2016                 [Page 14]
 
 Internet-Draft                HTTP Web Push                November 2015
 
 
-   message resource that was created by the push service when the
    application server requested message delivery.  A successful response
    includes a 410 (GONE) status code with no data.
 
@@ -810,7 +809,7 @@ Internet-Draft                HTTP Web Push                November 2015
      :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
      :authority     = push.example.net
 
-   HEADERS      [stream 4] +END_STREAM
+   HEADERS      [stream 82] +END_STREAM
                            +END_HEADERS
      :status        = 410
      date           = Thu, 11 Dec 2014 23:56:56 GMT
@@ -837,7 +836,8 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 15]
+
+Thomson, et al.           Expires May 14, 2016                 [Page 15]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 16]
+Thomson, et al.           Expires May 14, 2016                 [Page 16]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 17]
+Thomson, et al.           Expires May 14, 2016                 [Page 17]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 18]
+Thomson, et al.           Expires May 14, 2016                 [Page 18]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 19]
+Thomson, et al.           Expires May 14, 2016                 [Page 19]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 20]
+Thomson, et al.           Expires May 14, 2016                 [Page 20]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 21]
+Thomson, et al.           Expires May 14, 2016                 [Page 21]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 22]
+Thomson, et al.           Expires May 14, 2016                 [Page 22]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 23]
+Thomson, et al.           Expires May 14, 2016                 [Page 23]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 24]
+Thomson, et al.           Expires May 14, 2016                 [Page 24]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1397,4 +1397,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.            Expires May 6, 2016                 [Page 25]
+Thomson, et al.           Expires May 14, 2016                 [Page 25]

@@ -496,7 +496,7 @@ ul.toc a:first-child {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2015-11-3" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-11-11" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -521,7 +521,7 @@ ul.toc a:first-child {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: May 6, 2016</td>
+  <td class="left">Expires: May 14, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -530,7 +530,7 @@ ul.toc a:first-child {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">November 3, 2015</td>
+  <td class="right">November 11, 2015</td>
 </tr>
 
     	
@@ -550,7 +550,7 @@ ul.toc a:first-child {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 6, 2016.</p>
+<p>This Internet-Draft will expire on May 14, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -787,7 +787,7 @@ TTL = 1*DIGIT
 <p id="rfc.section.5.2.p.9">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.6.p.2">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push" and a URI for the receipt subscribe resource in a link relation of type "urn:ietf:params:push:receipt". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
+<p id="rfc.section.6.p.2">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
@@ -810,20 +810,27 @@ HEADERS      [stream 4] +END_HEADERS
   cache-control  = private
   :link          = &lt;/p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
                     rel="urn:ietf:params:push"
-  :link          = &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
-                    rel="urn:ietf:params:push:receipt"
   content-type   = text/plain;charset=utf8
   content-length = 36
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 </pre>
-<p id="rfc.section.6.p.3">A user agent can also request the contents of the push message subscription resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0". In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
-<p id="rfc.section.6.p.4">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
+<p/>
+<p>The push service response for the GET request to the push message subscription resource SHOULD provide a URI for the receipt subscribe resource in a link relation of type "urn:ietf:params:push:receipt".  </p>
+<pre>
+
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :status        = 200
+  :link          = &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
+                    rel="urn:ietf:params:push:receipt"
+     </pre>
+<p id="rfc.section.6.p.4">A user agent can also request the contents of the push message subscription resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0". In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
+<p id="rfc.section.6.p.5">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#monitor-set" id="monitor-set">Receiving Push Messages for a Subscription Set</a></h1>
 <p id="rfc.section.6.1.p.1">There are minor differences between receiving push messages for a subscription and a subscripion set.  </p>
 <p id="rfc.section.6.1.p.2">A user agent requests the delivery of new push messages for a collection of push message subscriptions by making a GET request to a push message subscription set resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.6.1.p.3">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE. This GET request is made to the push message resource that was created by the push service when the application server requested message delivery. The synthetic request MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". This enables the user agent to differentiate the source of the message. The response headers SHOULD provide a URI for the receipt subscribe resource in a link relation of type "urn:ietf:params:push:receipt".  The response body is the entity body from the most recent request sent to the push resource by an application server.  </p>
+<p id="rfc.section.6.1.p.3">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE. This GET request is made to the push message resource that was created by the push service when the application server requested message delivery. The synthetic request MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". This enables the user agent to differentiate the source of the message. The response body is the entity body from the most recent request sent to the push resource by an application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
             
@@ -848,13 +855,20 @@ HEADERS      [stream 4] +END_HEADERS
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
   cache-control  = private
-  :link          = &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
-                    rel="urn:ietf:params:push:receipt"
   content-type   = text/plain;charset=utf8
   content-length = 36
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+
+          </pre>
+<p>The push service response for the GET request to the push message subscription set resource SHOULD provide a URI for the receipt subscribe resource in a link relation of type "urn:ietf:params:push:receipt".  </p>
+<pre>
+            
+HEADERS      [stream 7] +END_STREAM +END_HEADERS
+  :status        = 200
+  :link          = &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
+                    rel="urn:ietf:params:push:receipt"
 
           </pre>
 <p id="rfc.section.6.1.p.4">A user agent can request the contents of the push message subscription set resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
@@ -890,7 +904,7 @@ PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
   :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
 
-HEADERS      [stream 4] +END_STREAM
+HEADERS      [stream 82] +END_STREAM
                         +END_HEADERS
   :status        = 410
   date           = Thu, 11 Dec 2014 23:56:56 GMT
