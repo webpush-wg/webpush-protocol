@@ -547,7 +547,7 @@ TTL = 1*DIGIT
         <t>
           If the user agent is unavailable, a push message with a zero TTL expires and
           is never delivered.
-        </t> 
+        </t>
         <t>
           A push service MAY choose to retain a push message for a shorter
           duration than that requested.  It indicates this by including a TTL
@@ -611,6 +611,7 @@ HEADERS      [stream 4] +END_HEADERS
                     rel="urn:ietf:params:push"
   content-type   = text/plain;charset=utf8
   content-length = 36
+  etag           = "xyzzy"
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
@@ -752,6 +753,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             <![CDATA[
 DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
 Host: push.example.net
+If-Match: "xyzzy"
 ]]>
           </artwork>
         </figure>
@@ -773,6 +775,11 @@ Host: push.example.net
           operational constraints. If the application has requested a delivery receipt,
           then the push service MUST deliver a failure response to the application server
           monitoring the receipt subscription resource.
+        </t>
+        <t>
+          If a push message contains an ETag header field, the user agent SHOULD
+          issue a conditional DELETE when acknowledging by including an If-Match
+          header field.
         </t>
       </section>
 
@@ -885,7 +892,7 @@ HEADERS      [stream 82] +END_STREAM
         </t>
         <t>
           Push services might need to limit the size and number of stored push
-          messages to avoid overloading.  To limit the size of messages, the 
+          messages to avoid overloading.  To limit the size of messages, the
           push service MAY return the 413 (Payload Too Large) status code for messages
           that are too large. To limit the number of stored push messages, the
           push service MAY either expire messages prior to their advertised Time-To-Live
