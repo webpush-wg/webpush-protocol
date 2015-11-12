@@ -630,6 +630,93 @@ TTL = 1*DIGIT
           application server.
         </t>
       </section>
+
+      <section anchor="update" title="Updating Push Messages">
+        <t>
+          A push message that has been stored by the push service can be
+          replaced with new content.  If the user agent is offline during the
+          time that the push messages are sent, updating a push message avoids
+          the situation where obsolete or redundant messages are sent to the
+          user agent.
+        </t>
+        <t>
+          Only push messages that have been assigned a topic can be updated.  A
+          push message with a topic replaces any outstanding push message with
+          an identical topic.
+        </t>
+        <t>
+          A push message topic is a string.  A topic is carried in a Topic
+          header field.  A topic is used to correlate push messages sent to the
+          same subscription, it does not convey any other semantics.
+        </t>
+        <t>
+          The grammar for the Topic header field uses the <spanx
+          style="verb">token</spanx> and <spanx
+          style="verb">quoted-string</spanx> rules defined in <xref
+          target="RFC7230"/>.
+        </t>
+        <figure>
+          <artwork type="abnf">
+            <![CDATA[
+Topic = token / quoted-string
+          ]]>
+          </artwork>
+        </figure>
+        <t>
+          Any double quotes from the <spanx style="verb">quoted-string</spanx>
+          form are removed before comparing topics for equality.
+        </t>
+
+        <t>
+          A push message request replaces the contents of any push message with
+          the same topic.  Other information that is stored for the push message
+          is also updated.  In particular, the Push-Receipt header field is
+          replaced and the time-to-live for the message is refreshed.
+        </t>
+        <t>
+          This mechanism doesn't allow for stored push messages to be deleted.
+          An application server can send a DELETE request toward a push message
+          URL to remove (or acknowledge) an undelivered message.  Note that a
+          push message with a topic that has a zero or absent time-to-live
+          causes any stored message with the same topic to be removed, though a
+          push message with zero time-to-live could be forwarded to the user
+          agent.
+        </t>
+        <t>
+          A push message with a topic that is not shared by an existing message
+          to the same subscription is stored or delivered as normal.
+        </t>
+        <figure>
+          <preamble>
+            For example, the following message could cause an existing message
+            to be updated:
+          </preamble>
+          <artwork type="inline"><![CDATA[
+POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+Host: push.example.net
+TTL: 600
+Topic: "upd"
+Content-Type: text/plain;charset=utf8
+Content-Length: 36
+
+ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
+]]></artwork>
+        </figure>
+        <figure>
+          <preamble>
+            If the push service identifies an outstanding push message with a
+            topic of "upd", the contents of that message are replaced.  The push
+            service then responds with a 200 status code, identifying the push
+            message resource that was updated in a Location header field.
+          </preamble>
+          <artwork type="inline"><![CDATA[
+HTTP/1.1 200 OK
+Date: Thu, 11 Dec 2014 23:57:02 GMT
+Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+
+]]></artwork>
+        </figure>
+      </section>
     </section>
 
     <section anchor="monitor-subscription" title="Receiving Push Messages for a Subscription">
@@ -1271,6 +1358,12 @@ HEADERS      [stream 82] +END_STREAM
           <c>standard</c>
           <c>
             <xref target="request_receipt"/>
+          </c>
+          <c>Topic</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="update"/>
           </c>
         </texttable>
         <t>
