@@ -1289,8 +1289,8 @@ HEADERS      [stream 82] +END_STREAM
     <section anchor="ack" title="Acknowledgements">
       <t>
         Significant technical input to this document has been provided by Ben
-        Bangert, Kit Cambridge, Matthew Kaufman, Costin Manolache, Mark
-        Nottingham, Robert Sparks, Darshak Thakore and many others.
+        Bangert, Kit Cambridge, JR Conlin, Matthew Kaufman, Costin Manolache,
+        Mark Nottingham, Robert Sparks, Darshak Thakore and many others.
       </t>
     </section>
 
