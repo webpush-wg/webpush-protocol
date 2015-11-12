@@ -453,9 +453,16 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]></artwork>
       </figure>
       <t>
-        A push service MAY generate a 413 (Payload Too Large) status code in
-        response to requests that include an entity body that is too large.
-        Push services MUST NOT generate a 413 status code in responses to an
+        A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/> 
+        when an application server has exceeded its rate limit for push message
+        delivery to a push resource. The push service SHOULD also include a
+        Retry-After header <xref target="RFC7231"/> to indicate how long the application server
+        is requested to wait before it makes another request to the push resource. 
+      </t>
+      <t>
+        A push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
+        in response to requests that include an entity body that is too large.
+        Push services MUST NOT return a 413 status code in responses to an
         entity body that is 4k (4096 bytes) or less in size.
       </t>
 
@@ -1377,7 +1384,18 @@ HEADERS      [stream 82] +END_STREAM
         <seriesInfo name="RFC" value="5988" />
         <format type="TXT" octets="46834" target="http://www.rfc-editor.org/rfc/rfc5988.txt" />
       </reference>
-
+      <reference anchor="RFC6585">
+        <front>
+          <title>Additional HTTP Status Codes</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+          <organization /></author>
+          <author initials="R." surname="Fielding" fullname="R. Fielding">
+          <organization /></author>
+          <date year="2012" month="April" />
+        </front>
+        <seriesInfo name="RFC" value="6585" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc6585.txt" />
+      </reference>
       <reference anchor="RFC7230">
         <front>
           <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
