@@ -666,12 +666,14 @@ Topic = token / quoted-string
           Any double quotes from the <spanx style="verb">quoted-string</spanx>
           form are removed before comparing topics for equality.
         </t>
-
         <t>
-          A push message request replaces the contents of any push message with
-          the same topic.  Other information that is stored for the push message
-          is also updated.  In particular, the Push-Receipt header field is
-          replaced and the time-to-live for the message is refreshed.
+          A push message request creates a new push message resource, but
+          simultaneously deletes any existing message resource that has a
+          matching topic.  In effect, the information that is stored for the
+          push message is updated, but a new resource is created to avoid
+          problems with in flight acknowledgments for the old message.  The push
+          service MAY suppress acknowledgement receipts for the replaced
+          message.
         </t>
         <t>
           This mechanism doesn't allow for stored push messages to be deleted.
@@ -683,8 +685,8 @@ Topic = token / quoted-string
           agent.
         </t>
         <t>
-          A push message with a topic that is not shared by an existing message
-          to the same subscription is stored or delivered as normal.
+          A push message with a topic that is not shared by an outstanding
+          message to the same subscription is stored or delivered as normal.
         </t>
         <figure>
           <preamble>
@@ -706,11 +708,11 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
           <preamble>
             If the push service identifies an outstanding push message with a
             topic of "upd", the contents of that message are replaced.  The push
-            service then responds with a 200 status code, identifying the push
-            message resource that was updated in a Location header field.
+            service then responds with a 201 status code, identifying the push
+            message resource that was created in a Location header field.
           </preamble>
           <artwork type="inline"><![CDATA[
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 
