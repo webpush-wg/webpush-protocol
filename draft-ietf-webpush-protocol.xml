@@ -453,10 +453,11 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]></artwork>
       </figure>
       <t>
-        A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/>
+        A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/> 
         when an application server has exceeded its rate limit for push message
-        delivery. The push service SHOULD also include a Retry-After header <xref target="RFC7231"/>
-        to indicate how long the application server must wait before it makes another request. 
+        delivery to a push resource. The push service SHOULD also include a
+        Retry-After header <xref target="RFC7231"/> to indicate how long the application server
+        is requested to wait before it makes another request to the push resource. 
       </t>
       <t>
         A push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
