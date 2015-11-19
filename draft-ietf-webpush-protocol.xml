@@ -305,7 +305,22 @@
         </t>
       </section>
     </section>
-
+    <section title="Connecting to the Push Service">
+      <t>
+        The push service shares the same default port number (443/TCP) with HTTPS, but MAY
+        also advertise the IANA allocated TCP port 1001 using HTTP alternative services
+        <xref target="I-D.ietf-httpbis-alt-svc"/>:
+      </t>
+      <t>
+        The configuration of this port can potentially be optimized for better timeout
+        characteristics for push notifications than port 443.
+      </t>
+      <t>
+        NAT(s) MUST comply with REQ-5 in <xref target="RFC7231"/> which requires that
+        "the value of the 'established connection idle-timeout' MUST NOT be less than
+        2 hours 4 minutes".
+      </t>
+    </section>
     <section anchor="message_subscription" title="Subscribing for Push Messages">
       <t>
         A user agent sends a POST request to its configured push service
@@ -384,7 +399,6 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
           <![CDATA[
 POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
 Host: push.example.net
-
 ]]>
         </artwork>
       </figure>
@@ -398,7 +412,6 @@ Host: push.example.net
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
-
 ]]>
         </artwork>
       </figure>
@@ -449,7 +462,6 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
-
 ]]></artwork>
       </figure>
       <t>
@@ -616,9 +628,6 @@ DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 ]]></artwork>
       </figure>
-      <t>
-
-      </t>
       <figure>
         <preamble>
           The push service response for the GET request to the push message subscription resource
@@ -822,7 +831,6 @@ HEADERS      [stream 82] +END_STREAM
                         +END_HEADERS
   :status        = 410
   date           = Thu, 11 Dec 2014 23:56:56 GMT
-
 ]]>
           </artwork>
         </figure>
@@ -836,13 +844,12 @@ HEADERS      [stream 82] +END_STREAM
     </section>
 
     <section anchor="operational" title="Operational Considerations">
-      <t>
-        A push service is likely to have to maintain a very large number of open
-        TCP connections.  Effective management of those connections can depend
-        on being able to move connections between server instances.
-      </t>
-
       <section anchor="load" title="Load Management">
+        <t>
+          A push service is likely to have to maintain a very large number of open
+          TCP connections.  Effective management of those connections can depend
+          on being able to move connections between server instances.
+        </t>
         <t>
           A user agent MUST support the 307 (Temporary Redirect) status code
           <xref target="RFC7231"/>, which can be used by a push service to
@@ -1169,7 +1176,8 @@ HEADERS      [stream 82] +END_STREAM
       <t>
         This protocol defines new HTTP header fields in <xref
         target="iana.header.fields"/>.  New link relation types are identified
-        using the URNs defined in <xref target="iana.urns"/>.
+        using the URNs defined in <xref target="iana.urns"/>. Port registration is
+        defined in <xref target="iana.port"/>
       </t>
 
       <section anchor="iana.header.fields" title="Header Field Registrations">
@@ -1284,6 +1292,38 @@ HEADERS      [stream 82] +END_STREAM
           </list>
         </t>
       </section>
+      <section title="Service Name and Port Number Registration" anchor="iana.port">
+        <t>
+          <list style="hanging">
+            <t hangText="Service Name.">
+              <vspace />
+              webpush</t>
+            <t hangText="Transport Protocol.">
+              <vspace />
+              tcp</t>
+            <t hangText="Assignee.">
+              <vspace />
+              IESG (iesg@ietf.org)
+            </t>
+            <t hangText="Contact.">
+              <vspace />
+              IETF Chair (chair@ietf.org)
+            </t>
+            <t hangText="Description.">
+              <vspace />
+              HTTP Web Push
+            </t>
+            <t hangText="Reference.">
+              <vspace />
+              [RFCthis]
+            </t>
+            <t hangText="Port Number.">
+              <vspace />
+              1001
+            </t>
+          </list>
+        </t>
+      </section>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
@@ -1373,7 +1413,26 @@ HEADERS      [stream 82] +END_STREAM
         <seriesInfo name="RFC" value="5226" />
         <format type="TXT" octets="66160" target="http://www.rfc-editor.org/rfc/rfc5226.txt" />
       </reference>
-
+      <reference anchor="RFC5382">
+        <front>
+          <title>NAT Behavioral Requirements for TCP</title>
+          <author initials="K." surname="Biswas" fullname="K. Biswas">
+            <organization />
+          </author>
+          <author initials="B." surname="Ford" fullname="B. Ford">
+            <organization />
+          </author>
+          <author initials="S." surname="Sivakumar" fullname="S. Sivakumar">
+            <organization />
+          </author>
+          <author initials="P." surname="Srisuresh" fullname="P. Srisuresh">
+            <organization />
+          </author>
+          <date year="2008" month="October"/>
+        </front>
+        <seriesInfo name="RFC" value="5382" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc5382.txt" />
+      </reference>
       <reference anchor="RFC5988">
         <front>
           <title>Web Linking</title>
@@ -1479,9 +1538,9 @@ HEADERS      [stream 82] +END_STREAM
           </author>
           <date month="May" day="15" year="2015" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-07" />
+        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-09" />
         <format type="TXT"
-                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-07.txt" />
+                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-09.txt" />
       </reference>
 
       <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
