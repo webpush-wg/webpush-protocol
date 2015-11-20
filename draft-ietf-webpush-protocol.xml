@@ -315,11 +315,11 @@
         While the default port (443) offers broad reachability characteristics, it is most
         often used for web browsing scenarios with a lower idle timeout than other ports
         configured in middleboxes. For webpush scenarios, this would contribute to unnecessary
-        radio communications on battery-powered devices to maintain the connection.
+        radio communications to maintain the connection on battery-powered devices.
       </t>
       <t>
         Advertising the alternate port (1001) allows middleboxes to optimize idle timeouts
-        for connections specific to push scenarios on the expectation that data exchange will be
+        for connections specific to push scenarios with the expectation that data exchange will be
         infrequent.
       </t>
       <t>
