@@ -305,7 +305,29 @@
         </t>
       </section>
     </section>
-
+    <section title="Connecting to the Push Service">
+      <t>
+        The push service shares the same default port number (443/TCP) with HTTPS, but MAY
+        also advertise the IANA allocated TCP System Port 1001 using HTTP alternative services
+        <xref target="I-D.ietf-httpbis-alt-svc"/>:
+      </t>
+      <t>
+        While the default port (443) offers broad reachability characteristics, it is most
+        often used for web browsing scenarios with a lower idle timeout than other ports
+        configured in middleboxes. For webpush scenarios, this would contribute to unnecessary
+        radio communications to maintain the connection on battery-powered devices.
+      </t>
+      <t>
+        Advertising the alternate port (1001) allows middleboxes to optimize idle timeouts
+        for connections specific to push scenarios with the expectation that data exchange will be
+        infrequent.
+      </t>
+      <t>
+        Middleboxes SHOULD comply with REQ-5 in <xref target="RFC5382"/> which requires that
+        "the value of the 'established connection idle-timeout' MUST NOT be less than
+        2 hours 4 minutes".
+      </t>
+    </section>
     <section anchor="message_subscription" title="Subscribing for Push Messages">
       <t>
         A user agent sends a POST request to its configured push service
@@ -384,7 +406,6 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
           <![CDATA[
 POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
 Host: push.example.net
-
 ]]>
         </artwork>
       </figure>
@@ -398,7 +419,6 @@ Host: push.example.net
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
-
 ]]>
         </artwork>
       </figure>
@@ -449,7 +469,6 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
-
 ]]></artwork>
       </figure>
       <t>
@@ -616,9 +635,6 @@ DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 ]]></artwork>
       </figure>
-      <t>
-
-      </t>
       <figure>
         <preamble>
           The push service response for the GET request to the push message subscription resource
@@ -822,7 +838,6 @@ HEADERS      [stream 82] +END_STREAM
                         +END_HEADERS
   :status        = 410
   date           = Thu, 11 Dec 2014 23:56:56 GMT
-
 ]]>
           </artwork>
         </figure>
@@ -836,13 +851,12 @@ HEADERS      [stream 82] +END_STREAM
     </section>
 
     <section anchor="operational" title="Operational Considerations">
-      <t>
-        A push service is likely to have to maintain a very large number of open
-        TCP connections.  Effective management of those connections can depend
-        on being able to move connections between server instances.
-      </t>
-
       <section anchor="load" title="Load Management">
+        <t>
+          A push service is likely to have to maintain a very large number of open
+          TCP connections.  Effective management of those connections can depend
+          on being able to move connections between server instances.
+        </t>
         <t>
           A user agent MUST support the 307 (Temporary Redirect) status code
           <xref target="RFC7231"/>, which can be used by a push service to
@@ -1169,7 +1183,8 @@ HEADERS      [stream 82] +END_STREAM
       <t>
         This protocol defines new HTTP header fields in <xref
         target="iana.header.fields"/>.  New link relation types are identified
-        using the URNs defined in <xref target="iana.urns"/>.
+        using the URNs defined in <xref target="iana.urns"/>. Port registration is
+        defined in <xref target="iana.port"/>
       </t>
 
       <section anchor="iana.header.fields" title="Header Field Registrations">
@@ -1284,6 +1299,46 @@ HEADERS      [stream 82] +END_STREAM
           </list>
         </t>
       </section>
+      <section title="Service Name and Port Number Registration" anchor="iana.port">
+        <t>
+          Service names and port numbers are registered within the "Service Name and
+          Transport Protocol Port Number Registry" maintained at <eref
+          target="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml"/>.
+        </t>
+        <t>
+          IANA is requested to assign the System Port number 1001 and the service name
+          "webpush" in accordance with <xref target="RFC6335"/>.
+
+        <list style="hanging">
+            <t hangText="Service Name.">
+              <vspace />
+              webpush</t>
+            <t hangText="Transport Protocol.">
+              <vspace />
+              tcp</t>
+            <t hangText="Assignee.">
+              <vspace />
+              IESG (iesg@ietf.org)
+            </t>
+            <t hangText="Contact.">
+              <vspace />
+              The Web Push WG (webpush@ietf.org)
+            </t>
+            <t hangText="Description.">
+              <vspace />
+              HTTP Web Push
+            </t>
+            <t hangText="Reference.">
+              <vspace />
+              [RFCthis]
+            </t>
+            <t hangText="Port Number.">
+              <vspace />
+              1001
+            </t>
+          </list>
+        </t>
+      </section>
     </section>
 
     <section anchor="ack" title="Acknowledgements">
@@ -1373,7 +1428,26 @@ HEADERS      [stream 82] +END_STREAM
         <seriesInfo name="RFC" value="5226" />
         <format type="TXT" octets="66160" target="http://www.rfc-editor.org/rfc/rfc5226.txt" />
       </reference>
-
+      <reference anchor="RFC5382">
+        <front>
+          <title>NAT Behavioral Requirements for TCP</title>
+          <author initials="K." surname="Biswas" fullname="K. Biswas">
+            <organization />
+          </author>
+          <author initials="B." surname="Ford" fullname="B. Ford">
+            <organization />
+          </author>
+          <author initials="S." surname="Sivakumar" fullname="S. Sivakumar">
+            <organization />
+          </author>
+          <author initials="P." surname="Srisuresh" fullname="P. Srisuresh">
+            <organization />
+          </author>
+          <date year="2008" month="October"/>
+        </front>
+        <seriesInfo name="RFC" value="5382" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc5382.txt" />
+      </reference>
       <reference anchor="RFC5988">
         <front>
           <title>Web Linking</title>
@@ -1383,6 +1457,31 @@ HEADERS      [stream 82] +END_STREAM
         </front>
         <seriesInfo name="RFC" value="5988" />
         <format type="TXT" octets="46834" target="http://www.rfc-editor.org/rfc/rfc5988.txt" />
+      </reference>
+      <reference anchor="RFC6335">
+        <front>
+          <title>
+            Internet Assigned Numbers Authority (IANA) Procedures for the Management of the Service Name and Transport Protocol Port Number Registry
+          </title>
+          <author initials="M." surname="Cotton" fullname="M. Cotton">
+            <organization />
+          </author>
+          <author initials="L." surname="Eggert" fullname="L. Eggert">
+            <organization />
+          </author>
+          <author initials="J." surname="Touch" fullname="J. Touch">
+            <organization />
+          </author>
+          <author initials="M." surname="Westerlund" fullname="M. Westerlund">
+            <organization />
+          </author>
+          <author initials="S." surname="Cheshire" fullname="S. Cheshire">
+            <organization />
+          </author>
+          <date year="2011" month="August" />
+        </front>
+        <seriesInfo name="RFC" value="6335" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc6335.txt" />
       </reference>
       <reference anchor="RFC6585">
         <front>
@@ -1479,9 +1578,9 @@ HEADERS      [stream 82] +END_STREAM
           </author>
           <date month="May" day="15" year="2015" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-07" />
+        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-09" />
         <format type="TXT"
-                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-07.txt" />
+                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-09.txt" />
       </reference>
 
       <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
