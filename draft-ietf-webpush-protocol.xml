@@ -678,11 +678,15 @@ Topic = token / quoted-string
         <t>
           This mechanism doesn't allow for stored push messages to be deleted.
           An application server can send a DELETE request toward a push message
-          URL to remove (or acknowledge) an undelivered message.  Note that a
-          push message with a topic that has a zero or absent time-to-live
-          causes any stored message with the same topic to be removed, though a
-          push message with zero time-to-live could be forwarded to the user
-          agent.
+          URL to remove (or acknowledge) an undelivered message.
+          <list style="hanging">
+            <t hangText="Note:">
+              A push message with a topic that has a zero or absent time-to-live
+              causes any stored message with the same topic to be removed.
+              However, such a push message could still be forwarded to the user
+              agent.
+            </t>
+          </list>
         </t>
         <t>
           A push message with a topic that is not shared by an outstanding
@@ -707,9 +711,10 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
         <figure>
           <preamble>
             If the push service identifies an outstanding push message with a
-            topic of "upd", the contents of that message are replaced.  The push
-            service then responds with a 201 status code, identifying the push
-            message resource that was created in a Location header field.
+            topic of "upd", the contents of that message are replaced.  Even if
+            a a message was not found and replaced, the push service responds
+            with a 201 status code. The newly created push message resource is
+            identified in a Location header field.
           </preamble>
           <artwork type="inline"><![CDATA[
 HTTP/1.1 201 Created
