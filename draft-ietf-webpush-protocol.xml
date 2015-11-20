@@ -787,8 +787,8 @@ Host: push.example.net
           The push service MAY cease to retry delivery of the message prior to its
           advertised expiration due to scenarios such as an unresponsive user agent or
           operational constraints. If the application has requested a delivery receipt,
-          then the push service MUST deliver a failure response to the application server
-          monitoring the receipt subscription resource.
+          then the push service MUST push a failure response with a status code of
+          410 (Gone) to the application server monitoring the receipt subscription resource.
         </t>
       </section>
 
@@ -805,7 +805,7 @@ Host: push.example.net
           Each receipt is pushed as the response to a synthesized GET request sent in a
           PUSH_PROMISE.  This GET request is made to the same push message resource that
           was created by the push service when the application server requested message
-          delivery. A successful response includes a 410 (GONE) status code with no data.
+          delivery. A successful response includes a 204 (No Content) status code with no data.
         </t>
         <figure>
           <preamble>
@@ -824,7 +824,7 @@ HEADERS      [stream 13] +END_STREAM +END_HEADERS
           <preamble>
             The push service permits the request to remain outstanding.  When
             the user agent acknowledges the message, the push service pushes a
-            delivery receipt to the application server. A 410 (Gone) status code
+            delivery receipt to the application server. A 204 (No Content) status code
             confirms that the message was delivered and acknowledged.
           </preamble>
           <artwork>
@@ -836,7 +836,7 @@ PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
 
 HEADERS      [stream 82] +END_STREAM
                         +END_HEADERS
-  :status        = 410
+  :status        = 204
   date           = Thu, 11 Dec 2014 23:56:56 GMT
 ]]>
           </artwork>
@@ -845,7 +845,7 @@ HEADERS      [stream 82] +END_STREAM
           If the user agent fails to acknowledge the receipt of the push message and
           the push service ceases to retry delivery of the message prior to its advertised
           expiration, then the push service MUST push a failure response with a status code
-          of 5XX (TBD).
+          of 410 (Gone).
         </t>
       </section>
     </section>
