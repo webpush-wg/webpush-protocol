@@ -161,7 +161,7 @@
               All push messages are associated with a push message subscription.
             </t>
             <t hangText="push message subscription set:">
-              A message delivery context that is established between the user 
+              A message delivery context that is established between the user
               agent and the push service that collects multiple push message
               subscriptions into a set.
             </t>
@@ -367,7 +367,7 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
       </figure>
       <section anchor="set-correlate" title="Correlating Subscriptions">
         <t>
-          PENDING: Discuss how two different subscriptions are correlated based on 
+          PENDING: Discuss how two different subscriptions are correlated based on
           either authentication or connection
         </t>
       </section>
@@ -453,11 +453,11 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]></artwork>
       </figure>
       <t>
-        A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/> 
+        A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/>
         when an application server has exceeded its rate limit for push message
         delivery to a push resource. The push service SHOULD also include a
         Retry-After header <xref target="RFC7231"/> to indicate how long the application server
-        is requested to wait before it makes another request to the push resource. 
+        is requested to wait before it makes another request to the push resource.
       </t>
       <t>
         A push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
@@ -547,7 +547,7 @@ TTL = 1*DIGIT
         <t>
           If the user agent is unavailable, a push message with a zero TTL expires and
           is never delivered.
-        </t> 
+        </t>
         <t>
           A push service MAY choose to retain a push message for a shorter
           duration than that requested.  It indicates this by including a TTL
@@ -617,7 +617,7 @@ DATA         [stream 4] +END_STREAM
 ]]></artwork>
       </figure>
       <t>
-        
+
       </t>
       <figure>
         <preamble>
@@ -737,9 +737,9 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
           A 204 (No Content) status code with no associated server pushes
           indicates that no messages are presently available.  This could be
           because push messages have expired.
-        </t> 
+        </t>
       </section>
-      
+
       <section anchor="acknowledge_message"
                title="Acknowledging Push Messages">
         <t>
@@ -786,7 +786,7 @@ Host: push.example.net
           (<xref target="acknowledge_message"></xref>) by the user agent.
         </t>
         <t>
-          Each receipt is pushed as the response to a synthesized GET request sent in a 
+          Each receipt is pushed as the response to a synthesized GET request sent in a
           PUSH_PROMISE.  This GET request is made to the same push message resource that
           was created by the push service when the application server requested message
           delivery. A successful response includes a 410 (GONE) status code with no data.
@@ -885,7 +885,7 @@ HEADERS      [stream 82] +END_STREAM
         </t>
         <t>
           Push services might need to limit the size and number of stored push
-          messages to avoid overloading.  To limit the size of messages, the 
+          messages to avoid overloading.  To limit the size of messages, the
           push service MAY return the 413 (Payload Too Large) status code for messages
           that are too large. To limit the number of stored push messages, the
           push service MAY either expire messages prior to their advertised Time-To-Live
@@ -925,7 +925,7 @@ HEADERS      [stream 82] +END_STREAM
           <t>
             A user agent can request that a subscription set be removed by sending a DELETE
             request to the subscription set URI. This MUST also remove all push message
-            subscriptions in the set. 
+            subscriptions in the set.
           </t>
           <t>
             If a specific push message subscription that is a member of a subscription set is
@@ -967,7 +967,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           If the push service requires that the user agent use push message subscription sets,
           then it MAY limit the number of concurrently active streams with the
-          SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <xref target="RFC7540"/>. 
+          SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <xref target="RFC7540"/>.
           The user agent MAY be limited to one concurrent stream to manage push message
           subscriptions and one concurrent stream for each subscription set returned by the push service.
           This could force the user agent to serialize subscription requests to the push
@@ -1288,9 +1288,9 @@ HEADERS      [stream 82] +END_STREAM
 
     <section anchor="ack" title="Acknowledgements">
       <t>
-        Significant technical input to this document has been provided by Costin
-        Manolache, Robert Sparks, Mark Nottingham, Matthew Kaufman and many
-        others.
+        Significant technical input to this document has been provided by Ben
+        Bangert, Kit Cambridge, JR Conlin, Matthew Kaufman, Costin Manolache,
+        Mark Nottingham, Robert Sparks, Darshak Thakore and many others.
       </t>
     </section>
 
