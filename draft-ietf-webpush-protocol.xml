@@ -335,7 +335,7 @@
       </t>
       <figure>
         <artwork type="inline"><![CDATA[
-POST /subscribe/ HTTP/1.1
+POST /subscribe HTTP/1.1
 Host: push.example.net
 
 ]]></artwork>
@@ -389,8 +389,47 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
       </figure>
       <section anchor="set-correlate" title="Correlating Subscriptions">
         <t>
-          PENDING: Discuss how two different subscriptions are correlated based on
-          either authentication or connection
+          The aggregation of multiple subscriptions into a subscription set can
+          represent a significant efficiency improvement for a push service.
+          For that reason, a user agent MUST indicate an existing subscription
+          set in a request to create a subscription unless it has no other
+          subscriptions.  The user agent does this by adding a subscription set
+          link relation to the request to create a subscription.
+        </t>
+      <figure>
+        <artwork type="inline">
+  <![CDATA[
+POST /subscribe HTTP/1.1
+Host: push.example.net
+Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
+        rel="urn:ietf:params:push:set"
+
+]]></artwork>
+      </figure>
+        <t>
+          This gives the push service the option to create a subscription within
+          an existing subscription set.
+        </t>
+      <figure>
+        <artwork type="inline">
+  <![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:56:52 GMT
+Link: </p/YBJNBIMwwA_Ag8EtD47J4A>;
+        rel="urn:ietf:params:push"
+Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
+        rel="urn:ietf:params:push:receipt"
+Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
+        rel="urn:ietf:params:push:set"
+Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
+
+]]></artwork>
+      </figure>
+        <t>
+          A user agent MAY omit the subscription set link relation if it is
+          unable to receive push messages that are aggregated together.  This
+          might happen if the user agent is forwarding requests from other
+          clients.
         </t>
       </section>
     </section>
