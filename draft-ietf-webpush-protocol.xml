@@ -1643,6 +1643,20 @@ HEADERS      [stream 82] +END_STREAM
               Removed subscription expiration based on HTTP cache headers
             </t>
           </section>
+          <section title="Since draft-ietf-webpush-protocol-01" anchor="changes.since.draft-ietf-webpush-protocol-01">
+            <t>
+              Added Subscription Sets
+            </t>
+            <t>
+              Added System Port as an alternate service with guidance for idle timeouts
+            </t>
+            <t>
+              Finalized status codes for acknowledgements
+            </t>
+            <t>
+              Editorial changes for Rate Limits
+            </t>
+          </section>
         </section>
   </back>
 </rfc>
