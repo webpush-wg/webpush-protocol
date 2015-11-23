@@ -442,7 +442,7 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
       </t>
       <t>
         How a push service detects that requests come from the same user agent
-        is implementation-dependent and could use ambient information into
+        is implementation-dependent and could take ambient information into
         consideration, such as the TLS connection, source IP address and port.
         Implementers are reminded that using some heuristics can produce false
         positives and cause requests to be rejected incorrectly.
