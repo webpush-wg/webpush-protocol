@@ -415,7 +415,9 @@ Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
       </figure>
         <t>
           This gives the push service the option to create a subscription within
-          an existing subscription set.
+          an existing subscription set.  The push service returns the same
+          subscription set in the response, though it MAY use a new subscription
+          set if it is unable to reuse the provided one.
         </t>
       <figure>
         <artwork type="inline">
@@ -432,6 +434,19 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
 
 ]]></artwork>
       </figure>
+      <t>
+        A push service MAY reject a request if it contains an unknown or invalid
+        subscription set, or a request that does not include a subscription set.
+        An 429 status code can be used to indicate that too many requests to
+        create subscriptions sets were made.
+      </t>
+      <t>
+        How a push service detects that requests come from the same user agent
+        is implementation-dependent and could use ambient information into
+        consideration, such as the TLS connection, source IP address and port.
+        Implementers are reminded that using some heuristics can produce false
+        positives and cause requests to be rejected incorrectly.
+      </t>
       </section>
     </section>
     <section anchor="receipt_subscription"
