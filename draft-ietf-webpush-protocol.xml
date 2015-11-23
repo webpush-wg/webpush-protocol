@@ -391,10 +391,17 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
         <t>
           The aggregation of multiple subscriptions into a subscription set can
           represent a significant efficiency improvement for a push service.
-          For that reason, a user agent MUST indicate an existing subscription
-          set in a request to create a subscription unless it has no other
-          subscriptions.  The user agent does this by adding a subscription set
-          link relation to the request to create a subscription.
+          For that reason, if a subscription set is available, a user agent MUST
+          indicate an existing subscription set in a request to create a
+          subscription.  However, a user agent MAY omit the subscription set if
+          it is unable to receive push messages that are aggregated for the
+          lifetime of the subscription.  This might be necessary if the user
+          agent is forwarding requests from other clients.
+        </t>
+        <t>
+          The user agent adds a subscription set link relation to the request to
+          create a subscription.  This indicates which subscription set the
+          subscription is to be bound to.
         </t>
       <figure>
         <artwork type="inline">
@@ -425,12 +432,6 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
 
 ]]></artwork>
       </figure>
-        <t>
-          A user agent MAY omit the subscription set link relation if it is
-          unable to receive push messages that are aggregated together.  This
-          might happen if the user agent is forwarding requests from other
-          clients.
-        </t>
       </section>
     </section>
     <section anchor="receipt_subscription"
