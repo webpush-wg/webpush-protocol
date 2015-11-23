@@ -98,6 +98,7 @@ Table of Contents
      12.2.  Informative References . . . . . . . . . . . . . . . . .  26
    Appendix A.  Change Log . . . . . . . . . . . . . . . . . . . . .  26
      A.1.  Since draft-ietf-webpush-protocol-00  . . . . . . . . . .  26
+     A.2.  Since draft-ietf-webpush-protocol-01  . . . . . . . . . .  27
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
 
 1.  Introduction
@@ -105,7 +106,6 @@ Table of Contents
    Many applications on mobile and embedded devices require continuous
    access to network communications so that real-time events - such as
    incoming calls or messages - can be delivered (or "pushed") in a
-   timely fashion.  These devices typically have limited power reserves,
 
 
 
@@ -114,6 +114,7 @@ Thomson, et al.           Expires May 26, 2016                  [Page 2]
 Internet-Draft                HTTP Web Push                November 2015
 
 
+   timely fashion.  These devices typically have limited power reserves,
    so finding more efficient ways to serve application requirements
    greatly benefits the application ecosystem.
 
@@ -160,8 +161,7 @@ Internet-Draft                HTTP Web Push                November 2015
    In cases where normative language needs to be emphasized, this
    document falls back on established shorthands for expressing
    interoperability requirements on implementations: the capitalized
-   words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these
-   is described in [RFC2119].
+
 
 
 
@@ -169,6 +169,9 @@ Thomson, et al.           Expires May 26, 2016                  [Page 3]
 
 Internet-Draft                HTTP Web Push                November 2015
 
+
+   words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these
+   is described in [RFC2119].
 
    This document defines the following terms:
 
@@ -207,9 +210,6 @@ Internet-Draft                HTTP Web Push                November 2015
 
    A general model for push services includes three basic actors: a user
    agent, a push service, and an application (server).
-
-
-
 
 
 
@@ -1458,6 +1458,17 @@ Thomson, et al.           Expires May 26, 2016                 [Page 26]
 Internet-Draft                HTTP Web Push                November 2015
 
 
+A.2.  Since draft-ietf-webpush-protocol-01
+
+   Added Subscription Sets
+
+   Added System Port as an alternate service with guidance for idle
+   timeouts
+
+   Finalized status codes for acknowledgements
+
+   Editorial changes for Rate Limits
+
 Authors' Addresses
 
    Martin Thomson
@@ -1485,17 +1496,6 @@ Authors' Addresses
    US
 
    Email: brian.raymor@microsoft.com
-
-
-
-
-
-
-
-
-
-
-
 
 
 
