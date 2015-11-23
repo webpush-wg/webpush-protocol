@@ -711,8 +711,9 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
         <figure>
           <preamble>
             If the push service identifies an outstanding push message with a
-            topic of "upd", the contents of that message are replaced.  Even if
-            a a message was not found and replaced, the push service responds
+            topic of "upd", the contents of that message are replaced.  Whether
+            a message was found and replaced or no existing message was found,
+            the push service creates a new push message resource and responds
             with a 201 status code. The newly created push message resource is
             identified in a Location header field.
           </preamble>
