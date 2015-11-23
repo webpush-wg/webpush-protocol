@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: May 23, 2016                                     B. Raymor, Ed.
+Expires: May 26, 2016                                     B. Raymor, Ed.
                                                                Microsoft
-                                                       November 20, 2015
+                                                       November 23, 2015
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 23, 2016.
+   This Internet-Draft will expire on May 26, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 1]
+Thomson, et al.           Expires May 26, 2016                  [Page 1]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 2]
+Thomson, et al.           Expires May 26, 2016                  [Page 2]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 3]
+Thomson, et al.           Expires May 26, 2016                  [Page 3]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 4]
+Thomson, et al.           Expires May 26, 2016                  [Page 4]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 5]
+Thomson, et al.           Expires May 26, 2016                  [Page 5]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 6]
+Thomson, et al.           Expires May 26, 2016                  [Page 6]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 7]
+Thomson, et al.           Expires May 26, 2016                  [Page 7]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 8]
+Thomson, et al.           Expires May 26, 2016                  [Page 8]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -501,7 +501,7 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
 
 
-Thomson, et al.           Expires May 23, 2016                  [Page 9]
+Thomson, et al.           Expires May 26, 2016                  [Page 9]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 10]
+Thomson, et al.           Expires May 26, 2016                 [Page 10]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 11]
+Thomson, et al.           Expires May 26, 2016                 [Page 11]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 12]
+Thomson, et al.           Expires May 26, 2016                 [Page 12]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 13]
+Thomson, et al.           Expires May 26, 2016                 [Page 13]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 14]
+Thomson, et al.           Expires May 26, 2016                 [Page 14]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -810,9 +810,9 @@ Internet-Draft                HTTP Web Push                November 2015
    The push service MAY cease to retry delivery of the message prior to
    its advertised expiration due to scenarios such as an unresponsive
    user agent or operational constraints.  If the application has
-   requested a delivery receipt, then the push service MUST deliver a
-   failure response to the application server monitoring the receipt
-   subscription resource.
+   requested a delivery receipt, then the push service MUST push a
+   failure response with a status code of 410 (Gone) to the application
+   server monitoring the receipt subscription resource.
 
 7.3.  Receiving Push Message Receipts
 
@@ -826,7 +826,7 @@ Internet-Draft                HTTP Web Push                November 2015
    sent in a PUSH_PROMISE.  This GET request is made to the same push
    message resource that was created by the push service when the
    application server requested message delivery.  A successful response
-   includes a 410 (GONE) status code with no data.
+   includes a 204 (No Content) status code with no data.
 
 
 
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 15]
+Thomson, et al.           Expires May 26, 2016                 [Page 15]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -853,8 +853,8 @@ Internet-Draft                HTTP Web Push                November 2015
 
    The push service permits the request to remain outstanding.  When the
    user agent acknowledges the message, the push service pushes a
-   delivery receipt to the application server.  A 410 (Gone) status code
-   confirms that the message was delivered and acknowledged.
+   delivery receipt to the application server.  A 204 (No Content)
+   status code confirms that the message was delivered and acknowledged.
 
 
    PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
@@ -864,14 +864,14 @@ Internet-Draft                HTTP Web Push                November 2015
 
    HEADERS      [stream 82] +END_STREAM
                            +END_HEADERS
-     :status        = 410
+     :status        = 204
      date           = Thu, 11 Dec 2014 23:56:56 GMT
 
 
    If the user agent fails to acknowledge the receipt of the push
    message and the push service ceases to retry delivery of the message
    prior to its advertised expiration, then the push service MUST push a
-   failure response with a status code of 5XX (TBD).
+   failure response with a status code of 410 (Gone).
 
 8.  Operational Considerations
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 16]
+Thomson, et al.           Expires May 26, 2016                 [Page 16]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 17]
+Thomson, et al.           Expires May 26, 2016                 [Page 17]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 18]
+Thomson, et al.           Expires May 26, 2016                 [Page 18]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 19]
+Thomson, et al.           Expires May 26, 2016                 [Page 19]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 20]
+Thomson, et al.           Expires May 26, 2016                 [Page 20]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 21]
+Thomson, et al.           Expires May 26, 2016                 [Page 21]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 22]
+Thomson, et al.           Expires May 26, 2016                 [Page 22]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 23]
+Thomson, et al.           Expires May 26, 2016                 [Page 23]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 24]
+Thomson, et al.           Expires May 26, 2016                 [Page 24]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1397,7 +1397,7 @@ Internet-Draft                HTTP Web Push                November 2015
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 25]
+Thomson, et al.           Expires May 26, 2016                 [Page 25]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1453,7 +1453,7 @@ A.1.  Since draft-ietf-webpush-protocol-00
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 26]
+Thomson, et al.           Expires May 26, 2016                 [Page 26]
 
 Internet-Draft                HTTP Web Push                November 2015
 
@@ -1509,4 +1509,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.           Expires May 23, 2016                 [Page 27]
+Thomson, et al.           Expires May 26, 2016                 [Page 27]
