@@ -682,9 +682,9 @@ Topic = token / quoted-string
           <list style="hanging">
             <t hangText="Note:">
               A push message with a topic that has a zero or absent time-to-live
-              will cause a stored message with the same topic to be removed, but
-              the push service will attempt to forward the updated message to
-              the user agent.
+              will cause a stored message with the same topic to be removed as
+              well as not being stored itself, but the push service will attempt
+              to forward the updated message to the user agent.
             </t>
           </list>
         </t>
