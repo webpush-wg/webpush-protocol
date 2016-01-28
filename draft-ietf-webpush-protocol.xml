@@ -1192,6 +1192,11 @@ HEADERS      [stream 82] +END_STREAM
           that are authorized to send messages on the channel.  The push service
           does not require access to this public key.
         </t>
+        <t>
+          The Topic header field exposes information that allows more granular
+          correlation of push messages on the same subject.  This might be used
+          to aid traffic analysis of push messages by the push service.
+        </t>
      </section>
 
      <section title="Privacy Considerations">
