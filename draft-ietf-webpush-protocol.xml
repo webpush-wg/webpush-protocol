@@ -667,6 +667,13 @@ Topic = token / quoted-string
           form are removed before comparing topics for equality.
         </t>
         <t>
+          For use with this protocol, the Topic header field MUST be restricted
+          to no more than 32 characters from the URL- and filename-safe base64
+          set [RFC4648].  A push service that receives a request with a Token
+          header field that does not meet these constraints SHOULD return an
+          HTTP 400 (Bad Request) status code to an application server.
+        </t>
+        <t>
           A push message request creates a new push message resource, but
           simultaneously deletes any existing message resource that has a
           matching topic.  In effect, the information that is stored for the
