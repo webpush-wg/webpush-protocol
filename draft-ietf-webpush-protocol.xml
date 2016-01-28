@@ -731,6 +731,10 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 
 ]]></artwork>
         </figure>
+        <t>
+          The value of the Topic header field MUST NOT be forwarded to user
+          agents.  Its value is not encrypted or authenticated.
+        </t>
       </section>
     </section>
 
