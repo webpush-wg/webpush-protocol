@@ -586,7 +586,7 @@ Host: push.example.net
           
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
 
         </pre>
 <p id="rfc.section.5.p.3">An application server that sends push messages to a large population of user agents incurs a significant load if it has to monitor a receipt subscription for each user agent.  Reuse of receipt subscriptions is critical in reducing load on application servers.  A receipt subscription can be used for all resources that have the same receipt subscribe URI.  </p>
@@ -596,7 +596,7 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
 <pre>
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
-Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
 
@@ -778,7 +778,7 @@ Host: push.example.net
             
 HEADERS      [stream 13] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
   :authority     = push.example.net
 
           </pre>
