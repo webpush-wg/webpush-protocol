@@ -389,19 +389,21 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
       </figure>
       <section anchor="set-correlate" title="Correlating Subscriptions">
         <t>
-          The aggregation of multiple subscriptions into a subscription set can
-          represent a significant efficiency improvement for a push service.
-          For that reason, if a subscription set is available, a user agent MUST
-          indicate an existing subscription set in a request to create a
-          subscription.  However, a user agent MAY omit the subscription set if
-          it is unable to receive push messages that are aggregated for the
-          lifetime of the subscription.  This might be necessary if the user
-          agent is forwarding requests from other clients.
+          Collecting multiple push message subscriptions into a subscription set
+          can represent a significant efficiency improvement for a push service.
+          For that reason, if a subscription set is returned in a push message
+          subscription response, the user agent SHOULD include this subscription
+          set in subsequent push message subscription requests to the push service. 
+          </t>
+          <t>
+          A user agent MAY omit the subscription set if it is unable to receive push
+          messages that are aggregated for the lifetime of the subscription. This might
+          be necessary if the user agent is forwarding requests from other clients.
         </t>
         <t>
           The user agent adds a subscription set link relation to the request to
-          create a subscription.  This indicates which subscription set the
-          subscription is to be bound to.
+          create a push message subscription. This gives the push service the option
+          to create the new subscription within that subscription set.
         </t>
       <figure>
         <artwork type="inline">
@@ -414,10 +416,9 @@ Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
 ]]></artwork>
       </figure>
         <t>
-          This gives the push service the option to create a subscription within
-          an existing subscription set.  The push service returns the same
-          subscription set in the response, though it MAY use a new subscription
-          set if it is unable to reuse the provided one.
+          The push service returns the same subscription set in its response, although
+          it MAY return a new subscription set if it is unable to reuse the one provided
+          by the user agent.
         </t>
       <figure>
         <artwork type="inline">
@@ -435,16 +436,15 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
 ]]></artwork>
       </figure>
       <t>
-        A push service MAY reject a request if it contains an unknown or invalid
-        subscription set, or a request that does not include a subscription set.
-        An 429 status code can be used to indicate that too many requests to
-        create subscriptions sets were made.
+        A push service MAY return a 429 (Too Many Requests) status code
+        <xref target="RFC6585"/> to reject requests which omit a subscription set
+        or contain an invalid subscription set. 
       </t>
       <t>
-        How a push service detects that requests come from the same user agent
-        is implementation-dependent and could take ambient information into
+        How a push service detects that requests originate from the same user agent
+        is implementation-specific but could take ambient information into
         consideration, such as the TLS connection, source IP address and port.
-        Implementers are reminded that using some heuristics can produce false
+        Implementers are reminded that some heuristics can produce false
         positives and cause requests to be rejected incorrectly.
       </t>
       </section>
@@ -636,7 +636,7 @@ TTL = 1*DIGIT
           A push message that has been stored by the push service can be
           replaced with new content.  If the user agent is offline during the
           time that the push messages are sent, updating a push message avoids
-          the situation where obsolete or redundant messages are sent to the
+          the situation where outdated or redundant messages are sent to the
           user agent.
         </t>
         <t>
@@ -645,9 +645,9 @@ TTL = 1*DIGIT
           an identical topic.
         </t>
         <t>
-          A push message topic is a string.  A topic is carried in a Topic
-          header field.  A topic is used to correlate push messages sent to the
-          same subscription, it does not convey any other semantics.
+          A push message topic is a string carried in a Topic header field.
+          A topic is used to correlate push messages sent to the same subscription and
+          does not convey any other semantics.
         </t>
         <t>
           The grammar for the Topic header field uses the <spanx
@@ -668,32 +668,19 @@ Topic = token / quoted-string
         </t>
         <t>
           For use with this protocol, the Topic header field MUST be restricted
-          to no more than 32 characters from the URL- and filename-safe base64
-          set [RFC4648].  A push service that receives a request with a Token
-          header field that does not meet these constraints SHOULD return an
-          HTTP 400 (Bad Request) status code to an application server.
+          to no more than 32 characters from the URL and filename safe Base 64 
+          alphabet <xref target="RFC4648"/>. A push service that receives a request
+          with a Topic header field that does not meet these constraints MUST return
+          an HTTP 400 (Bad Request) status code to the application server.
         </t>
         <t>
-          A push message request creates a new push message resource, but
+          A push message update request creates a new push message resource and
           simultaneously deletes any existing message resource that has a
           matching topic.  In effect, the information that is stored for the
           push message is updated, but a new resource is created to avoid
           problems with in flight acknowledgments for the old message.  The push
           service MAY suppress acknowledgement receipts for the replaced
           message.
-        </t>
-        <t>
-          This mechanism doesn't allow for stored push messages to be deleted.
-          An application server can remove a push message using a DELETE request
-          to the push message URL.
-          <list style="hanging">
-            <t hangText="Note:">
-              A push message with a topic that has a zero or absent time-to-live
-              will cause a stored message with the same topic to be removed as
-              well as not being stored itself, but the push service will attempt
-              to forward the updated message to the user agent.
-            </t>
-          </list>
         </t>
         <t>
           A push message with a topic that is not shared by an outstanding
@@ -718,11 +705,10 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
         <figure>
           <preamble>
             If the push service identifies an outstanding push message with a
-            topic of "upd", the contents of that message are replaced.  Whether
-            a message was found and replaced or no existing message was found,
-            the push service creates a new push message resource and responds
-            with a 201 status code. The newly created push message resource is
-            identified in a Location header field.
+            topic of "upd", then that message resource is deleted. A 201 (Created)
+            response indicates that the push message update was accepted. A URI for
+            the new push message resource that was created in response to the request
+            is included in the Location header field.
           </preamble>
           <artwork type="inline"><![CDATA[
 HTTP/1.1 201 Created
@@ -733,7 +719,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         </figure>
         <t>
           The value of the Topic header field MUST NOT be forwarded to user
-          agents.  Its value is not encrypted or authenticated.
+          agents.  Its value is neither encrypted nor authenticated.
         </t>
       </section>
     </section>
@@ -1461,7 +1447,7 @@ HEADERS      [stream 82] +END_STREAM
         </t>
         <t>
           <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:receipts</t>
+            <t hangText="URN:">urn:ietf:params:push:receipt</t>
             <t hangText="Description:">
               This link relation type is used to identify a resource for
               creating new push message receipt subscriptions.
@@ -1586,7 +1572,17 @@ HEADERS      [stream 82] +END_STREAM
         <seriesInfo name="RFC" value="3864" />
         <format type="TXT" octets="36231" target="http://www.rfc-editor.org/rfc/rfc3864.txt" />
       </reference>
-
+      <reference anchor="RFC4648">
+        <front>
+          <title>The Base16, Base32, and Base64 Data Encodings</title>
+          <author initials="S." surname="Josefsson" fullname="S. Josefsson">
+            <organization />
+          </author>
+          <date year="2006" month="October" />
+        </front>
+        <seriesInfo name="RFC" value="4648" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc4648.txt" />
+      </reference>
       <reference anchor="RFC5226">
         <front>
           <title>Guidelines for Writing an IANA Considerations Section in RFCs</title>
