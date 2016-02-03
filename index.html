@@ -547,8 +547,9 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 
 </pre>
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#set-correlate" id="set-correlate">Correlating Subscriptions</a></h1>
-<p id="rfc.section.4.1.p.1">The aggregation of multiple subscriptions into a subscription set can represent a significant efficiency improvement for a push service.  For that reason, if a subscription set is available, a user agent MUST indicate an existing subscription set in a request to create a subscription.  However, a user agent MAY omit the subscription set if it is unable to receive push messages that are aggregated for the lifetime of the subscription.  This might be necessary if the user agent is forwarding requests from other clients.  </p>
-<p id="rfc.section.4.1.p.2">The user agent adds a subscription set link relation to the request to create a subscription.  This indicates which subscription set the subscription is to be bound to.  </p>
+<p id="rfc.section.4.1.p.1">Collecting multiple push message subscriptions into a subscription set can represent a significant efficiency improvement for a push service.  For that reason, if a subscription set is returned in a push message subscription response, the user agent SHOULD include this subscription set in subsequent push message subscription requests to the push service.  </p>
+<p id="rfc.section.4.1.p.2">A user agent MAY omit the subscription set if it is unable to receive push messages that are aggregated for the lifetime of the subscription. This might be necessary if the user agent is forwarding requests from other clients.  </p>
+<p id="rfc.section.4.1.p.3">The user agent adds a subscription set link relation to the request to create a push message subscription. This gives the push service the option to create the new subscription within that subscription set.  </p>
 <pre>
   
 POST /subscribe HTTP/1.1
@@ -557,7 +558,7 @@ Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
         rel="urn:ietf:params:push:set"
 
 </pre>
-<p id="rfc.section.4.1.p.3">This gives the push service the option to create a subscription within an existing subscription set.  The push service returns the same subscription set in the response, though it MAY use a new subscription set if it is unable to reuse the provided one.  </p>
+<p id="rfc.section.4.1.p.4">The push service returns the same subscription set in its response, although it MAY return a new subscription set if it is unable to reuse the one provided by the user agent.  </p>
 <pre>
   
 HTTP/1.1 201 Created
@@ -571,8 +572,8 @@ Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
 Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
 
 </pre>
-<p id="rfc.section.4.1.p.4">A push service MAY reject a request if it contains an unknown or invalid subscription set, or a request that does not include a subscription set.  An 429 status code can be used to indicate that too many requests to create subscriptions sets were made.  </p>
-<p id="rfc.section.4.1.p.5">How a push service detects that requests come from the same user agent is implementation-dependent and could take ambient information into consideration, such as the TLS connection, source IP address and port.  Implementers are reminded that using some heuristics can produce false positives and cause requests to be rejected incorrectly.  </p>
+<p id="rfc.section.4.1.p.5">A push service MAY return a 429 (Too Many Requests) status code <a href="#RFC6585">[RFC6585]</a> to reject requests which omit a subscription set or contain an invalid subscription set.  </p>
+<p id="rfc.section.4.1.p.6">How a push service detects that requests originate from the same user agent is implementation-specific but could take ambient information into consideration, such as the TLS connection, source IP address and port.  Implementers are reminded that some heuristics can produce false positives and cause requests to be rejected incorrectly.  </p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#receipt_subscription" id="receipt_subscription">Subscribing for Push Message Receipts</a></h1>
 <p id="rfc.section.5.p.1">An application server requests the creation of a receipt subscription by sending a HTTP POST request to the receipt subscribe resource distributed to the application server by a user agent.  </p>
 <pre>
@@ -632,9 +633,9 @@ TTL = 1*DIGIT
 <p id="rfc.section.6.2.p.8">If the user agent is unavailable, a push message with a zero TTL expires and is never delivered.  </p>
 <p id="rfc.section.6.2.p.9">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
 <h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
-<p id="rfc.section.6.3.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where obsolete or redundant messages are sent to the user agent.  </p>
+<p id="rfc.section.6.3.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where outdated or redundant messages are sent to the user agent.  </p>
 <p id="rfc.section.6.3.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
-<p id="rfc.section.6.3.p.3">A push message topic is a string.  A topic is carried in a Topic header field.  A topic is used to correlate push messages sent to the same subscription, it does not convey any other semantics.  </p>
+<p id="rfc.section.6.3.p.3">A push message topic is a string carried in a Topic header field.  A topic is used to correlate push messages sent to the same subscription and does not convey any other semantics.  </p>
 <p id="rfc.section.6.3.p.4">The grammar for the Topic header field uses the <samp>token</samp> and <samp>quoted-string</samp> rules defined in <a href="#RFC7230">[RFC7230]</a>.  </p>
 <pre>
             
@@ -642,17 +643,9 @@ Topic = token / quoted-string
           
           </pre>
 <p id="rfc.section.6.3.p.5">Any double quotes from the <samp>quoted-string</samp> form are removed before comparing topics for equality.  </p>
-<p id="rfc.section.6.3.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL- and filename-safe base64 set [RFC4648].  A push service that receives a request with a Token header field that does not meet these constraints SHOULD return an HTTP 400 (Bad Request) status code to an application server.  </p>
-<p id="rfc.section.6.3.p.7">A push message request creates a new push message resource, but simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
-<p id="rfc.section.6.3.p.8">This mechanism doesn't allow for stored push messages to be deleted.  An application server can remove a push message using a DELETE request to the push message URL.  </p>
-
-<dl>
-  <dt>Note:</dt>
-  <dd style="margin-left: 8">A push message with a topic that has a zero or absent time-to-live will cause a stored message with the same topic to be removed as well as not being stored itself, but the push service will attempt to forward the updated message to the user agent.  </dd>
-</dl>
-
-<p> </p>
-<p id="rfc.section.6.3.p.9">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
+<p id="rfc.section.6.3.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return an HTTP 400 (Bad Request) status code to the application server.  </p>
+<p id="rfc.section.6.3.p.7">A push message update request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
+<p id="rfc.section.6.3.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
 <p>For example, the following message could cause an existing message to be updated: </p>
 <pre>
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -664,14 +657,14 @@ Content-Length: 36
 
 ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
 </pre>
-<p>If the push service identifies an outstanding push message with a topic of "upd", the contents of that message are replaced.  Whether a message was found and replaced or no existing message was found, the push service creates a new push message resource and responds with a 201 status code. The newly created push message resource is identified in a Location header field.  </p>
+<p>If the push service identifies an outstanding push message with a topic of "upd", then that message resource is deleted. A 201 (Created) response indicates that the push message update was accepted. A URI for the new push message resource that was created in response to the request is included in the Location header field.  </p>
 <pre>
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 
 </pre>
-<p id="rfc.section.6.3.p.10">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is not encrypted or authenticated.  </p>
+<p id="rfc.section.6.3.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.7.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.7.p.2">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
@@ -967,7 +960,7 @@ HEADERS      [stream 82] +END_STREAM
 
 <dl>
   <dt>URN:</dt>
-  <dd style="margin-left: 8">urn:ietf:params:push:receipts</dd>
+  <dd style="margin-left: 8">urn:ietf:params:push:receipt</dd>
   <dt>Description:</dt>
   <dd style="margin-left: 8">This link relation type is used to identify a resource for creating new push message receipt subscriptions.  </dd>
   <dt>Specification:</dt>
@@ -1040,6 +1033,12 @@ HEADERS      [stream 82] +END_STREAM
         <b id="RFC3864">[RFC3864]</b>
       </td>
       <td class="top"><a>Klyne, G.</a>, <a>Nottingham, M.</a> and <a>J. Mogul</a>, "<a href="http://tools.ietf.org/html/rfc3864">Registration Procedures for Message Header Fields</a>", BCP 90, RFC 3864, September 2004.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4648">[RFC4648]</b>
+      </td>
+      <td class="top"><a>Josefsson, S.</a>, "<a href="http://tools.ietf.org/html/rfc4648">The Base16, Base32, and Base64 Data Encodings</a>", RFC 4648, October 2006.</td>
     </tr>
     <tr>
       <td class="reference">
