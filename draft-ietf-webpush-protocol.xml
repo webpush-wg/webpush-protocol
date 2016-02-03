@@ -630,6 +630,112 @@ TTL = 1*DIGIT
           application server.
         </t>
       </section>
+
+      <section anchor="update" title="Updating Push Messages">
+        <t>
+          A push message that has been stored by the push service can be
+          replaced with new content.  If the user agent is offline during the
+          time that the push messages are sent, updating a push message avoids
+          the situation where obsolete or redundant messages are sent to the
+          user agent.
+        </t>
+        <t>
+          Only push messages that have been assigned a topic can be updated.  A
+          push message with a topic replaces any outstanding push message with
+          an identical topic.
+        </t>
+        <t>
+          A push message topic is a string.  A topic is carried in a Topic
+          header field.  A topic is used to correlate push messages sent to the
+          same subscription, it does not convey any other semantics.
+        </t>
+        <t>
+          The grammar for the Topic header field uses the <spanx
+          style="verb">token</spanx> and <spanx
+          style="verb">quoted-string</spanx> rules defined in <xref
+          target="RFC7230"/>.
+        </t>
+        <figure>
+          <artwork type="abnf">
+            <![CDATA[
+Topic = token / quoted-string
+          ]]>
+          </artwork>
+        </figure>
+        <t>
+          Any double quotes from the <spanx style="verb">quoted-string</spanx>
+          form are removed before comparing topics for equality.
+        </t>
+        <t>
+          For use with this protocol, the Topic header field MUST be restricted
+          to no more than 32 characters from the URL- and filename-safe base64
+          set [RFC4648].  A push service that receives a request with a Token
+          header field that does not meet these constraints SHOULD return an
+          HTTP 400 (Bad Request) status code to an application server.
+        </t>
+        <t>
+          A push message request creates a new push message resource, but
+          simultaneously deletes any existing message resource that has a
+          matching topic.  In effect, the information that is stored for the
+          push message is updated, but a new resource is created to avoid
+          problems with in flight acknowledgments for the old message.  The push
+          service MAY suppress acknowledgement receipts for the replaced
+          message.
+        </t>
+        <t>
+          This mechanism doesn't allow for stored push messages to be deleted.
+          An application server can remove a push message using a DELETE request
+          to the push message URL.
+          <list style="hanging">
+            <t hangText="Note:">
+              A push message with a topic that has a zero or absent time-to-live
+              will cause a stored message with the same topic to be removed as
+              well as not being stored itself, but the push service will attempt
+              to forward the updated message to the user agent.
+            </t>
+          </list>
+        </t>
+        <t>
+          A push message with a topic that is not shared by an outstanding
+          message to the same subscription is stored or delivered as normal.
+        </t>
+        <figure>
+          <preamble>
+            For example, the following message could cause an existing message
+            to be updated:
+          </preamble>
+          <artwork type="inline"><![CDATA[
+POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+Host: push.example.net
+TTL: 600
+Topic: "upd"
+Content-Type: text/plain;charset=utf8
+Content-Length: 36
+
+ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
+]]></artwork>
+        </figure>
+        <figure>
+          <preamble>
+            If the push service identifies an outstanding push message with a
+            topic of "upd", the contents of that message are replaced.  Whether
+            a message was found and replaced or no existing message was found,
+            the push service creates a new push message resource and responds
+            with a 201 status code. The newly created push message resource is
+            identified in a Location header field.
+          </preamble>
+          <artwork type="inline"><![CDATA[
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:57:02 GMT
+Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+
+]]></artwork>
+        </figure>
+        <t>
+          The value of the Topic header field MUST NOT be forwarded to user
+          agents.  Its value is not encrypted or authenticated.
+        </t>
+      </section>
     </section>
 
     <section anchor="monitor-subscription" title="Receiving Push Messages for a Subscription">
@@ -1086,6 +1192,11 @@ HEADERS      [stream 82] +END_STREAM
           that are authorized to send messages on the channel.  The push service
           does not require access to this public key.
         </t>
+        <t>
+          The Topic header field exposes information that allows more granular
+          correlation of push messages on the same subject.  This might be used
+          to aid traffic analysis of push messages by the push service.
+        </t>
      </section>
 
      <section title="Privacy Considerations">
@@ -1271,6 +1382,12 @@ HEADERS      [stream 82] +END_STREAM
           <c>standard</c>
           <c>
             <xref target="request_receipt"/>
+          </c>
+          <c>Topic</c>
+          <c>http</c>
+          <c>standard</c>
+          <c>
+            <xref target="update"/>
           </c>
         </texttable>
         <t>
