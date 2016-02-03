@@ -274,6 +274,7 @@ ol, ul {
 <link href="#rfc.section.6" rel="Chapter" title="6 Requesting Push Message Delivery"/>
 <link href="#rfc.section.6.1" rel="Chapter" title="6.1 Requesting Push Message Receipts"/>
 <link href="#rfc.section.6.2" rel="Chapter" title="6.2 Push Message Time-To-Live"/>
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Updating Push Messages"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Receiving Push Messages for a Subscription"/>
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Receiving Push Messages for a Subscription Set"/>
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Acknowledging Push Messages"/>
@@ -310,7 +311,7 @@ ol, ul {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-1-15" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-2-3" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -334,7 +335,7 @@ ol, ul {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: July 18, 2016</td>
+  <td class="left">Expires: August 6, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -343,7 +344,7 @@ ol, ul {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">January 15, 2016</td>
+  <td class="right">February 3, 2016</td>
 </tr>
 
     	
@@ -363,7 +364,7 @@ ol, ul {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 18, 2016.</p>
+<p>This Internet-Draft will expire on August 6, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -386,6 +387,7 @@ ol, ul {
 <li>6.   <a href="#rfc.section.6">Requesting Push Message Delivery</a></li>
 <ul><li>6.1.   <a href="#rfc.section.6.1">Requesting Push Message Receipts</a></li>
 <li>6.2.   <a href="#rfc.section.6.2">Push Message Time-To-Live</a></li>
+<li>6.3.   <a href="#rfc.section.6.3">Updating Push Messages</a></li>
 </ul><li>7.   <a href="#rfc.section.7">Receiving Push Messages for a Subscription</a></li>
 <ul><li>7.1.   <a href="#rfc.section.7.1">Receiving Push Messages for a Subscription Set</a></li>
 <li>7.2.   <a href="#rfc.section.7.2">Acknowledging Push Messages</a></li>
@@ -629,6 +631,47 @@ TTL = 1*DIGIT
 <p id="rfc.section.6.2.p.7">Absence of the TTL header field is interpreted as equivalent to a zero value.  A Push message with a zero TTL is immediately delivered if the user agent is available to receive the message. After delivery, the push service is permitted to immediately remove a push message with a zero TTL.  This might occur before the user agent acknowledges receipt of the message by performing a HTTP DELETE on the push message resource. Consequently, an application server cannot rely on receiving acknowledgement receipts for zero TTL push messages.  </p>
 <p id="rfc.section.6.2.p.8">If the user agent is unavailable, a push message with a zero TTL expires and is never delivered.  </p>
 <p id="rfc.section.6.2.p.9">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
+<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
+<p id="rfc.section.6.3.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where obsolete or redundant messages are sent to the user agent.  </p>
+<p id="rfc.section.6.3.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
+<p id="rfc.section.6.3.p.3">A push message topic is a string.  A topic is carried in a Topic header field.  A topic is used to correlate push messages sent to the same subscription, it does not convey any other semantics.  </p>
+<p id="rfc.section.6.3.p.4">The grammar for the Topic header field uses the <samp>token</samp> and <samp>quoted-string</samp> rules defined in <a href="#RFC7230">[RFC7230]</a>.  </p>
+<pre>
+            
+Topic = token / quoted-string
+          
+          </pre>
+<p id="rfc.section.6.3.p.5">Any double quotes from the <samp>quoted-string</samp> form are removed before comparing topics for equality.  </p>
+<p id="rfc.section.6.3.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL- and filename-safe base64 set [RFC4648].  A push service that receives a request with a Token header field that does not meet these constraints SHOULD return an HTTP 400 (Bad Request) status code to an application server.  </p>
+<p id="rfc.section.6.3.p.7">A push message request creates a new push message resource, but simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
+<p id="rfc.section.6.3.p.8">This mechanism doesn't allow for stored push messages to be deleted.  An application server can remove a push message using a DELETE request to the push message URL.  </p>
+
+<dl>
+  <dt>Note:</dt>
+  <dd style="margin-left: 8">A push message with a topic that has a zero or absent time-to-live will cause a stored message with the same topic to be removed as well as not being stored itself, but the push service will attempt to forward the updated message to the user agent.  </dd>
+</dl>
+
+<p> </p>
+<p id="rfc.section.6.3.p.9">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
+<p>For example, the following message could cause an existing message to be updated: </p>
+<pre>
+POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+Host: push.example.net
+TTL: 600
+Topic: "upd"
+Content-Type: text/plain;charset=utf8
+Content-Length: 36
+
+ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
+</pre>
+<p>If the push service identifies an outstanding push message with a topic of "upd", the contents of that message are replaced.  Whether a message was found and replaced or no existing message was found, the push service creates a new push message resource and responds with a 201 status code. The newly created push message resource is identified in a Location header field.  </p>
+<pre>
+HTTP/1.1 201 Created
+Date: Thu, 11 Dec 2014 23:57:02 GMT
+Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+
+</pre>
+<p id="rfc.section.6.3.p.10">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is not encrypted or authenticated.  </p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.7.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.7.p.2">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
@@ -788,6 +831,7 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.9.1.p.2">Applications are able to provide additional confidentiality, integrity or authentication mechanisms within the push message itself.  The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context.  The process of providing the application server with subscription information provides a convenient medium for key agreement.  </p>
 <p id="rfc.section.9.1.p.3">The Web Push API codifies this practice by requiring that each push subscription created by the browser be bound to a browser generated encryption key.  Pushed messages are authenticated and decrypted by the browser before delivery to applications.  This scheme ensures that the push service is unable to examine the contents of push messages.  </p>
 <p id="rfc.section.9.1.p.4">The public key for a subscription ensures that applications using that subscription can identify messages from unknown sources and discard them.  This depends on the public key only being disclosed to entities that are authorized to send messages on the channel.  The push service does not require access to this public key.  </p>
+<p id="rfc.section.9.1.p.5">The Topic header field exposes information that allows more granular correlation of push messages on the same subject.  This might be used to aid traffic analysis of push messages by the push service.  </p>
 <h1 id="rfc.section.9.2"><a href="#rfc.section.9.2">9.2.</a> Privacy Considerations</h1>
 <p id="rfc.section.9.2.p.1">Push message confidentiality does not ensure that the identity of who is communicating and when they are communicating is protected.  However, the amount of information that is exposed can be limited.  </p>
 <p id="rfc.section.9.2.p.2">The URIs provided for push resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two push resource URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  </p>
@@ -846,6 +890,12 @@ HEADERS      [stream 82] +END_STREAM
       <td class="left">http</td>
       <td class="left">standard</td>
       <td class="left"><a href="#request_receipt">Section 6.1</a> </td>
+    </tr>
+    <tr>
+      <td class="left">Topic</td>
+      <td class="left">http</td>
+      <td class="left">standard</td>
+      <td class="left"><a href="#update">Section 6.3</a> </td>
     </tr>
   </tbody>
 </table>
