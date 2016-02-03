@@ -473,7 +473,7 @@ Host: push.example.net
           <![CDATA[
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
 ]]>
         </artwork>
       </figure>
@@ -506,7 +506,7 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
         <artwork type="inline"><![CDATA[
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
-Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
 
@@ -976,7 +976,7 @@ Host: push.example.net
             <![CDATA[
 HEADERS      [stream 13] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM9mpN
+  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
   :authority     = push.example.net
 ]]>
           </artwork>
