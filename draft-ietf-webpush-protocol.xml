@@ -415,7 +415,7 @@ Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
 ]]></artwork>
       </figure>
         <t>
-          The push service returns the same subscription set in its response, although
+          The push service SHOULD return the same subscription set in its response, although
           it MAY return a new subscription set if it is unable to reuse the one provided
           by the user agent.
         </t>
@@ -704,7 +704,6 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
-
 ]]></artwork>
         </figure>
         <t>
@@ -1818,6 +1817,18 @@ HEADERS      [stream 82] +END_STREAM
             </t>
             <t>
               Editorial changes for Rate Limits
+            </t>
+          </section>
+          <section title="Since draft-ietf-webpush-protocol-02" anchor="changes.since.draft-ietf-webpush-protocol-02">
+            <t>
+              Added explicit correlation for Subscription Sets
+            </t>
+            <t>
+              Added Push Message Updates (message collapsing)
+            </t>
+            <t>
+              Renamed the push:receipt link relation to push:receipts and transitioned the
+              Push-Receipt header field to the push:receipt link relation type
             </t>
           </section>
         </section>
