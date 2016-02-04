@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: August 6, 2016                                   B. Raymor, Ed.
+Expires: August 7, 2016                                   B. Raymor, Ed.
                                                                Microsoft
-                                                        February 3, 2016
+                                                        February 4, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 6, 2016.
+   This Internet-Draft will expire on August 7, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 1]
+Thomson, et al.          Expires August 7, 2016                 [Page 1]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -72,7 +72,7 @@ Table of Contents
      6.1.  Requesting Push Message Receipts  . . . . . . . . . . . .  11
      6.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .  11
      6.3.  Updating Push Messages  . . . . . . . . . . . . . . . . .  12
-   7.  Receiving Push Messages for a Subscription  . . . . . . . . .  14
+   7.  Receiving Push Messages for a Subscription  . . . . . . . . .  13
      7.1.  Receiving Push Messages for a Subscription Set  . . . . .  15
      7.2.  Acknowledging Push Messages . . . . . . . . . . . . . . .  17
      7.3.  Receiving Push Message Receipts . . . . . . . . . . . . .  17
@@ -96,7 +96,7 @@ Table of Contents
    11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  27
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  27
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  27
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  28
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  29
    Appendix A.  Change Log . . . . . . . . . . . . . . . . . . . . .  29
      A.1.  Since draft-ietf-webpush-protocol-00  . . . . . . . . . .  29
      A.2.  Since draft-ietf-webpush-protocol-01  . . . . . . . . . .  29
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 2]
+Thomson, et al.          Expires August 7, 2016                 [Page 2]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 3]
+Thomson, et al.          Expires August 7, 2016                 [Page 3]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 4]
+Thomson, et al.          Expires August 7, 2016                 [Page 4]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 5]
+Thomson, et al.          Expires August 7, 2016                 [Page 5]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -306,8 +306,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
    push:  A push resource is used by the application server to request
       the delivery of a push message (see Section 6).  A link relation
-      of type "urn:ietf:params:push" is used to identify a push
-      resource.
+      of type "urn:ietf:params:push" identifies a push resource.
 
    push message:  A push message resource is created to identify push
       messages that have been accepted by the push service.  The push
@@ -317,11 +316,13 @@ Internet-Draft                HTTP Web Push                February 2016
    receipt subscribe:  A receipt subscribe resource is used by an
       application server to create a receipt subscription (see
       Section 5).  A link relation of type
-      "urn:ietf:params:push:receipt" is used to identity a receipt
-      subscribe resource.
+      "urn:ietf:params:push:receipts" identifies a receipt subscribe
+      resource.
 
    receipt subscription:  An application server receives delivery
       confirmations (Section 6.1) for push messages using a receipt
+      subscription.  A link relation of type
+      "urn:ietf:params:push:receipt" is identifies a receipt
       subscription.
 
 3.  Connecting to the Push Service
@@ -332,8 +333,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-Thomson, et al.          Expires August 6, 2016                 [Page 6]
+Thomson, et al.          Expires August 7, 2016                 [Page 6]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -369,7 +369,7 @@ Internet-Draft                HTTP Web Push                February 2016
    of type "urn:ietf:params:push".
 
    The push service MUST provide a URI for a receipt subscribe resource
-   in a link relation of type "urn:ietf:params:push:receipt".
+   in a link relation of type "urn:ietf:params:push:receipts".
 
    An application-specific method is used to distribute the push and
    receipt subscribe URIs to the application server.  Confidentiality
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 7]
+Thomson, et al.          Expires August 7, 2016                 [Page 7]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -403,7 +403,7 @@ Internet-Draft                HTTP Web Push                February 2016
    Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
            rel="urn:ietf:params:push"
    Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-           rel="urn:ietf:params:push:receipt"
+           rel="urn:ietf:params:push:receipts"
    Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
            rel="urn:ietf:params:push:set"
    Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
@@ -434,7 +434,6 @@ Internet-Draft                HTTP Web Push                February 2016
    Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
            rel="urn:ietf:params:push:set"
 
-
    The push service returns the same subscription set in its response,
    although it MAY return a new subscription set if it is unable to
    reuse the one provided by the user agent.
@@ -445,7 +444,8 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 8]
+
+Thomson, et al.          Expires August 7, 2016                 [Page 8]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -455,11 +455,10 @@ Internet-Draft                HTTP Web Push                February 2016
    Link: </p/YBJNBIMwwA_Ag8EtD47J4A>;
            rel="urn:ietf:params:push"
    Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-           rel="urn:ietf:params:push:receipt"
+           rel="urn:ietf:params:push:receipts"
    Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
            rel="urn:ietf:params:push:set"
    Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
-
 
    A push service MAY return a 429 (Too Many Requests) status code
    [RFC6585] to reject requests which omit a subscription set or contain
@@ -501,7 +500,8 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                 [Page 9]
+
+Thomson, et al.          Expires August 7, 2016                 [Page 9]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -521,9 +521,11 @@ Internet-Draft                HTTP Web Push                February 2016
    application server by a user agent.  The push message is included in
    the body of the request.
 
+
    POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
    Host: push.example.net
-   Push-Receipt: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
+   Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
+           rel="urn:ietf:params:push:receipt"
    Content-Type: text/plain;charset=utf8
    Content-Length: 36
 
@@ -555,26 +557,18 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 10]
+Thomson, et al.          Expires August 7, 2016                [Page 10]
 
 Internet-Draft                HTTP Web Push                February 2016
 
 
 6.1.  Requesting Push Message Receipts
 
-   An application server can use the Push-Receipt header field to
-   request a confirmation from the push service when a push message is
-   delivered and acknowledged by the user agent.  The Push-Receipt
-   header field is a URI-Reference as defined in Section 2.7 of
-   [RFC7230].
+   An application server can use the "urn:ietf:params:push:receipt" link
+   relation type to request a confirmation from the push service when a
+   push message is delivered and acknowledged by the user agent.
 
-
-   Push-Receipt = URI-reference
-
-
-   The application sets the Push-Receipt header field value to a receipt
+   The application sets the link relation value to a receipt
    subscription URI.  This receipt subscription resource MUST be created
    from the same receipt subscribe resource which was returned with the
    push message subscription response (see Section 4).
@@ -610,19 +604,19 @@ Internet-Draft                HTTP Web Push                February 2016
    within a server cluster might accrue errors due to clock skew or
    propagation delays.
 
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 11]
-
-Internet-Draft                HTTP Web Push                February 2016
-
-
    A push service is not obligated to account for time spent by the
    application server in sending a push message to the push service, or
    delays incurred while sending a push message to the user agent.  An
    application server needs to account for transit delays in selecting a
    TTL header field value.
+
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 11]
+
+Internet-Draft                HTTP Web Push                February 2016
+
 
    Absence of the TTL header field is interpreted as equivalent to a
    zero value.  A Push message with a zero TTL is immediately delivered
@@ -666,20 +660,20 @@ Internet-Draft                HTTP Web Push                February 2016
    Topic = token / quoted-string
 
 
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 12]
-
-Internet-Draft                HTTP Web Push                February 2016
-
-
    Any double quotes from the "quoted-string" form are removed before
    comparing topics for equality.
 
    For use with this protocol, the Topic header field MUST be restricted
    to no more than 32 characters from the URL and filename safe Base 64
    alphabet [RFC4648].  A push service that receives a request with a
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 12]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
    Topic header field that does not meet these constraints MUST return
    an HTTP 400 (Bad Request) status code to the application server.
 
@@ -720,16 +714,6 @@ Internet-Draft                HTTP Web Push                February 2016
    The value of the Topic header field MUST NOT be forwarded to user
    agents.  Its value is neither encrypted nor authenticated.
 
-
-
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 13]
-
-Internet-Draft                HTTP Web Push                February 2016
-
-
 7.  Receiving Push Messages for a Subscription
 
    A user agent requests the delivery of new push messages by making a
@@ -737,6 +721,14 @@ Internet-Draft                HTTP Web Push                February 2016
    service does not respond to this request, it instead uses HTTP/2
    server push [RFC7540] to send the contents of push messages as they
    are sent by application servers.
+
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 13]
+
+Internet-Draft                HTTP Web Push                February 2016
+
 
    Each push message is pushed as the response to a synthesized GET
    request in a PUSH_PROMISE.  This GET request is made to the push
@@ -781,20 +773,28 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 14]
+
+
+
+
+
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 14]
 
 Internet-Draft                HTTP Web Push                February 2016
 
 
    The push service response for the GET request to the push message
    subscription resource SHOULD provide a URI for the receipt subscribe
-   resource in a link relation of type "urn:ietf:params:push:receipt".
+   resource in a link relation of type "urn:ietf:params:push:receipts".
 
 
    HEADERS      [stream 7] +END_STREAM +END_HEADERS
      :status        = 200
      :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                       rel="urn:ietf:params:push:receipt"
+                       rel="urn:ietf:params:push:receipts"
 
    A user agent can also request the contents of the push message
    subscription resource immediately by including a Prefer header field
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 15]
+Thomson, et al.          Expires August 7, 2016                [Page 15]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -879,13 +879,13 @@ Internet-Draft                HTTP Web Push                February 2016
    The push service response for the GET request to the push message
    subscription set resource SHOULD provide a URI for the receipt
    subscribe resource in a link relation of type
-   "urn:ietf:params:push:receipt".
+   "urn:ietf:params:push:receipts".
 
 
    HEADERS      [stream 7] +END_STREAM +END_HEADERS
      :status        = 200
      :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                       rel="urn:ietf:params:push:receipt"
+                       rel="urn:ietf:params:push:receipts"
 
 
    A user agent can request the contents of the push message
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 16]
+Thomson, et al.          Expires August 7, 2016                [Page 16]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 17]
+Thomson, et al.          Expires August 7, 2016                [Page 17]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 18]
+Thomson, et al.          Expires August 7, 2016                [Page 18]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 19]
+Thomson, et al.          Expires August 7, 2016                [Page 19]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 20]
+Thomson, et al.          Expires August 7, 2016                [Page 20]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 21]
+Thomson, et al.          Expires August 7, 2016                [Page 21]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 22]
+Thomson, et al.          Expires August 7, 2016                [Page 22]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 23]
+Thomson, et al.          Expires August 7, 2016                [Page 23]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 24]
+Thomson, et al.          Expires August 7, 2016                [Page 24]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1350,7 +1350,6 @@ Internet-Draft                HTTP Web Push                February 2016
    | Header Field Name | Protocol | Status   | Reference    |
    +-------------------+----------+----------+--------------+
    | TTL               | http     | standard | Section 6.2  |
-   | Push-Receipt      | http     | standard | Section 6.1  |
    | Topic             | http     | standard | Section 6.3  |
    +-------------------+----------+----------+--------------+
 
@@ -1397,7 +1396,8 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 6, 2016                [Page 25]
+
+Thomson, et al.          Expires August 7, 2016                [Page 25]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1430,7 +1430,16 @@ Internet-Draft                HTTP Web Push                February 2016
    URN:  urn:ietf:params:push:receipt
 
    Description:  This link relation type is used to identify a resource
-      for creating new push message receipt subscriptions.
+      for receiving delivery confirmations for push messages.
+
+   Specification:  (this document)
+
+   Contact:  The Web Push WG (webpush@ietf.org)
+
+   URN:  urn:ietf:params:push:receipts
+
+   Description:  This link relation type is used to identify a resource
+      for subscribing to delivery confirmations for push messages.
 
    Specification:  (this document)
 
@@ -1440,6 +1449,15 @@ Internet-Draft                HTTP Web Push                February 2016
 
    Service names and port numbers are registered within the "Service
    Name and Transport Protocol Port Number Registry" maintained at
+
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 26]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
    <https://www.iana.org/assignments/service-names-port-numbers/service-
    names-port-numbers.xhtml>.
 
@@ -1450,14 +1468,6 @@ Internet-Draft                HTTP Web Push                February 2016
       webpush
 
    Transport Protocol.
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 26]
-
-Internet-Draft                HTTP Web Push                February 2016
-
-
       tcp
 
    Assignee.
@@ -1497,6 +1507,13 @@ Internet-Draft                HTTP Web Push                February 2016
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 27]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
    [RFC3553]  Mealling, M., Masinter, L., Hardie, T., and G. Klyne, "An
@@ -1506,13 +1523,6 @@ Internet-Draft                HTTP Web Push                February 2016
    [RFC3864]  Klyne, G., Nottingham, M., and J. Mogul, "Registration
               Procedures for Message Header Fields", BCP 90, RFC 3864,
               September 2004.
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 27]
-
-Internet-Draft                HTTP Web Push                February 2016
-
 
    [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, October 2006.
@@ -1551,6 +1561,15 @@ Internet-Draft                HTTP Web Push                February 2016
    [RFC7540]  Belshe, M., Peon, R., and M. Thomson, "Hypertext Transfer
               Protocol Version 2", RFC 7540, May 2015.
 
+
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 28]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
 12.2.  Informative References
 
    [API]      Sullivan, B., Fullea, E., and M. van Ouwerkerk, "Web Push
@@ -1561,14 +1580,6 @@ Internet-Draft                HTTP Web Push                February 2016
               Morris, J., Hansen, M., and R. Smith, "Privacy
               Considerations for Internet Protocols", RFC 6973, July
               2013.
-
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 28]
-
-Internet-Draft                HTTP Web Push                February 2016
-
 
 Appendix A.  Change Log
 
@@ -1605,6 +1616,16 @@ Authors' Addresses
    Email: martin.thomson@gmail.com
 
 
+
+
+
+
+
+Thomson, et al.          Expires August 7, 2016                [Page 29]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
    Elio Damaggio
    Microsoft
    One Microsoft Way
@@ -1612,18 +1633,6 @@ Authors' Addresses
    US
 
    Email: elioda@microsoft.com
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 29]
-
-Internet-Draft                HTTP Web Push                February 2016
 
 
    Brian Raymor (editor)
@@ -1668,13 +1677,4 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires August 6, 2016                [Page 30]
+Thomson, et al.          Expires August 7, 2016                [Page 30]
