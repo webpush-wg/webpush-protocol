@@ -100,8 +100,8 @@ Table of Contents
    Appendix A.  Change Log . . . . . . . . . . . . . . . . . . . . .  29
      A.1.  Since draft-ietf-webpush-protocol-00  . . . . . . . . . .  29
      A.2.  Since draft-ietf-webpush-protocol-01  . . . . . . . . . .  29
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  29
-
+     A.3.  Since draft-ietf-webpush-protocol-02  . . . . . . . . . .  29
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
 
 
 
@@ -434,9 +434,9 @@ Internet-Draft                HTTP Web Push                February 2016
    Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
            rel="urn:ietf:params:push:set"
 
-   The push service returns the same subscription set in its response,
-   although it MAY return a new subscription set if it is unable to
-   reuse the one provided by the user agent.
+   The push service SHOULD return the same subscription set in its
+   response, although it MAY return a new subscription set if it is
+   unable to reuse the one provided by the user agent.
 
 
 
@@ -710,7 +710,6 @@ Internet-Draft                HTTP Web Push                February 2016
    Date: Thu, 11 Dec 2014 23:57:02 GMT
    Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 
-
    The value of the Topic header field MUST NOT be forwarded to user
    agents.  Its value is neither encrypted nor authenticated.
 
@@ -721,6 +720,7 @@ Internet-Draft                HTTP Web Push                February 2016
    service does not respond to this request, it instead uses HTTP/2
    server push [RFC7540] to send the contents of push messages as they
    are sent by application servers.
+
 
 
 
@@ -1605,15 +1605,15 @@ A.2.  Since draft-ietf-webpush-protocol-01
 
    Editorial changes for Rate Limits
 
-Authors' Addresses
+A.3.  Since draft-ietf-webpush-protocol-02
 
-   Martin Thomson
-   Mozilla
-   331 E Evelyn Street
-   Mountain View, CA  94041
-   US
+   Added explicit correlation for Subscription Sets
 
-   Email: martin.thomson@gmail.com
+   Added Push Message Updates (message collapsing)
+
+   Renamed the push:receipt link relation to push:receipts and
+   transitioned the Push-Receipt header field to the push:receipt link
+   relation type
 
 
 
@@ -1624,6 +1624,17 @@ Authors' Addresses
 Thomson, et al.          Expires August 7, 2016                [Page 29]
 
 Internet-Draft                HTTP Web Push                February 2016
+
+
+Authors' Addresses
+
+   Martin Thomson
+   Mozilla
+   331 E Evelyn Street
+   Mountain View, CA  94041
+   US
+
+   Email: martin.thomson@gmail.com
 
 
    Elio Damaggio
@@ -1642,17 +1653,6 @@ Internet-Draft                HTTP Web Push                February 2016
    US
 
    Email: brian.raymor@microsoft.com
-
-
-
-
-
-
-
-
-
-
-
 
 
 

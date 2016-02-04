@@ -303,6 +303,7 @@ ol, ul {
 <link href="#rfc.appendix.A" rel="Chapter" title="A Change Log"/>
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Since draft-ietf-webpush-protocol-00"/>
 <link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Since draft-ietf-webpush-protocol-01"/>
+<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Since draft-ietf-webpush-protocol-02"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -416,6 +417,7 @@ ol, ul {
 </ul><li>Appendix A.   <a href="#rfc.appendix.A">Change Log</a></li>
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">Since draft-ietf-webpush-protocol-00</a></li>
 <li>A.2.   <a href="#rfc.appendix.A.2">Since draft-ietf-webpush-protocol-01</a></li>
+<li>A.3.   <a href="#rfc.appendix.A.3">Since draft-ietf-webpush-protocol-02</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -557,7 +559,7 @@ Host: push.example.net
 Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
         rel="urn:ietf:params:push:set"
 </pre>
-<p id="rfc.section.4.1.p.4">The push service returns the same subscription set in its response, although it MAY return a new subscription set if it is unable to reuse the one provided by the user agent.  </p>
+<p id="rfc.section.4.1.p.4">The push service SHOULD return the same subscription set in its response, although it MAY return a new subscription set if it is unable to reuse the one provided by the user agent.  </p>
 <pre>
   
 HTTP/1.1 201 Created
@@ -657,7 +659,6 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
-
 </pre>
 <p id="rfc.section.6.3.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
@@ -1133,6 +1134,10 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.A.2.p.2">Added System Port as an alternate service with guidance for idle timeouts </p>
 <p id="rfc.section.A.2.p.3">Finalized status codes for acknowledgements </p>
 <p id="rfc.section.A.2.p.4">Editorial changes for Rate Limits </p>
+<h1 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#changes.since.draft-ietf-webpush-protocol-02" id="changes.since.draft-ietf-webpush-protocol-02">Since draft-ietf-webpush-protocol-02</a></h1>
+<p id="rfc.section.A.3.p.1">Added explicit correlation for Subscription Sets </p>
+<p id="rfc.section.A.3.p.2">Added Push Message Updates (message collapsing) </p>
+<p id="rfc.section.A.3.p.3">Renamed the push:receipt link relation to push:receipts and transitioned the Push-Receipt header field to the push:receipt link relation type </p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
