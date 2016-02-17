@@ -507,6 +507,7 @@ POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
         rel="urn:ietf:params:push:receipt"
+TTL: 15
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
 
@@ -517,7 +518,7 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
         <preamble>
           A 201 (Created) response indicates that the push message was accepted.
           A URI for the push message resource that was created in response to
-          the request is included in the Location header field.  This does not
+          the request MUST be returned in the Location header field.  This does not
           indicate that the message was delivered to the user agent.
         </preamble>
         <artwork type="inline"><![CDATA[
@@ -574,10 +575,9 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           suppress the message so that it does not generate a useless alert.
         </t>
         <t>
-          An application server can use the TTL header field to limit the time
-          that a push message is retained by a push service.  The TTL header
-          field contains a value in seconds that describes how long a push
-          message is retained by the push service.
+          An application server MUST include the TTL (Time-To-Live) header field in
+          its request for push message delivery. The TTL header field contains a value
+          in seconds that suggests how long a push message is retained by the push service.
         </t>
         <figure>
           <artwork type="abnf"><![CDATA[
@@ -585,11 +585,20 @@ TTL = 1*DIGIT
           ]]></artwork>
         </figure>
         <t>
-          Once the Time-To-Live (TTL) period elapses, the push service MUST NOT
-          attempt to deliver the push message to the user agent.  A push service
-          might adjust the TTL value to account for time accounting errors in
-          processing.  For instance, distributing a push message within a server
-          cluster might accrue errors due to clock skew or propagation delays.
+          A push service MUST return a 400 (Bad Request) status code in response to
+          requests that omit the TTL header field.
+        </t>
+        <t>
+          A push service MAY retain a push message for a shorter duration than requested.
+          It indicates this by returning a TTL header field in its response with the actual
+          TTL.  This TTL value MUST be less than or equal to the value provided by the
+          application server.
+        </t>
+        <t>
+          Once the TTL period elapses, the push service MUST NOT attempt to deliver the push
+          message to the user agent. A push service might adjust the TTL value to account for
+          time accounting errors in processing.  For instance, distributing a push message
+          within a server cluster might accrue errors due to clock skew or propagation delays.
         </t>
         <t>
           A push service is not obligated to account for time spent by the
@@ -599,26 +608,18 @@ TTL = 1*DIGIT
           TTL header field value.
         </t>
         <t>
-          Absence of the TTL header field is interpreted as equivalent to a zero
-          value.  A Push message with a zero TTL is immediately delivered if the
-          user agent is available to receive the message. After delivery, the push
-          service is permitted to immediately remove a push message with a zero TTL.
-          This might occur before the user agent acknowledges receipt of the message
-          by performing a HTTP DELETE on the push message resource. Consequently, an
-          application server cannot rely on receiving acknowledgement receipts for
-          zero TTL push messages.
+          A Push message with a zero TTL is immediately delivered if the user agent is
+          available to receive the message. After delivery, the push service is permitted
+          to immediately remove a push message with a zero TTL. This might occur before the
+          user agent acknowledges receipt of the message by performing a HTTP DELETE on the
+          push message resource. Consequently, an application server cannot rely on receiving
+          acknowledgement receipts for zero TTL push messages.
         </t>
         <t>
           If the user agent is unavailable, a push message with a zero TTL expires and
           is never delivered.
         </t>
-        <t>
-          A push service MAY choose to retain a push message for a shorter
-          duration than that requested.  It indicates this by including a TTL
-          header field in the response that includes the actual TTL.  This TTL
-          value MUST be less than or equal to the value provided by the
-          application server.
-        </t>
+
       </section>
 
       <section anchor="update" title="Updating Push Messages">
@@ -661,7 +662,7 @@ Topic = token / quoted-string
           to no more than 32 characters from the URL and filename safe Base 64 
           alphabet <xref target="RFC4648"/>. A push service that receives a request
           with a Topic header field that does not meet these constraints MUST return
-          an HTTP 400 (Bad Request) status code to the application server.
+          a 400 (Bad Request) status code to the application server.
         </t>
         <t>
           A push message update request creates a new push message resource and
