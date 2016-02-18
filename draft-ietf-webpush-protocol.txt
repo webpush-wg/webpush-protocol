@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: August 7, 2016                                   B. Raymor, Ed.
+Expires: August 21, 2016                                  B. Raymor, Ed.
                                                                Microsoft
-                                                        February 4, 2016
+                                                       February 18, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 7, 2016.
+   This Internet-Draft will expire on August 21, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 1]
+Thomson, et al.          Expires August 21, 2016                [Page 1]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 2]
+Thomson, et al.          Expires August 21, 2016                [Page 2]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 3]
+Thomson, et al.          Expires August 21, 2016                [Page 3]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 4]
+Thomson, et al.          Expires August 21, 2016                [Page 4]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 5]
+Thomson, et al.          Expires August 21, 2016                [Page 5]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 6]
+Thomson, et al.          Expires August 21, 2016                [Page 6]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 7]
+Thomson, et al.          Expires August 21, 2016                [Page 7]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 8]
+Thomson, et al.          Expires August 21, 2016                [Page 8]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                 [Page 9]
+Thomson, et al.          Expires August 21, 2016                [Page 9]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -526,6 +526,7 @@ Internet-Draft                HTTP Web Push                February 2016
    Host: push.example.net
    Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
            rel="urn:ietf:params:push:receipt"
+   TTL: 15
    Content-Type: text/plain;charset=utf8
    Content-Length: 36
 
@@ -533,9 +534,9 @@ Internet-Draft                HTTP Web Push                February 2016
 
    A 201 (Created) response indicates that the push message was
    accepted.  A URI for the push message resource that was created in
-   response to the request is included in the Location header field.
-   This does not indicate that the message was delivered to the user
-   agent.
+   response to the request MUST be returned in the Location header
+   field.  This does not indicate that the message was delivered to the
+   user agent.
 
    HTTP/1.1 201 Created
    Date: Thu, 11 Dec 2014 23:56:55 GMT
@@ -556,8 +557,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-Thomson, et al.          Expires August 7, 2016                [Page 10]
+Thomson, et al.          Expires August 21, 2016               [Page 10]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -590,19 +590,36 @@ Internet-Draft                HTTP Web Push                February 2016
    call is of no value; the application at the user agent is forced to
    suppress the message so that it does not generate a useless alert.
 
-   An application server can use the TTL header field to limit the time
-   that a push message is retained by a push service.  The TTL header
-   field contains a value in seconds that describes how long a push
-   message is retained by the push service.
+   An application server MUST include the TTL (Time-To-Live) header
+   field in its request for push message delivery.  The TTL header field
+   contains a value in seconds that suggests how long a push message is
+   retained by the push service.
 
    TTL = 1*DIGIT
 
-   Once the Time-To-Live (TTL) period elapses, the push service MUST NOT
-   attempt to deliver the push message to the user agent.  A push
-   service might adjust the TTL value to account for time accounting
-   errors in processing.  For instance, distributing a push message
-   within a server cluster might accrue errors due to clock skew or
-   propagation delays.
+   A push service MUST return a 400 (Bad Request) status code in
+   response to requests that omit the TTL header field.
+
+   A push service MAY retain a push message for a shorter duration than
+   requested.  It indicates this by returning a TTL header field in its
+   response with the actual TTL.  This TTL value MUST be less than or
+   equal to the value provided by the application server.
+
+   Once the TTL period elapses, the push service MUST NOT attempt to
+   deliver the push message to the user agent.  A push service might
+   adjust the TTL value to account for time accounting errors in
+   processing.  For instance, distributing a push message within a
+
+
+
+
+Thomson, et al.          Expires August 21, 2016               [Page 11]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
+   server cluster might accrue errors due to clock skew or propagation
+   delays.
 
    A push service is not obligated to account for time spent by the
    application server in sending a push message to the push service, or
@@ -610,32 +627,16 @@ Internet-Draft                HTTP Web Push                February 2016
    application server needs to account for transit delays in selecting a
    TTL header field value.
 
-
-
-
-Thomson, et al.          Expires August 7, 2016                [Page 11]
-
-Internet-Draft                HTTP Web Push                February 2016
-
-
-   Absence of the TTL header field is interpreted as equivalent to a
-   zero value.  A Push message with a zero TTL is immediately delivered
-   if the user agent is available to receive the message.  After
-   delivery, the push service is permitted to immediately remove a push
-   message with a zero TTL.  This might occur before the user agent
-   acknowledges receipt of the message by performing a HTTP DELETE on
-   the push message resource.  Consequently, an application server
-   cannot rely on receiving acknowledgement receipts for zero TTL push
-   messages.
+   A Push message with a zero TTL is immediately delivered if the user
+   agent is available to receive the message.  After delivery, the push
+   service is permitted to immediately remove a push message with a zero
+   TTL.  This might occur before the user agent acknowledges receipt of
+   the message by performing a HTTP DELETE on the push message resource.
+   Consequently, an application server cannot rely on receiving
+   acknowledgement receipts for zero TTL push messages.
 
    If the user agent is unavailable, a push message with a zero TTL
    expires and is never delivered.
-
-   A push service MAY choose to retain a push message for a shorter
-   duration than that requested.  It indicates this by including a TTL
-   header field in the response that includes the actual TTL.  This TTL
-   value MUST be less than or equal to the value provided by the
-   application server.
 
 6.3.  Updating Push Messages
 
@@ -665,17 +666,17 @@ Internet-Draft                HTTP Web Push                February 2016
 
    For use with this protocol, the Topic header field MUST be restricted
    to no more than 32 characters from the URL and filename safe Base 64
-   alphabet [RFC4648].  A push service that receives a request with a
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 12]
+Thomson, et al.          Expires August 21, 2016               [Page 12]
 
 Internet-Draft                HTTP Web Push                February 2016
 
 
-   Topic header field that does not meet these constraints MUST return
-   an HTTP 400 (Bad Request) status code to the application server.
+   alphabet [RFC4648].  A push service that receives a request with a
+   Topic header field that does not meet these constraints MUST return a
+   400 (Bad Request) status code to the application server.
 
    A push message update request creates a new push message resource and
    simultaneously deletes any existing message resource that has a
@@ -724,8 +725,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-Thomson, et al.          Expires August 7, 2016                [Page 13]
+Thomson, et al.          Expires August 21, 2016               [Page 13]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 14]
+Thomson, et al.          Expires August 21, 2016               [Page 14]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 15]
+Thomson, et al.          Expires August 21, 2016               [Page 15]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 16]
+Thomson, et al.          Expires August 21, 2016               [Page 16]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 17]
+Thomson, et al.          Expires August 21, 2016               [Page 17]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 18]
+Thomson, et al.          Expires August 21, 2016               [Page 18]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 19]
+Thomson, et al.          Expires August 21, 2016               [Page 19]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 20]
+Thomson, et al.          Expires August 21, 2016               [Page 20]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 21]
+Thomson, et al.          Expires August 21, 2016               [Page 21]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 22]
+Thomson, et al.          Expires August 21, 2016               [Page 22]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 23]
+Thomson, et al.          Expires August 21, 2016               [Page 23]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 24]
+Thomson, et al.          Expires August 21, 2016               [Page 24]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 25]
+Thomson, et al.          Expires August 21, 2016               [Page 25]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 26]
+Thomson, et al.          Expires August 21, 2016               [Page 26]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 27]
+Thomson, et al.          Expires August 21, 2016               [Page 27]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 28]
+Thomson, et al.          Expires August 21, 2016               [Page 28]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1621,7 +1621,7 @@ A.3.  Since draft-ietf-webpush-protocol-02
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 29]
+Thomson, et al.          Expires August 21, 2016               [Page 29]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1677,4 +1677,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.          Expires August 7, 2016                [Page 30]
+Thomson, et al.          Expires August 21, 2016               [Page 30]

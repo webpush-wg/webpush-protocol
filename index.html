@@ -312,7 +312,7 @@ ol, ul {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-2-4" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-2-18" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -336,7 +336,7 @@ ol, ul {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: August 7, 2016</td>
+  <td class="left">Expires: August 21, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -345,7 +345,7 @@ ol, ul {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">February 4, 2016</td>
+  <td class="right">February 18, 2016</td>
 </tr>
 
     	
@@ -365,7 +365,7 @@ ol, ul {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 7, 2016.</p>
+<p>This Internet-Draft will expire on August 21, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -600,12 +600,13 @@ POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 Link: &lt;/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM&gt;;
         rel="urn:ietf:params:push:receipt"
+TTL: 15
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
 
 iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 </pre>
-<p>A 201 (Created) response indicates that the push message was accepted.  A URI for the push message resource that was created in response to the request is included in the Location header field.  This does not indicate that the message was delivered to the user agent.  </p>
+<p>A 201 (Created) response indicates that the push message was accepted.  A URI for the push message resource that was created in response to the request MUST be returned in the Location header field.  This does not indicate that the message was delivered to the user agent.  </p>
 <pre>
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
@@ -620,15 +621,16 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 <p id="rfc.section.6.2.p.1">A push service can improve the reliability of push message delivery considerably by storing push messages for a period.  User agents are often only intermittently connected, and so benefit from having short term message storage at the push service.  </p>
 <p id="rfc.section.6.2.p.2">Delaying delivery might also be used to batch communication with the user agent, thereby conserving radio resources.  </p>
 <p id="rfc.section.6.2.p.3">Some push messages are not useful once a certain period of time elapses.  Delivery of messages after they have ceased to be relevant is wasteful.  For example, if the push message contains a call notification, receiving a message after the caller has abandoned the call is of no value; the application at the user agent is forced to suppress the message so that it does not generate a useless alert.  </p>
-<p id="rfc.section.6.2.p.4">An application server can use the TTL header field to limit the time that a push message is retained by a push service.  The TTL header field contains a value in seconds that describes how long a push message is retained by the push service.  </p>
+<p id="rfc.section.6.2.p.4">An application server MUST include the TTL (Time-To-Live) header field in its request for push message delivery. The TTL header field contains a value in seconds that suggests how long a push message is retained by the push service.  </p>
 <pre>
 TTL = 1*DIGIT
           </pre>
-<p id="rfc.section.6.2.p.5">Once the Time-To-Live (TTL) period elapses, the push service MUST NOT attempt to deliver the push message to the user agent.  A push service might adjust the TTL value to account for time accounting errors in processing.  For instance, distributing a push message within a server cluster might accrue errors due to clock skew or propagation delays.  </p>
-<p id="rfc.section.6.2.p.6">A push service is not obligated to account for time spent by the application server in sending a push message to the push service, or delays incurred while sending a push message to the user agent.  An application server needs to account for transit delays in selecting a TTL header field value.  </p>
-<p id="rfc.section.6.2.p.7">Absence of the TTL header field is interpreted as equivalent to a zero value.  A Push message with a zero TTL is immediately delivered if the user agent is available to receive the message. After delivery, the push service is permitted to immediately remove a push message with a zero TTL.  This might occur before the user agent acknowledges receipt of the message by performing a HTTP DELETE on the push message resource. Consequently, an application server cannot rely on receiving acknowledgement receipts for zero TTL push messages.  </p>
-<p id="rfc.section.6.2.p.8">If the user agent is unavailable, a push message with a zero TTL expires and is never delivered.  </p>
-<p id="rfc.section.6.2.p.9">A push service MAY choose to retain a push message for a shorter duration than that requested.  It indicates this by including a TTL header field in the response that includes the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
+<p id="rfc.section.6.2.p.5">A push service MUST return a 400 (Bad Request) status code in response to requests that omit the TTL header field.  </p>
+<p id="rfc.section.6.2.p.6">A push service MAY retain a push message for a shorter duration than requested.  It indicates this by returning a TTL header field in its response with the actual TTL.  This TTL value MUST be less than or equal to the value provided by the application server.  </p>
+<p id="rfc.section.6.2.p.7">Once the TTL period elapses, the push service MUST NOT attempt to deliver the push message to the user agent. A push service might adjust the TTL value to account for time accounting errors in processing.  For instance, distributing a push message within a server cluster might accrue errors due to clock skew or propagation delays.  </p>
+<p id="rfc.section.6.2.p.8">A push service is not obligated to account for time spent by the application server in sending a push message to the push service, or delays incurred while sending a push message to the user agent.  An application server needs to account for transit delays in selecting a TTL header field value.  </p>
+<p id="rfc.section.6.2.p.9">A Push message with a zero TTL is immediately delivered if the user agent is available to receive the message. After delivery, the push service is permitted to immediately remove a push message with a zero TTL. This might occur before the user agent acknowledges receipt of the message by performing a HTTP DELETE on the push message resource. Consequently, an application server cannot rely on receiving acknowledgement receipts for zero TTL push messages.  </p>
+<p id="rfc.section.6.2.p.10">If the user agent is unavailable, a push message with a zero TTL expires and is never delivered.  </p>
 <h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
 <p id="rfc.section.6.3.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where outdated or redundant messages are sent to the user agent.  </p>
 <p id="rfc.section.6.3.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
@@ -640,7 +642,7 @@ Topic = token / quoted-string
           
           </pre>
 <p id="rfc.section.6.3.p.5">Any double quotes from the <samp>quoted-string</samp> form are removed before comparing topics for equality.  </p>
-<p id="rfc.section.6.3.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return an HTTP 400 (Bad Request) status code to the application server.  </p>
+<p id="rfc.section.6.3.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return a 400 (Bad Request) status code to the application server.  </p>
 <p id="rfc.section.6.3.p.7">A push message update request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
 <p id="rfc.section.6.3.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
 <p>For example, the following message could cause an existing message to be updated: </p>
