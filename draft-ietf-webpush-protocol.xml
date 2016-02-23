@@ -636,42 +636,44 @@ TTL = 1*DIGIT
         </t>
         <t>
           An application server MAY include an Urgency header field in its request for push message
-          delivery. This header field indicates the message urgency. A user agent MAY include the
+          delivery. This header field indicates the message urgency. The push service MUST not forward
+          the Urgency header field to the user agent. A user agent MAY include the
           Urgency header field when requesting push messages to indicate that it only wants to
           receive messages at an equal or greater urgency.
         </t>
         <figure>
           <artwork type="abnf">
             <![CDATA[
-Urgency = ("0" / "1" / "2" / "3")
+Urgency = 1#(urgency-option)
+urgency-option = ("very-low" / "low" / "normal" / "high")
           ]]>
           </artwork>
         </figure>
-        <t>
-          The value of the header field is a decimal number between 0 and 3 inclusive.  Values
-          greater than zero indicate increasing levels of urgency.  A lower value indicates lesser
-          urgency; for example, a value of 0 is less urgent or important than a value of 1.
-          An absent "Urgency" header field indicates that the request is to be forwarded at normal
-          urgency (2). Multiple values for the header field MUST NOT be included in requests; otherwise,
-          the push service must return a 400 (Bad Request) status code. 
-        </t>
-        <texttable anchor="urgency_table" title="Mapping Urgency to Device State and Scenarios">
+        <texttable anchor="urgency_values" title="Table of Urgency Values">
+          <preamble>
+              In order of increasing urgency:
+          </preamble>
           <ttcol width='15%' align='center'>Urgency</ttcol>
           <ttcol width='45%' align='left'>Device State</ttcol>
           <ttcol width='40%' align='left'>Application Scenario</ttcol>
-          <c>3</c>
-          <c>Low battery</c>
-          <c>Incoming phone call or time-sensitive alert</c>
-          <c>2</c>
-          <c>On neither power nor wifi</c>
-          <c>Chat or Calendar Message</c>
-          <c>1</c>
-          <c>On either power or wifi</c>
-          <c>Topic updates</c>
-          <c>0</c>
+          <c>very-low</c>
           <c>On power and wifi</c>
           <c>Advertisements</c>
+          <c>low</c>
+          <c>On either power or wifi</c>
+          <c>Topic updates</c>
+          <c>normal</c>
+          <c>On neither power nor wifi</c>
+          <c>Chat or Calendar Message</c>
+          <c>high</c>
+          <c>Low battery</c>
+          <c>Incoming phone call or time-sensitive alert</c>
         </texttable>
+        <t>
+          An absent Urgency header field indicates that the request is to be forwarded at "normal"
+          urgency. Multiple values for the header field MUST NOT be included in requests; otherwise,
+          the push service MUST return a 400 (Bad Request) status code.
+        </t>
       </section>
       
       <section anchor="update" title="Updating Push Messages">
@@ -776,7 +778,8 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
       </t>
       <t>
         A user agent MAY include a Urgency header field in its request. The push service MUST
-        only deliver messages with an urgency greater than or equal to the value of the header field.
+        only deliver messages with an urgency greater than or equal to the value of the header field
+        as defined in the <xref target="urgency_values" format="title"/>.
       </t>
       <t>
         Each push message is pushed as the response to a synthesized GET request
@@ -868,7 +871,8 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         </t>
         <t>
           A user agent MAY include a Urgency header field in its request. The push service MUST
-          only deliver messages with an urgency greater than or equal to the value of the header field.
+          only deliver messages with an urgency greater than or equal to the value of the header field
+          as defined in the <xref target="urgency_values" format="title"/>. 
         </t>
         <t>
           Each push message is pushed as the response to a synthesized GET request
