@@ -274,7 +274,8 @@ ol, ul {
 <link href="#rfc.section.6" rel="Chapter" title="6 Requesting Push Message Delivery"/>
 <link href="#rfc.section.6.1" rel="Chapter" title="6.1 Requesting Push Message Receipts"/>
 <link href="#rfc.section.6.2" rel="Chapter" title="6.2 Push Message Time-To-Live"/>
-<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Updating Push Messages"/>
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Push Message Urgency"/>
+<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Updating Push Messages"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Receiving Push Messages for a Subscription"/>
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Receiving Push Messages for a Subscription Set"/>
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Acknowledging Push Messages"/>
@@ -312,7 +313,7 @@ ol, ul {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-2-18" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-2-24" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -336,7 +337,7 @@ ol, ul {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: August 21, 2016</td>
+  <td class="left">Expires: August 27, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -345,7 +346,7 @@ ol, ul {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">February 18, 2016</td>
+  <td class="right">February 24, 2016</td>
 </tr>
 
     	
@@ -365,7 +366,7 @@ ol, ul {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 21, 2016.</p>
+<p>This Internet-Draft will expire on August 27, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -388,7 +389,8 @@ ol, ul {
 <li>6.   <a href="#rfc.section.6">Requesting Push Message Delivery</a></li>
 <ul><li>6.1.   <a href="#rfc.section.6.1">Requesting Push Message Receipts</a></li>
 <li>6.2.   <a href="#rfc.section.6.2">Push Message Time-To-Live</a></li>
-<li>6.3.   <a href="#rfc.section.6.3">Updating Push Messages</a></li>
+<li>6.3.   <a href="#rfc.section.6.3">Push Message Urgency</a></li>
+<li>6.4.   <a href="#rfc.section.6.4">Updating Push Messages</a></li>
 </ul><li>7.   <a href="#rfc.section.7">Receiving Push Messages for a Subscription</a></li>
 <ul><li>7.1.   <a href="#rfc.section.7.1">Receiving Push Messages for a Subscription Set</a></li>
 <li>7.2.   <a href="#rfc.section.7.2">Acknowledging Push Messages</a></li>
@@ -631,20 +633,66 @@ TTL = 1*DIGIT
 <p id="rfc.section.6.2.p.8">A push service is not obligated to account for time spent by the application server in sending a push message to the push service, or delays incurred while sending a push message to the user agent.  An application server needs to account for transit delays in selecting a TTL header field value.  </p>
 <p id="rfc.section.6.2.p.9">A Push message with a zero TTL is immediately delivered if the user agent is available to receive the message. After delivery, the push service is permitted to immediately remove a push message with a zero TTL. This might occur before the user agent acknowledges receipt of the message by performing a HTTP DELETE on the push message resource. Consequently, an application server cannot rely on receiving acknowledgement receipts for zero TTL push messages.  </p>
 <p id="rfc.section.6.2.p.10">If the user agent is unavailable, a push message with a zero TTL expires and is never delivered.  </p>
-<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
-<p id="rfc.section.6.3.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where outdated or redundant messages are sent to the user agent.  </p>
-<p id="rfc.section.6.3.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
-<p id="rfc.section.6.3.p.3">A push message topic is a string carried in a Topic header field.  A topic is used to correlate push messages sent to the same subscription and does not convey any other semantics.  </p>
-<p id="rfc.section.6.3.p.4">The grammar for the Topic header field uses the <samp>token</samp> and <samp>quoted-string</samp> rules defined in <a href="#RFC7230">[RFC7230]</a>.  </p>
+<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#urgency" id="urgency">Push Message Urgency</a></h1>
+<p id="rfc.section.6.3.p.1">For a device that is battery-powered, it is often critical that it remains dormant for extended periods.  Radio communication in particular consumes significant power and limits the length of time that the device can operate.  </p>
+<p id="rfc.section.6.3.p.2">To avoid consuming resources to receive trivial messages, it is helpful if an application server can communicate the urgency of a message and if the user agent can request that the push server only forward messages of a specific urgency.  </p>
+<p id="rfc.section.6.3.p.3">An application server MAY include an Urgency header field in its request for push message delivery. This header field indicates the message urgency. The push service MUST not forward the Urgency header field to the user agent. A user agent MAY include the Urgency header field when requesting push messages to indicate that it only wants to receive messages at an equal or greater urgency.  </p>
+<pre>
+            
+Urgency = 1#(urgency-option)
+urgency-option = ("very-low" / "low" / "normal" / "high")
+          
+          </pre>
+<div id="rfc.table.1"/>
+<div id="urgency_values"/>
+<p>In order of increasing urgency: </p>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <caption>Table of Urgency Values</caption>
+  <thead>
+    <tr>
+      <th class="center">Urgency</th>
+      <th class="left">Device State</th>
+      <th class="left">Application Scenario</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="center">very-low</td>
+      <td class="left">On power and wifi</td>
+      <td class="left">Advertisements</td>
+    </tr>
+    <tr>
+      <td class="center">low</td>
+      <td class="left">On either power or wifi</td>
+      <td class="left">Topic updates</td>
+    </tr>
+    <tr>
+      <td class="center">normal</td>
+      <td class="left">On neither power nor wifi</td>
+      <td class="left">Chat or Calendar Message</td>
+    </tr>
+    <tr>
+      <td class="center">high</td>
+      <td class="left">Low battery</td>
+      <td class="left">Incoming phone call or time-sensitive alert</td>
+    </tr>
+  </tbody>
+</table>
+<p id="rfc.section.6.3.p.4">An absent Urgency header field indicates that the request is to be forwarded at "normal" urgency. Multiple values for the header field MUST NOT be included in requests; otherwise, the push service MUST return a 400 (Bad Request) status code.  </p>
+<h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
+<p id="rfc.section.6.4.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where outdated or redundant messages are sent to the user agent.  </p>
+<p id="rfc.section.6.4.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
+<p id="rfc.section.6.4.p.3">A push message topic is a string carried in a Topic header field.  A topic is used to correlate push messages sent to the same subscription and does not convey any other semantics.  </p>
+<p id="rfc.section.6.4.p.4">The grammar for the Topic header field uses the <samp>token</samp> and <samp>quoted-string</samp> rules defined in <a href="#RFC7230">[RFC7230]</a>.  </p>
 <pre>
             
 Topic = token / quoted-string
           
           </pre>
-<p id="rfc.section.6.3.p.5">Any double quotes from the <samp>quoted-string</samp> form are removed before comparing topics for equality.  </p>
-<p id="rfc.section.6.3.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return a 400 (Bad Request) status code to the application server.  </p>
-<p id="rfc.section.6.3.p.7">A push message update request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
-<p id="rfc.section.6.3.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
+<p id="rfc.section.6.4.p.5">Any double quotes from the <samp>quoted-string</samp> form are removed before comparing topics for equality.  </p>
+<p id="rfc.section.6.4.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return a 400 (Bad Request) status code to the application server.  </p>
+<p id="rfc.section.6.4.p.7">A push message update request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
+<p id="rfc.section.6.4.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
 <p>For example, the following message could cause an existing message to be updated: </p>
 <pre>
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -662,10 +710,11 @@ HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 </pre>
-<p id="rfc.section.6.3.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
+<p id="rfc.section.6.4.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.7.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.7.p.2">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
+<p id="rfc.section.7.p.2">A user agent MAY include a Urgency header field in its request. The push service MUST only deliver messages with an urgency greater than or equal to the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
+<p id="rfc.section.7.p.3">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
@@ -702,12 +751,13 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :link          = &lt;/receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ&gt;;
                     rel="urn:ietf:params:push:receipts"
      </pre>
-<p id="rfc.section.7.p.3">A user agent can also request the contents of the push message subscription resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0". In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
-<p id="rfc.section.7.p.4">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
+<p id="rfc.section.7.p.4">A user agent can also request the contents of the push message subscription resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0". In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
+<p id="rfc.section.7.p.5">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#monitor-set" id="monitor-set">Receiving Push Messages for a Subscription Set</a></h1>
 <p id="rfc.section.7.1.p.1">There are minor differences between receiving push messages for a subscription and a subscripion set.  </p>
 <p id="rfc.section.7.1.p.2">A user agent requests the delivery of new push messages for a collection of push message subscriptions by making a GET request to a push message subscription set resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.7.1.p.3">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE. This GET request is made to the push message resource that was created by the push service when the application server requested message delivery. The synthetic request MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". This enables the user agent to differentiate the source of the message. The response body is the entity body from the most recent request sent to the push resource by an application server.  </p>
+<p id="rfc.section.7.1.p.3">A user agent MAY include a Urgency header field in its request. The push service MUST only deliver messages with an urgency greater than or equal to the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
+<p id="rfc.section.7.1.p.4">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE. This GET request is made to the push message resource that was created by the push service when the application server requested message delivery. The synthetic request MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". This enables the user agent to differentiate the source of the message. The response body is the entity body from the most recent request sent to the push resource by an application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
             
@@ -748,8 +798,8 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
                     rel="urn:ietf:params:push:receipts"
 
           </pre>
-<p id="rfc.section.7.1.p.4">A user agent can request the contents of the push message subscription set resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
-<p id="rfc.section.7.1.p.5">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
+<p id="rfc.section.7.1.p.5">A user agent can request the contents of the push message subscription set resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" parameter set to "0".  In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
+<p id="rfc.section.7.1.p.6">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#acknowledge_message" id="acknowledge_message">Acknowledging Push Messages</a></h1>
 <p id="rfc.section.7.2.p.1">To ensure that a push message is properly delivered to the user agent at least once, the user agent MUST acknowledge receipt of the message by performing a HTTP DELETE on the push message resource.  </p>
 <pre>
@@ -858,7 +908,7 @@ HEADERS      [stream 82] +END_STREAM
 <h1 id="rfc.section.10.1"><a href="#rfc.section.10.1">10.1.</a> <a href="#iana.header.fields" id="iana.header.fields">Header Field Registrations</a></h1>
 <p id="rfc.section.10.1.p.1">HTTP header fields are registered within the "Message Headers" registry maintained at <span>&lt;</span><a href="https://www.iana.org/assignments/message-headers/">https://www.iana.org/assignments/message-headers/</a><span>&gt;</span>.  </p>
 <p id="rfc.section.10.1.p.2">This document defines the following HTTP header fields, so their associated registry entries shall be added according to the permanent registrations below (see <a href="#RFC3864">[RFC3864]</a>): </p>
-<div id="rfc.table.1"/>
+<div id="rfc.table.2"/>
 <div id="iana.header.registration.table"/>
 <table cellpadding="3" cellspacing="0" class="tt full left">
   <thead>
@@ -877,10 +927,16 @@ HEADERS      [stream 82] +END_STREAM
       <td class="left"><a href="#ttl">Section 6.2</a> </td>
     </tr>
     <tr>
+      <td class="left">Urgency</td>
+      <td class="left">http</td>
+      <td class="left">standard</td>
+      <td class="left"><a href="#urgency">Section 6.3</a> </td>
+    </tr>
+    <tr>
       <td class="left">Topic</td>
       <td class="left">http</td>
       <td class="left">standard</td>
-      <td class="left"><a href="#update">Section 6.3</a> </td>
+      <td class="left"><a href="#update">Section 6.4</a> </td>
     </tr>
   </tbody>
 </table>

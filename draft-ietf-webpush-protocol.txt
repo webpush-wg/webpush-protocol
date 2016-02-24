@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: August 21, 2016                                  B. Raymor, Ed.
+Expires: August 27, 2016                                  B. Raymor, Ed.
                                                                Microsoft
-                                                       February 18, 2016
+                                                       February 24, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 21, 2016.
+   This Internet-Draft will expire on August 27, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 1]
+Thomson, et al.          Expires August 27, 2016                [Page 1]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -71,45 +71,45 @@ Table of Contents
    6.  Requesting Push Message Delivery  . . . . . . . . . . . . . .  10
      6.1.  Requesting Push Message Receipts  . . . . . . . . . . . .  11
      6.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .  11
-     6.3.  Updating Push Messages  . . . . . . . . . . . . . . . . .  12
-   7.  Receiving Push Messages for a Subscription  . . . . . . . . .  13
-     7.1.  Receiving Push Messages for a Subscription Set  . . . . .  15
-     7.2.  Acknowledging Push Messages . . . . . . . . . . . . . . .  17
-     7.3.  Receiving Push Message Receipts . . . . . . . . . . . . .  17
-   8.  Operational Considerations  . . . . . . . . . . . . . . . . .  18
-     8.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  18
-     8.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  19
-     8.3.  Subscription Expiration . . . . . . . . . . . . . . . . .  19
-       8.3.1.  Subscription Set Expiration . . . . . . . . . . . . .  20
-     8.4.  Implications for Application Reliability  . . . . . . . .  20
-     8.5.  Subscription Sets and Concurrent HTTP/2 streams . . . . .  21
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  21
-     9.1.  Confidentiality from Push Service Access  . . . . . . . .  21
-     9.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  22
-     9.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  22
-     9.4.  Denial of Service Considerations  . . . . . . . . . . . .  23
-     9.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  24
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
-     10.1.  Header Field Registrations . . . . . . . . . . . . . . .  24
-     10.2.  Link Relation URNs . . . . . . . . . . . . . . . . . . .  25
-     10.3.  Service Name and Port Number Registration  . . . . . . .  26
-   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  27
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  27
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  27
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  29
-   Appendix A.  Change Log . . . . . . . . . . . . . . . . . . . . .  29
-     A.1.  Since draft-ietf-webpush-protocol-00  . . . . . . . . . .  29
-     A.2.  Since draft-ietf-webpush-protocol-01  . . . . . . . . . .  29
-     A.3.  Since draft-ietf-webpush-protocol-02  . . . . . . . . . .  29
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
+     6.3.  Push Message Urgency  . . . . . . . . . . . . . . . . . .  12
+     6.4.  Updating Push Messages  . . . . . . . . . . . . . . . . .  13
+   7.  Receiving Push Messages for a Subscription  . . . . . . . . .  14
+     7.1.  Receiving Push Messages for a Subscription Set  . . . . .  16
+     7.2.  Acknowledging Push Messages . . . . . . . . . . . . . . .  18
+     7.3.  Receiving Push Message Receipts . . . . . . . . . . . . .  18
+   8.  Operational Considerations  . . . . . . . . . . . . . . . . .  19
+     8.1.  Load Management . . . . . . . . . . . . . . . . . . . . .  19
+     8.2.  Push Message Expiration . . . . . . . . . . . . . . . . .  20
+     8.3.  Subscription Expiration . . . . . . . . . . . . . . . . .  20
+       8.3.1.  Subscription Set Expiration . . . . . . . . . . . . .  21
+     8.4.  Implications for Application Reliability  . . . . . . . .  21
+     8.5.  Subscription Sets and Concurrent HTTP/2 streams . . . . .  22
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
+     9.1.  Confidentiality from Push Service Access  . . . . . . . .  22
+     9.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  23
+     9.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  23
+     9.4.  Denial of Service Considerations  . . . . . . . . . . . .  24
+     9.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  25
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  25
+     10.1.  Header Field Registrations . . . . . . . . . . . . . . .  25
+     10.2.  Link Relation URNs . . . . . . . . . . . . . . . . . . .  26
+     10.3.  Service Name and Port Number Registration  . . . . . . .  27
+   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  28
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  28
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  28
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  30
+   Appendix A.  Change Log . . . . . . . . . . . . . . . . . . . . .  30
+     A.1.  Since draft-ietf-webpush-protocol-00  . . . . . . . . . .  30
+     A.2.  Since draft-ietf-webpush-protocol-01  . . . . . . . . . .  30
+     A.3.  Since draft-ietf-webpush-protocol-02  . . . . . . . . . .  30
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 
 
 
 
 
-
-Thomson, et al.          Expires August 21, 2016                [Page 2]
+Thomson, et al.          Expires August 27, 2016                [Page 2]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 3]
+Thomson, et al.          Expires August 27, 2016                [Page 3]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 4]
+Thomson, et al.          Expires August 27, 2016                [Page 4]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 5]
+Thomson, et al.          Expires August 27, 2016                [Page 5]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 6]
+Thomson, et al.          Expires August 27, 2016                [Page 6]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 7]
+Thomson, et al.          Expires August 27, 2016                [Page 7]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 8]
+Thomson, et al.          Expires August 27, 2016                [Page 8]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016                [Page 9]
+Thomson, et al.          Expires August 27, 2016                [Page 9]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 10]
+Thomson, et al.          Expires August 27, 2016               [Page 10]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 11]
+Thomson, et al.          Expires August 27, 2016               [Page 11]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -638,7 +638,62 @@ Internet-Draft                HTTP Web Push                February 2016
    If the user agent is unavailable, a push message with a zero TTL
    expires and is never delivered.
 
-6.3.  Updating Push Messages
+6.3.  Push Message Urgency
+
+   For a device that is battery-powered, it is often critical that it
+   remains dormant for extended periods.  Radio communication in
+   particular consumes significant power and limits the length of time
+   that the device can operate.
+
+   To avoid consuming resources to receive trivial messages, it is
+   helpful if an application server can communicate the urgency of a
+   message and if the user agent can request that the push server only
+   forward messages of a specific urgency.
+
+   An application server MAY include an Urgency header field in its
+   request for push message delivery.  This header field indicates the
+   message urgency.  The push service MUST not forward the Urgency
+   header field to the user agent.  A user agent MAY include the Urgency
+   header field when requesting push messages to indicate that it only
+   wants to receive messages at an equal or greater urgency.
+
+
+   Urgency = 1#(urgency-option)
+   urgency-option = ("very-low" / "low" / "normal" / "high")
+
+
+
+
+
+
+
+
+
+Thomson, et al.          Expires August 27, 2016               [Page 12]
+
+Internet-Draft                HTTP Web Push                February 2016
+
+
+                      In order of increasing urgency:
+
+   +----------+-----------------------------+--------------------------+
+   | Urgency  | Device State                | Application Scenario     |
+   +----------+-----------------------------+--------------------------+
+   | very-low | On power and wifi           | Advertisements           |
+   |   low    | On either power or wifi     | Topic updates            |
+   |  normal  | On neither power nor wifi   | Chat or Calendar Message |
+   |   high   | Low battery                 | Incoming phone call or   |
+   |          |                             | time-sensitive alert     |
+   +----------+-----------------------------+--------------------------+
+
+                     Table 1: Table of Urgency Values
+
+   An absent Urgency header field indicates that the request is to be
+   forwarded at "normal" urgency.  Multiple values for the header field
+   MUST NOT be included in requests; otherwise, the push service MUST
+   return a 400 (Bad Request) status code.
+
+6.4.  Updating Push Messages
 
    A push message that has been stored by the push service can be
    replaced with new content.  If the user agent is offline during the
@@ -666,15 +721,15 @@ Internet-Draft                HTTP Web Push                February 2016
 
    For use with this protocol, the Topic header field MUST be restricted
    to no more than 32 characters from the URL and filename safe Base 64
+   alphabet [RFC4648].  A push service that receives a request with a
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 12]
+Thomson, et al.          Expires August 27, 2016               [Page 13]
 
 Internet-Draft                HTTP Web Push                February 2016
 
 
-   alphabet [RFC4648].  A push service that receives a request with a
    Topic header field that does not meet these constraints MUST return a
    400 (Bad Request) status code to the application server.
 
@@ -725,10 +780,16 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 13]
+
+Thomson, et al.          Expires August 27, 2016               [Page 14]
 
 Internet-Draft                HTTP Web Push                February 2016
 
+
+   A user agent MAY include a Urgency header field in its request.  The
+   push service MUST only deliver messages with an urgency greater than
+   or equal to the value of the header field as defined in the
+   Table of Urgency Values.
 
    Each push message is pushed as the response to a synthesized GET
    request in a PUSH_PROMISE.  This GET request is made to the push
@@ -776,12 +837,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-
-
-
-
-Thomson, et al.          Expires August 21, 2016               [Page 14]
+Thomson, et al.          Expires August 27, 2016               [Page 15]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -818,6 +874,11 @@ Internet-Draft                HTTP Web Push                February 2016
    to send the contents of push messages as they are sent by application
    servers.
 
+   A user agent MAY include a Urgency header field in its request.  The
+   push service MUST only deliver messages with an urgency greater than
+   or equal to the value of the header field as defined in the
+   Table of Urgency Values.
+
    Each push message is pushed as the response to a synthesized GET
    request sent in a PUSH_PROMISE.  This GET request is made to the push
    message resource that was created by the push service when the
@@ -832,12 +893,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-
-
-
-
-Thomson, et al.          Expires August 21, 2016               [Page 15]
+Thomson, et al.          Expires August 27, 2016               [Page 16]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -893,7 +949,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 16]
+Thomson, et al.          Expires August 27, 2016               [Page 17]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -949,7 +1005,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 17]
+Thomson, et al.          Expires August 27, 2016               [Page 18]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1005,7 +1061,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 18]
+Thomson, et al.          Expires August 27, 2016               [Page 19]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1061,7 +1117,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 19]
+Thomson, et al.          Expires August 27, 2016               [Page 20]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1117,7 +1173,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 20]
+Thomson, et al.          Expires August 27, 2016               [Page 21]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1173,7 +1229,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 21]
+Thomson, et al.          Expires August 27, 2016               [Page 22]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1229,7 +1285,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 22]
+Thomson, et al.          Expires August 27, 2016               [Page 23]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1285,7 +1341,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 23]
+Thomson, et al.          Expires August 27, 2016               [Page 24]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1341,7 +1397,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 24]
+Thomson, et al.          Expires August 27, 2016               [Page 25]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1350,7 +1406,8 @@ Internet-Draft                HTTP Web Push                February 2016
    | Header Field Name | Protocol | Status   | Reference    |
    +-------------------+----------+----------+--------------+
    | TTL               | http     | standard | Section 6.2  |
-   | Topic             | http     | standard | Section 6.3  |
+   | Urgency           | http     | standard | Section 6.3  |
+   | Topic             | http     | standard | Section 6.4  |
    +-------------------+----------+----------+--------------+
 
    The change controller is: "IETF (iesg@ietf.org) - Internet
@@ -1396,8 +1453,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-
-Thomson, et al.          Expires August 21, 2016               [Page 25]
+Thomson, et al.          Expires August 27, 2016               [Page 26]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1453,7 +1509,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 26]
+Thomson, et al.          Expires August 27, 2016               [Page 27]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1509,7 +1565,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 27]
+Thomson, et al.          Expires August 27, 2016               [Page 28]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1565,7 +1621,7 @@ Internet-Draft                HTTP Web Push                February 2016
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 28]
+Thomson, et al.          Expires August 27, 2016               [Page 29]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1621,7 +1677,7 @@ A.3.  Since draft-ietf-webpush-protocol-02
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 29]
+Thomson, et al.          Expires August 27, 2016               [Page 30]
 
 Internet-Draft                HTTP Web Push                February 2016
 
@@ -1677,4 +1733,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.          Expires August 21, 2016               [Page 30]
+Thomson, et al.          Expires August 27, 2016               [Page 31]
