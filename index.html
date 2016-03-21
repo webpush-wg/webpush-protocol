@@ -305,6 +305,7 @@ ol, ul {
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Since draft-ietf-webpush-protocol-00"/>
 <link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Since draft-ietf-webpush-protocol-01"/>
 <link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Since draft-ietf-webpush-protocol-02"/>
+<link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 Since draft-ietf-webpush-protocol-03"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -313,7 +314,7 @@ ol, ul {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-2-24" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-3-21" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -337,7 +338,7 @@ ol, ul {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: August 27, 2016</td>
+  <td class="left">Expires: September 22, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -346,7 +347,7 @@ ol, ul {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">February 24, 2016</td>
+  <td class="right">March 21, 2016</td>
 </tr>
 
     	
@@ -366,7 +367,7 @@ ol, ul {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 27, 2016.</p>
+<p>This Internet-Draft will expire on September 22, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -420,6 +421,7 @@ ol, ul {
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">Since draft-ietf-webpush-protocol-00</a></li>
 <li>A.2.   <a href="#rfc.appendix.A.2">Since draft-ietf-webpush-protocol-01</a></li>
 <li>A.3.   <a href="#rfc.appendix.A.3">Since draft-ietf-webpush-protocol-02</a></li>
+<li>A.4.   <a href="#rfc.appendix.A.4">Since draft-ietf-webpush-protocol-03</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -595,7 +597,7 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
 <p id="rfc.section.5.p.3">An application server that sends push messages to a large population of user agents incurs a significant load if it has to monitor a receipt subscription for each user agent.  Reuse of receipt subscriptions is critical in reducing load on application servers.  A receipt subscription can be used for all resources that have the same receipt subscribe URI.  </p>
 <p id="rfc.section.5.p.4">A push service SHOULD provide the same receipt subscribe URI to all user agents.  Application servers SHOULD reuse receipt subscription URIs if the receipt subscribe URI provided with the push resource is identical to the one used to create the receipt subscription.  Checking that the receipt subscribe URI is identical allows the application server to avoid creating unnecessary receipt subscriptions.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#send" id="send">Requesting Push Message Delivery</a></h1>
-<p id="rfc.section.6.p.1">An application server requests the delivery of a push message by sending a HTTP request to a push resource distributed to the application server by a user agent. The push message is included in the body of the request.  </p>
+<p id="rfc.section.6.p.1">An application server requests the delivery of a push message by sending a HTTP POST request to a push resource distributed to the application server by a user agent. The push message is included in the body of the request.  </p>
 <pre>
   
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -1070,7 +1072,7 @@ HEADERS      [stream 82] +END_STREAM
       <td class="reference">
         <b id="I-D.ietf-httpbis-alt-svc">[I-D.ietf-httpbis-alt-svc]</b>
       </td>
-      <td class="top"><a>Nottingham, M.</a>, <a>McManus, P.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-09">HTTP Alternative Services</a>", Internet-Draft draft-ietf-httpbis-alt-svc-09, May 2015.</td>
+      <td class="top"><a>Nottingham, M.</a>, <a>McManus, P.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-14">HTTP Alternative Services</a>", Internet-Draft draft-ietf-httpbis-alt-svc-14, March 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1171,7 +1173,7 @@ HEADERS      [stream 82] +END_STREAM
       <td class="reference">
         <b id="API">[API]</b>
       </td>
-      <td class="top"><a>Sullivan, B.</a>, <a>Fullea, E.</a> and <a>M. van Ouwerkerk</a>, "<a href="https://w3c.github.io/push-api/">Web Push API</a>", ED push-api, February 2015.</td>
+      <td class="top"><a>van Ouwerkerk, M.</a>, <a>Thomson, M.</a>, <a>Sullivan, B.</a> and <a>E. Fullea</a>, "<a href="https://w3c.github.io/push-api/">Web Push API</a>", ED push-api, January 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1196,6 +1198,9 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.A.3.p.1">Added explicit correlation for Subscription Sets </p>
 <p id="rfc.section.A.3.p.2">Added Push Message Updates (message collapsing) </p>
 <p id="rfc.section.A.3.p.3">Renamed the push:receipt link relation to push:receipts and transitioned the Push-Receipt header field to the push:receipt link relation type </p>
+<h1 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#changes.since.draft-ietf-webpush-protocol-03" id="changes.since.draft-ietf-webpush-protocol-03">Since draft-ietf-webpush-protocol-03</a></h1>
+<p id="rfc.section.A.4.p.1">An application server MUST include the TTL (Time-To-Live) header field in its request for push message delivery.  </p>
+<p id="rfc.section.A.4.p.2">Added Push Message Urgency header field </p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
