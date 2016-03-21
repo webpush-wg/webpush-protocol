@@ -496,7 +496,7 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
-        a HTTP request to a push resource distributed to the application server
+        a HTTP POST request to a push resource distributed to the application server
         by a user agent. The push message is included in the body of the
         request.
       </t>
@@ -1809,11 +1809,11 @@ HEADERS      [stream 82] +END_STREAM
           <author initials="J" surname="Reschke" fullname="Julian Reschke">
             <organization />
           </author>
-          <date month="May" day="15" year="2015" />
+          <date month="March" day="8" year="2016" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-09" />
+        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-14" />
         <format type="TXT"
-                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-09.txt" />
+                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-14.txt" />
       </reference>
 
       <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
@@ -1830,10 +1830,11 @@ HEADERS      [stream 82] +END_STREAM
       <reference anchor="API" target="https://w3c.github.io/push-api/">
         <front>
           <title>Web Push API</title>
+          <author initials="M." surname="van Ouwerkerk" fullname="Michael van Ouwerkerk"/>
+          <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <author initials="B." surname="Sullivan" fullname="Bryan Sullivan"/>
           <author initials="E." surname="Fullea" fullname="Eduardo Fullea"/>
-          <author initials="M." surname="van Ouwerkerk" fullname="Michael van Ouwerkerk"/>
-          <date month="February" year="2015" />
+          <date month="January" year="2016" />
         </front>
         <seriesInfo name="ED" value="push-api" />
       </reference>
@@ -1902,6 +1903,15 @@ HEADERS      [stream 82] +END_STREAM
               Push-Receipt header field to the push:receipt link relation type
             </t>
           </section>
-        </section>
+          <section title="Since draft-ietf-webpush-protocol-03" anchor="changes.since.draft-ietf-webpush-protocol-03">
+            <t>
+              An application server MUST include the TTL (Time-To-Live) header field in
+              its request for push message delivery.
+            </t>
+            <t>
+              Added Push Message Urgency header field
+            </t>
+          </section>
+      </section>
   </back>
 </rfc>
