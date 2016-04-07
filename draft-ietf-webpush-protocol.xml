@@ -638,7 +638,7 @@ TTL = 1*DIGIT
           An application server MAY include an Urgency header field in its
           request for push message delivery. This header field indicates the
           message urgency. The push service MUST not forward the Urgency header
-          field to the user agent.  An push message without the Urgent header
+          field to the user agent.  An push message without the Urgency header
           field is forwarded as though it included a value of "normal".
         </t>
         <t>
