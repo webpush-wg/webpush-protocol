@@ -638,7 +638,8 @@ TTL = 1*DIGIT
 <h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#urgency" id="urgency">Push Message Urgency</a></h1>
 <p id="rfc.section.6.3.p.1">For a device that is battery-powered, it is often critical that it remains dormant for extended periods.  Radio communication in particular consumes significant power and limits the length of time that the device can operate.  </p>
 <p id="rfc.section.6.3.p.2">To avoid consuming resources to receive trivial messages, it is helpful if an application server can communicate the urgency of a message and if the user agent can request that the push server only forward messages of a specific urgency.  </p>
-<p id="rfc.section.6.3.p.3">An application server MAY include an Urgency header field in its request for push message delivery. This header field indicates the message urgency. The push service MUST not forward the Urgency header field to the user agent. A user agent MAY include the Urgency header field when requesting push messages to indicate that it only wants to receive messages at an equal or greater urgency.  </p>
+<p id="rfc.section.6.3.p.3">An application server MAY include an Urgency header field in its request for push message delivery. This header field indicates the message urgency. The push service MUST not forward the Urgency header field to the user agent.  An push message without the Urgency header field is forwarded as though it included a value of "normal".  </p>
+<p id="rfc.section.6.3.p.4">A user agent MAY include the Urgency header field when monitoring for push messages to indicate the lowest urgency of push messages that it is willing to receive.  A push service MUST NOT deliver push messages with lower urgency than the value indicated by the user agent in its monitoring request.  Push messages of any urgency are delivered to a user agent that does not include an Urgency header field when monitoring for messages.  </p>
 <pre>
             
 Urgency = 1#(urgency-option)
@@ -680,7 +681,7 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.6.3.p.4">An absent Urgency header field indicates that the request is to be forwarded at "normal" urgency. Multiple values for the header field MUST NOT be included in requests; otherwise, the push service MUST return a 400 (Bad Request) status code.  </p>
+<p id="rfc.section.6.3.p.5">Multiple values for the Urgency header field MUST NOT be included in requests; otherwise, the push service MUST return a 400 (Bad Request) status code.  </p>
 <h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
 <p id="rfc.section.6.4.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where outdated or redundant messages are sent to the user agent.  </p>
 <p id="rfc.section.6.4.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
