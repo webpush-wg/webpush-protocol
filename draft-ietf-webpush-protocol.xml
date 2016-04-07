@@ -393,7 +393,7 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
           can represent a significant efficiency improvement for a push service.
           For that reason, if a subscription set is returned in a push message
           subscription response, the user agent SHOULD include this subscription
-          set in subsequent push message subscription requests to the push service. 
+          set in subsequent push message subscription requests to the push service.
           </t>
           <t>
           A user agent MAY omit the subscription set if it is unable to receive push
@@ -436,7 +436,7 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
       <t>
         A push service MAY return a 429 (Too Many Requests) status code
         <xref target="RFC6585"/> to reject requests which omit a subscription set
-        or contain an invalid subscription set. 
+        or contain an invalid subscription set.
       </t>
       <t>
         How a push service detects that requests originate from the same user agent
@@ -675,7 +675,7 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
           the push service MUST return a 400 (Bad Request) status code.
         </t>
       </section>
-      
+
       <section anchor="update" title="Updating Push Messages">
         <t>
           A push message that has been stored by the push service can be
@@ -713,7 +713,7 @@ Topic = token / quoted-string
         </t>
         <t>
           For use with this protocol, the Topic header field MUST be restricted
-          to no more than 32 characters from the URL and filename safe Base 64 
+          to no more than 32 characters from the URL and filename safe Base 64
           alphabet <xref target="RFC4648"/>. A push service that receives a request
           with a Topic header field that does not meet these constraints MUST return
           a 400 (Bad Request) status code to the application server.
@@ -872,7 +872,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         <t>
           A user agent MAY include a Urgency header field in its request. The push service MUST
           only deliver messages with an urgency greater than or equal to the value of the header field
-          as defined in the <xref target="urgency_values" format="title"/>. 
+          as defined in the <xref target="urgency_values" format="title"/>.
         </t>
         <t>
           Each push message is pushed as the response to a synthesized GET request
