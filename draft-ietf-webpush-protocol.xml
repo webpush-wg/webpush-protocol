@@ -595,7 +595,7 @@ TTL = 1*DIGIT
           request for push message delivery. This header field indicates the
           message urgency. The push service MUST not forward the Urgency header
           field to the user agent.  An push message without the Urgency header
-          field is forwarded as though it included a value of "normal".
+          field defaults to a value of "normal".
         </t>
         <t>
           A user agent MAY include the Urgency header field when monitoring for
@@ -743,7 +743,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
       </t>
       <t>
         A user agent MAY include a Urgency header field in its request. The push service MUST
-        only deliver messages with an urgency greater than or equal to the value of the header field
+        NOT deliver messages with lower urgency than the value of the header field
         as defined in the <xref target="urgency_values" format="title"/>.
       </t>
       <t>
@@ -828,7 +828,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         </t>
         <t>
           A user agent MAY include a Urgency header field in its request. The push service MUST
-          only deliver messages with an urgency greater than or equal to the value of the header field
+          NOT deliver messages with lower urgency than the value of the header field
           as defined in the <xref target="urgency_values" format="title"/>.
         </t>
         <t>
