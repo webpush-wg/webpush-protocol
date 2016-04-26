@@ -349,18 +349,6 @@ Host: push.example.net
         authentication MUST be used to ensure that this URI is not disclosed
         to unauthorized recipients (<xref target="authorization"/>).
       </t>
-      <t>
-        The push service MAY provide a URI for a subscription set resource in a
-        link relation of type "urn:ietf:params:push:set". If provided, the push
-        service supports subscription sets. If available, the user agent SHOULD
-        use the subscription set to receive push messages rather than individual
-        push message subscriptions.
-      </t>
-      <t>
-        The push service MAY return new subscription sets in response to different
-        subscription requests from the same user agent. This allows the push service to
-        control the grouping of the push message subscriptions.
-      </t>
       <figure>
         <artwork type="inline">
   <![CDATA[
@@ -374,16 +362,18 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 
 ]]></artwork>
       </figure>
-      <section anchor="set-correlate" title="Correlating Subscriptions">
+      <section title="Collecting Subscriptions into Sets">
         <t>
           Collecting multiple push message subscriptions into a subscription
           set can represent a significant efficiency improvement for a push
-          service. If a subscription set is returned in a push message
-          subscription response, the user agent SHOULD include this
-          subscription set in a link relation of type "urn:ietf:params:push:set"
-          in subsequent requests to create new push message subscriptions.
-          This gives the push service the option to create the new subscription
-          within that subscription set.
+          service. The push service MAY provide a URI for a subscription set
+          resource in a link relation of type "urn:ietf:params:push:set".
+        </t>
+        <t>
+          When a subscription set is returned in a push message subscription
+          response, the user agent SHOULD include this subscription set in a link
+          relation of type "urn:ietf:params:push:set" in subsequent requests to
+          create new push message subscriptions.
         </t>
         <t>
           A user agent MAY omit the subscription set if it is unable to receive push
@@ -825,7 +815,9 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
       <section anchor="monitor-set" title="Receiving Push Messages for a Subscription Set">
         <t>
           There are minor differences between receiving push messages for a subscription and
-          a subscripion set.
+          a subscripion set. If a subscription set is available, the user agent SHOULD use the
+          subscription set to monitor for push messages rather than individual push message
+          subscriptions.
         </t>
         <t>
           A user agent requests the delivery of new push messages for a collection of
