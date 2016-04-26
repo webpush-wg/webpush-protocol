@@ -376,21 +376,19 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
       </figure>
       <section anchor="set-correlate" title="Correlating Subscriptions">
         <t>
-          Collecting multiple push message subscriptions into a subscription set
-          can represent a significant efficiency improvement for a push service.
-          For that reason, if a subscription set is returned in a push message
-          subscription response, the user agent SHOULD include this subscription
-          set in subsequent push message subscription requests to the push service.
-          </t>
-          <t>
+          Collecting multiple push message subscriptions into a subscription
+          set can represent a significant efficiency improvement for a push
+          service. If a subscription set is returned in a push message
+          subscription response, the user agent SHOULD include this
+          subscription set in a link relation of type "urn:ietf:params:push:set"
+          in subsequent requests to create new push message subscriptions.
+          This gives the push service the option to create the new subscription
+          within that subscription set.
+        </t>
+        <t>
           A user agent MAY omit the subscription set if it is unable to receive push
           messages that are aggregated for the lifetime of the subscription. This might
           be necessary if the user agent is forwarding requests from other clients.
-        </t>
-        <t>
-          The user agent adds a subscription set link relation to the request to
-          create a push message subscription. This gives the push service the option
-          to create the new subscription within that subscription set.
         </t>
       <figure>
         <artwork type="inline">
@@ -507,11 +505,13 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           </artwork>
         </figure>
         <t>
-          The application server SHOULD include the returned receipt subscription in future
-          requests for push message delivery with receipts to allow the push service to
-          aggregate receipts. The push service SHOULD return the same receipt subscription in
-          its response, although it MAY return a new receipt subscription if it is unable to
-          reuse the one provided by the application server.
+          For subsequent receipt requests to the same origin <xref target="RFC6454"/>,
+          the application server SHOULD include the returned receipt subscription in
+          a link relation of type "urn:ietf:params:push:receipt". This gives the push
+          service an option to aggregate the receipts. The push service SHOULD return
+          the same receipt subscription in its response, although it MAY return a new
+          receipt subscription if it is unable to reuse the one provided by the application
+          server.
         </t>
         <t>
           A push service MUST return a 400 (Bad Request) status code for requests which contain
@@ -1078,13 +1078,13 @@ HEADERS      [stream 82] +END_STREAM
           returning a 404 (Not Found) status code.
         </t>
         <t>
-          A user agent or application server can request that a subscription be
-          removed by sending a DELETE request to the push message subscription
-          or receipt subscription URI.
-        </t>
-        <t>
           A push service MUST return a 404 (Not Found) status code if an application server
           attempts to send a push message to a removed or expired push message subscription.
+        </t>
+        <t>
+          A user agent can remove its push message subscription by sending a DELETE request to
+          the corresponding URI. An application server can remove its receipt subscription by
+          sending a DELETE request to the corresponding URI.
         </t>
         <section title="Subscription Set Expiration">
           <t>
@@ -1656,6 +1656,17 @@ HEADERS      [stream 82] +END_STREAM
         </front>
         <seriesInfo name="RFC" value="6335" />
         <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc6335.txt" />
+      </reference>
+      <reference anchor="RFC6454">
+        <front>
+          <title>The Web Origin Concept</title>
+          <author initials="A." surname="Barth" fullname="A. Barth">
+            <organization />
+          </author>
+          <date year="2011" month="December" />
+        </front>
+        <seriesInfo name="RFC" value="6454" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc6454.txt" />
       </reference>
       <reference anchor="RFC6585">
         <front>
