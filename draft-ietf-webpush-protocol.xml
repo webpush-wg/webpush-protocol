@@ -505,7 +505,8 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         </t>
         <t>
           A push service MUST return a 400 (Bad Request) status code for requests which contain
-          an invalid receipt subscription. A push service MAY return a 429 (Too Many Requests)
+          an invalid receipt subscription. If a push service wishes to limit the number of
+          receipt subscriptions that it maintains, it MAY return a 429 (Too Many Requests)
           status code <xref target="RFC6585"/> to reject receipt requests which omit a receipt
           subscription.
         </t>
