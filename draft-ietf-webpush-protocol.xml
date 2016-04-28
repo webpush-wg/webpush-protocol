@@ -137,11 +137,9 @@
 
       <section anchor="terminology" title="Conventions and Terminology">
         <t>
-          In cases where normative language needs to be emphasized, this
-          document falls back on established shorthands for expressing
-          interoperability requirements on implementations: the capitalized
-          words "MUST", "MUST NOT", "SHOULD" and "MAY".  The meaning of these is
-          described in <xref target="RFC2119"/>.
+          The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+          "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+          document are to be interpreted as described in [RFC2119].
         </t>
         <t>
           This document defines the following terms:
@@ -260,8 +258,8 @@
           are defined:
           <list style="hanging">
             <t hangText="push service:">
-              This resource is used to create push message subscriptions (see
-              <xref target="message_subscription"/>).  A URL for the push
+              This resource is used to create push message subscriptions
+              (<xref target="message_subscription"/>).  A URL for the push
               service is configured into user agents.
             </t>
             <t hangText="push message subscription:">
@@ -279,27 +277,21 @@
               subscription set.
             </t>
             <t hangText="push:">
-              A push resource is used by the application server to request the
-              delivery of a push message (see <xref target="send"/>).  A link
-              relation of type "urn:ietf:params:push" identifies a push
-              resource.
+              An application server <xref target="send">requests the delivery</xref> of a
+              push message using a push resource.  A link relation of type "urn:ietf:params:push"
+              identifies a push resource.
             </t>
             <t hangText="push message:">
-              A push message resource is created to identify push messages that
-              have been accepted by the push service.  The push message resource
-              is also used to acknowledge receipt of a push message.
-            </t>
-            <t hangText="receipt subscribe:">
-              A receipt subscribe resource is used by an application server to
-              create a receipt subscription (see <xref target="receipt_subscription"/>).
-              A link relation of type "urn:ietf:params:push:receipts" identifies a receipt
-              subscribe resource.
+              The push service creates a push message resource to identify push messages that
+              have been <xref target="send">accepted for delivery</xref>. The push message
+              resource is also deleted by the user agent to
+              <xref target="acknowledge_message">acknowledge receipt</xref> of a push message.
             </t>
             <t hangText="receipt subscription:">
               An application server <xref target="request_receipt">receives
               delivery confirmations</xref> for push messages using a receipt
               subscription.  A link relation of type "urn:ietf:params:push:receipt"
-              is identifies a receipt subscription.
+              identifies a receipt subscription.
             </t>
           </list>
         </t>
@@ -309,7 +301,7 @@
       <t>
         The push service shares the same default port number (443/TCP) with HTTPS, but MAY
         also advertise the IANA allocated TCP System Port 1001 using HTTP alternative services
-        <xref target="I-D.ietf-httpbis-alt-svc"/>:
+        <xref target="RFC7838"/>.
       </t>
       <t>
         While the default port (443) offers broad reachability characteristics, it is most
@@ -341,36 +333,21 @@ Host: push.example.net
 ]]></artwork>
       </figure>
       <t>
-        A response with a 201 (Created) status code includes a URI for a new
-        push message subscription resource in the Location header field.
+        A 201 (Created) response indicates that the a push subscription was 
+        created. A URI for the push message subscription resource that was
+        created in response to the request MUST be returned in the Location 
+        header field.
       </t>
       <t>
         The push service MUST provide a URI for the push resource corresponding
-        to the push message subscription using a link relation of type
+        to the push message subscription in a link relation of type
         "urn:ietf:params:push".
       </t>
       <t>
-        The push service MUST provide a URI for a receipt subscribe resource in a
-        link relation of type "urn:ietf:params:push:receipts".
-      </t>
-      <t>
-        An application-specific method is used to distribute the push and
-        receipt subscribe URIs to the application server.  Confidentiality
-        protection and application server authentication MUST be used to ensure
-        that these URIs are not disclosed to unauthorized recipients (see <xref
-        target="authorization"/>).
-      </t>
-      <t>
-        The push service MAY provide a URI for a subscription set resource in a
-        link relation of type "urn:ietf:params:push:set". If provided, the push
-        service supports subscription sets. If available, the user agent SHOULD
-        use the subscription set to receive push messages rather than individual
-        push message subscriptions.
-      </t>
-      <t>
-        The push service MAY return new subscription sets in response to different
-        subscription requests from the same user agent. This allows the push service to
-        control the grouping of the push message subscriptions.
+        An application-specific method is used to distribute the push URI to the
+        application server.  Confidentiality protection and application server
+        authentication MUST be used to ensure that this URI is not disclosed
+        to unauthorized recipients (<xref target="authorization"/>).
       </t>
       <figure>
         <artwork type="inline">
@@ -379,31 +356,29 @@ HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
         rel="urn:ietf:params:push"
-Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-        rel="urn:ietf:params:push:receipts"
 Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
         rel="urn:ietf:params:push:set"
 Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 
 ]]></artwork>
       </figure>
-      <section anchor="set-correlate" title="Correlating Subscriptions">
+      <section title="Collecting Subscriptions into Sets">
         <t>
-          Collecting multiple push message subscriptions into a subscription set
-          can represent a significant efficiency improvement for a push service.
-          For that reason, if a subscription set is returned in a push message
-          subscription response, the user agent SHOULD include this subscription
-          set in subsequent push message subscription requests to the push service.
-          </t>
-          <t>
+          Collecting multiple push message subscriptions into a subscription
+          set can represent a significant efficiency improvement for a push
+          service. The push service MAY provide a URI for a subscription set
+          resource in a link relation of type "urn:ietf:params:push:set".
+        </t>
+        <t>
+          When a subscription set is returned in a push message subscription
+          response, the user agent SHOULD include this subscription set in a link
+          relation of type "urn:ietf:params:push:set" in subsequent requests to
+          create new push message subscriptions.
+        </t>
+        <t>
           A user agent MAY omit the subscription set if it is unable to receive push
           messages that are aggregated for the lifetime of the subscription. This might
           be necessary if the user agent is forwarding requests from other clients.
-        </t>
-        <t>
-          The user agent adds a subscription set link relation to the request to
-          create a push message subscription. This gives the push service the option
-          to create the new subscription within that subscription set.
         </t>
       <figure>
         <artwork type="inline">
@@ -426,17 +401,16 @@ HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
 Link: </p/YBJNBIMwwA_Ag8EtD47J4A>;
         rel="urn:ietf:params:push"
-Link: </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-        rel="urn:ietf:params:push:receipts"
 Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
         rel="urn:ietf:params:push:set"
 Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
 ]]></artwork>
       </figure>
       <t>
-        A push service MAY return a 429 (Too Many Requests) status code
-        <xref target="RFC6585"/> to reject requests which omit a subscription set
-        or contain an invalid subscription set.
+        A push service MUST return a 400 (Bad Request) status code for requests which
+        contain an invalid subscription set. A push service MAY return a 429
+        (Too Many Requests) status code <xref target="RFC6585"/> to reject requests
+        which omit a subscription set.
       </t>
       <t>
         How a push service detects that requests originate from the same user agent
@@ -446,51 +420,6 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
         positives and cause requests to be rejected incorrectly.
       </t>
       </section>
-    </section>
-    <section anchor="receipt_subscription"
-             title="Subscribing for Push Message Receipts">
-      <t>
-        An application server requests the creation of a receipt subscription by
-        sending a HTTP POST request to the receipt subscribe resource
-        distributed to the application server by a user agent.
-      </t>
-      <figure>
-        <artwork type="inline">
-          <![CDATA[
-POST /receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ HTTP/1.1
-Host: push.example.net
-]]>
-        </artwork>
-      </figure>
-      <t>
-        A successful response with a 201 (Created) status code includes a URI
-        for the receipt subscription resource in the Location header field.
-      </t>
-      <figure>
-        <artwork type="inline">
-          <![CDATA[
-HTTP/1.1 201 Created
-Date: Thu, 11 Dec 2014 23:56:52 GMT
-Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
-]]>
-        </artwork>
-      </figure>
-      <t>
-        An application server that sends push messages to a large population of
-        user agents incurs a significant load if it has to monitor a receipt
-        subscription for each user agent.  Reuse of receipt subscriptions is
-        critical in reducing load on application servers.  A receipt
-        subscription can be used for all resources that have the same receipt
-        subscribe URI.
-      </t>
-      <t>
-        A push service SHOULD provide the same receipt subscribe URI to all user
-        agents.  Application servers SHOULD reuse receipt subscription URIs if
-        the receipt subscribe URI provided with the push resource is identical
-        to the one used to create the receipt subscription.  Checking that the
-        receipt subscribe URI is identical allows the application server to
-        avoid creating unnecessary receipt subscriptions.
-      </t>
     </section>
 
     <section anchor="send" title="Requesting Push Message Delivery">
@@ -505,8 +434,6 @@ Location: https://push.example.net/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
   <![CDATA[
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
-Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
-        rel="urn:ietf:params:push:receipt"
 TTL: 15
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
@@ -527,31 +454,61 @@ Date: Thu, 11 Dec 2014 23:56:55 GMT
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]></artwork>
       </figure>
-      <t>
-        A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/>
-        when an application server has exceeded its rate limit for push message
-        delivery to a push resource. The push service SHOULD also include a
-        Retry-After header <xref target="RFC7231"/> to indicate how long the application server
-        is requested to wait before it makes another request to the push resource.
-      </t>
-      <t>
-        A push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
-        in response to requests that include an entity body that is too large.
-        Push services MUST NOT return a 413 status code in responses to an
-        entity body that is 4k (4096 bytes) or less in size.
-      </t>
 
       <section anchor="request_receipt" title="Requesting Push Message Receipts">
         <t>
-          An application server can use the "urn:ietf:params:push:receipt" link
-          relation type to request a confirmation from the push service when a push
-          message is delivered and acknowledged by the user agent.
+          An application server can include the <xref target="RFC7240">Prefer header
+          field</xref> with the "respond-async" preference to request confirmation
+          from the push service when a push message is delivered and then acknowledged
+          by the user agent.
+       </t>
+        <figure>
+          <artwork type="inline">
+            <![CDATA[
+POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+Host: push.example.net
+Prefer: respond-async
+TTL: 15
+Content-Type: text/plain;charset=utf8
+Content-Length: 36
+
+iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
+]]>
+          </artwork>
+        </figure>
+        <figure>
+          <preamble>
+            A 202 (Accepted) response indicates that the push message was accepted. A
+            URI for the push message resource that was created in response to the request
+            MUST be returned in the Location header field. The push service MUST also provide
+            a URI for the receipt subscription resource in a link relation of type
+            "urn:ietf:params:push:receipt".
+          </preamble>
+          <artwork type="inline">
+            <![CDATA[
+HTTP/1.1 202 Accepted
+Date: Thu, 11 Dec 2014 23:56:55 GMT
+Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
+        rel="urn:ietf:params:push:receipt"
+Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+]]>
+          </artwork>
+        </figure>
+        <t>
+          For subsequent receipt requests to the same origin <xref target="RFC6454"/>,
+          the application server SHOULD include the returned receipt subscription in
+          a link relation of type "urn:ietf:params:push:receipt". This gives the push
+          service an option to aggregate the receipts. The push service SHOULD return
+          the same receipt subscription in its response, although it MAY return a new
+          receipt subscription if it is unable to reuse the one provided by the application
+          server.
         </t>
         <t>
-          The application sets the link relation value to a receipt subscription URI.
-          This receipt subscription resource MUST be created from the same receipt subscribe
-          resource which was returned with the push message subscription response (see <xref
-          target="message_subscription"/>).
+          A push service MUST return a 400 (Bad Request) status code for requests which contain
+          an invalid receipt subscription. If a push service wishes to limit the number of
+          receipt subscriptions that it maintains, it MAY return a 429 (Too Many Requests)
+          status code <xref target="RFC6585"/> to reject receipt requests which omit a receipt
+          subscription.
         </t>
       </section>
 
@@ -639,7 +596,7 @@ TTL = 1*DIGIT
           request for push message delivery. This header field indicates the
           message urgency. The push service MUST not forward the Urgency header
           field to the user agent.  An push message without the Urgency header
-          field is forwarded as though it included a value of "normal".
+          field defaults to a value of "normal".
         </t>
         <t>
           A user agent MAY include the Urgency header field when monitoring for
@@ -787,7 +744,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
       </t>
       <t>
         A user agent MAY include a Urgency header field in its request. The push service MUST
-        only deliver messages with an urgency greater than or equal to the value of the header field
+        NOT deliver messages with lower urgency than the value of the header field
         as defined in the <xref target="urgency_values" format="title"/>.
       </t>
       <t>
@@ -820,7 +777,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
           message.
         </preamble>
         <artwork>
-    <![CDATA[
+          <![CDATA[
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
   :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
@@ -838,26 +795,16 @@ HEADERS      [stream 4] +END_HEADERS
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
-]]></artwork>
-      </figure>
-      <figure>
-        <preamble>
-          The push service response for the GET request to the push message subscription resource
-          SHOULD provide a URI for the receipt subscribe resource in a link relation of type
-          "urn:ietf:params:push:receipts".
-        </preamble>
-        <artwork>
-<![CDATA[
+  
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :status        = 200
-  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                    rel="urn:ietf:params:push:receipts"
-]]>     </artwork>
+]]>
+        </artwork>
       </figure>
       <t>
         A user agent can also request the contents of the push message subscription
         resource immediately by including a <xref target="RFC7240">Prefer header
-        field</xref> with a "wait" parameter set to "0". In response to this request,
+        field</xref> with a "wait" preference set to "0". In response to this request,
         the push service MUST generate a server push for all push messages that have not yet
         been delivered.
       </t>
@@ -869,7 +816,9 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
       <section anchor="monitor-set" title="Receiving Push Messages for a Subscription Set">
         <t>
           There are minor differences between receiving push messages for a subscription and
-          a subscripion set.
+          a subscripion set. If a subscription set is available, the user agent SHOULD use the
+          subscription set to monitor for push messages rather than individual push message
+          subscriptions.
         </t>
         <t>
           A user agent requests the delivery of new push messages for a collection of
@@ -880,7 +829,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         </t>
         <t>
           A user agent MAY include a Urgency header field in its request. The push service MUST
-          only deliver messages with an urgency greater than or equal to the value of the header field
+          NOT deliver messages with lower urgency than the value of the header field
           as defined in the <xref target="urgency_values" format="title"/>.
         </t>
         <t>
@@ -934,28 +883,16 @@ HEADERS      [stream 4] +END_HEADERS
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
-]]>
-          </artwork>
-        </figure>
-        <figure>
-          <preamble>
-            The push service response for the GET request to the push message subscription set
-            resource SHOULD provide a URI for the receipt subscribe resource in a link relation
-            of type "urn:ietf:params:push:receipts".
-          </preamble>
-          <artwork>
-            <![CDATA[
+
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :status        = 200
-  :link          = </receipts/xjTG79I3VuptNWS0DsFu4ihT97aE6UQJ>;
-                    rel="urn:ietf:params:push:receipts"
 ]]>
           </artwork>
         </figure>
         <t>
           A user agent can request the contents of the push message subscription
           set resource immediately by including a <xref target="RFC7240">Prefer header
-          field</xref> with a "wait" parameter set to "0".  In response to this request,
+          field</xref> with a "wait" preference set to "0".  In response to this request,
           the push service MUST generate a server push for all push messages that have not
           yet been delivered.
         </t>
@@ -983,9 +920,8 @@ Host: push.example.net
         </figure>
         <t>
           If the push service receives the acknowledgement and the application
-          has requested a delivery receipt, the push service MUST deliver a success
-          response to the application server monitoring the receipt subscription
-          resource.
+          has requested a delivery receipt, the push service MUST return a 204 (No Content)
+          response to the application server monitoring the receipt subscription.
         </t>
         <t>
           If the push service does not receive the acknowledgement within a
@@ -997,8 +933,8 @@ Host: push.example.net
           The push service MAY cease to retry delivery of the message prior to its
           advertised expiration due to scenarios such as an unresponsive user agent or
           operational constraints. If the application has requested a delivery receipt,
-          then the push service MUST push a failure response with a status code of
-          410 (Gone) to the application server monitoring the receipt subscription resource.
+          then the push service MUST return a 410 (Gone) to the application server
+          monitoring the receipt subscription.
         </t>
       </section>
 
@@ -1007,9 +943,9 @@ Host: push.example.net
           The application server requests the delivery of receipts from the push
           service by making a HTTP GET request to the receipt subscription
           resource. The push service does not respond to this request, it
-          instead uses <xref target="RFC7540">HTTP/2 server
-          push</xref> to send push receipts when messages are acknowledged
-          (<xref target="acknowledge_message"></xref>) by the user agent.
+          instead uses <xref target="RFC7540">HTTP/2 server push</xref> to send push
+          receipts when messages are acknowledged (<xref target="acknowledge_message"></xref>)
+          by the user agent.
         </t>
         <t>
           Each receipt is pushed as the response to a synthesized GET request sent in a
@@ -1073,10 +1009,10 @@ HEADERS      [stream 82] +END_STREAM
           redistribute load at the time that a new subscription is requested.
         </t>
         <t>
-          A server that wishes to redistribute load can do so using alternative
-          services <xref target="I-D.ietf-httpbis-alt-svc"/>.  Alternative
-          services allows for redistribution of load whilst maintaining the same
-          URIs for various resources.  User agents can ensure a graceful
+          A server that wishes to redistribute load can do so using HTTP alternative
+          services <xref target="RFC7838"/>.  HTTP alternative
+          services allows for redistribution of load while maintaining the same
+          URIs for various resources.  A user agent can ensure a graceful
           transition by using the GOAWAY frame once it has established a
           replacement connection.
         </t>
@@ -1088,7 +1024,7 @@ HEADERS      [stream 82] +END_STREAM
           potentially significant amount of storage for a push service.  A push
           service is not obligated to store messages indefinitely.  A push
           service is able to indicate how long it intends to retain a message to
-          an application server using the TTL header field (see <xref
+          an application server using the TTL header field (<xref
           target="ttl"/>).
         </t>
         <t>
@@ -1098,22 +1034,27 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           Push messages that are stored and not delivered to a user agent are
           delivered when the user agent recommences monitoring.  Stored push
-          messages SHOULD include a Last-Modified header field (see Section 2.2
+          messages SHOULD include a Last-Modified header field (Section 2.2
           of <xref target="RFC7232"/>) indicating when delivery was requested by
           an application server.
         </t>
         <t>
-          A GET request to a push message subscription resource that has only
-          expired messages results in response as though no push message were
+          A GET request to a push message subscription resource with only
+          expired messages results in a response as though no push message was
           ever sent.
         </t>
         <t>
           Push services might need to limit the size and number of stored push
           messages to avoid overloading.  To limit the size of messages, the
-          push service MAY return the 413 (Payload Too Large) status code for messages
-          that are too large. To limit the number of stored push messages, the
-          push service MAY either expire messages prior to their advertised Time-To-Live
-          or reduce their advertised Time-To-Live.
+          push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
+          in response to requests that include an entity body that is too large.
+          Push services MUST NOT return a 413 status code in responses to an entity
+          body that is 4k (4096 bytes) or less in size.
+          </t>
+        <t>
+          To limit the number of stored push messages, the push service MAY either
+          expire messages prior to their advertised Time-To-Live or reduce their
+          advertised Time-To-Live.
         </t>
       </section>
 
@@ -1126,24 +1067,23 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           A push service can remove a subscription at any time. If a user agent
           or application server has an outstanding request to a subscription
-          resource (see <xref target="monitor-subscription"/>), this can be signaled by
-          returning a 400-series status code, such as 410 (Gone).
+          resource (<xref target="monitor-subscription"/>), this MUST be signaled by
+          returning a 404 (Not Found) status code.
         </t>
         <t>
-          A user agent or application server can request that a subscription be
-          removed by sending a DELETE request to the push message subscription
-          or receipt subscription URI.
+          A push service MUST return a 404 (Not Found) status code if an application server
+          attempts to send a push message to a removed or expired push message subscription.
         </t>
         <t>
-          A push service MUST return a 400-series status code, such as 404 (Not
-          Found) or 410 (Gone) if an application server attempts to send a push
-          message to a removed or expired push message subscription.
+          A user agent can remove its push message subscription by sending a DELETE request to
+          the corresponding URI. An application server can remove its receipt subscription by
+          sending a DELETE request to the corresponding URI.
         </t>
         <section title="Subscription Set Expiration">
           <t>
             A push service MAY expire a subscription set at any time which MUST also
             expire all push message subscriptions in the set. If a user agent has an
-            outstanding request to a push subscription set (see <xref target="monitor-set"/>)
+            outstanding request to a push subscription set (<xref target="monitor-set"/>)
             this can be signaled by returning a 400-series status code, such as 410 (Gone).
           </t>
           <t>
@@ -1169,9 +1109,9 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           Push message reliability can be important if messages contain
           information critical to the state of an application.  Repairing state
-          can be costly, particularly for devices with limited communications
+          can be expensive, particularly for devices with limited communications
           capacity.  Knowing that a push message has been correctly received
-          avoids costly retransmissions, polling and state resynchronization.
+          avoids retransmissions, polling, and state resynchronization.
         </t>
         <t>
           The availability of push message delivery receipts ensures that the
@@ -1279,7 +1219,7 @@ HEADERS      [stream 82] +END_STREAM
          <list style="hanging">
            <t hangText="Note:">
              This need not be perfect as long as the resulting anonymity set
-             (see <xref target="RFC6973"/>, Section 6.1.1) is sufficiently
+             (<xref target="RFC6973"/>, Section 6.1.1) is sufficiently
              large.  A push URI necessarily identifies a push service or a
              single server instance.  It is also possible that traffic analysis
              could be used to correlate subscriptions.
@@ -1304,9 +1244,8 @@ HEADERS      [stream 82] +END_STREAM
        </t>
        <t>
          Authorization is managed using capability URLs for the push message
-         subscription, push, and receipt subscription resources (see <xref
-         target="CAP-URI"/>).  A capability URL grants access to a resource
-         based solely on knowledge of the URL.
+         subscription, push, and receipt subscription resources (<xref target="CAP-URI"/>).
+         A capability URL grants access to a resource based solely on knowledge of the URL.
        </t>
        <t>
          Capability URLs are used for their "easy onward sharing" and "easy
@@ -1320,19 +1259,7 @@ HEADERS      [stream 82] +END_STREAM
          or delete the subscription. Knowledge of a push URI implies
          authorization to send push messages.  Knowledge of a push message URI
          allows for reading and acknowledging that specific message.  Knowledge
-         of a receipt subscription URI implies authorization to receive push
-         receipts.  Knowledge of a receipt subscribe URI implies authorization
-         to create subscriptions for receipts.
-       </t>
-       <t>
-         Note that the same receipt subscribe URI could be returned for multiple
-         push message subscriptions.  Using the same value for a large number of
-         subscriptions allows application servers to reuse receipt
-         subscriptions, which can provide a significant efficiency advantage.  A
-         push service that uses a common receipt subscribe URI loses control
-         over the creation of receipt subscriptions.  This can result in a
-         potential exposure to denial of service; stateless resource creation
-         can be used to mitigate the effects of this exposure.
+         of a receipt subscription URI implies authorization to receive push receipts.
        </t>
        <t>
          Encoding a large amount of random entropy (at least 120 bits) in the
@@ -1358,9 +1285,18 @@ HEADERS      [stream 82] +END_STREAM
          A malicious application with a valid push URI could use the greater
          resources of a push service to mount a denial of service attack on a
          user agent.  Push services SHOULD limit the rate at which push messages
-         are sent to individual user agents.  A push service or user agent MAY
-         <xref target="delete">terminate subscriptions</xref> that receive too
-         many push messages.
+         are sent to individual user agents.  
+       </t>
+       <t>
+         A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/>
+         when an application server has exceeded its rate limit for push message delivery to
+         a push resource. The push service SHOULD also include a Retry-After header
+         <xref target="RFC7231"/> to indicate how long the application server
+         is requested to wait before it makes another request to the push resource.
+       </t>
+       <t>
+         A push service or user agent MAY also <xref target="delete">terminate subscriptions</xref>
+         that receive too many push messages.
        </t>
        <t>
          End-to-end confidentiality mechanisms, such as those in <xref
@@ -1411,7 +1347,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           This document defines the following HTTP header fields, so their
           associated registry entries shall be added according to the permanent
-          registrations below (see <xref target="RFC3864"/>):
+          registrations below (<xref target="RFC3864"/>):
         </t>
         <texttable align="left" suppress-title="true"
                    anchor="iana.header.registration.table">
@@ -1514,17 +1450,6 @@ HEADERS      [stream 82] +END_STREAM
             <t hangText="Description:">
               This link relation type is used to identify a resource for
               receiving delivery confirmations for push messages.
-            </t>
-            <t hangText="Specification:">(this document)</t>
-            <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
-          </list>
-        </t>
-        <t>
-          <list style="hanging">
-            <t hangText="URN:">urn:ietf:params:push:receipts</t>
-            <t hangText="Description:">
-              This link relation type is used to identify a resource for
-              subscribing to delivery confirmations for push messages.
             </t>
             <t hangText="Specification:">(this document)</t>
             <t hangText="Contact:">The Web Push WG (webpush@ietf.org)</t>
@@ -1725,6 +1650,17 @@ HEADERS      [stream 82] +END_STREAM
         <seriesInfo name="RFC" value="6335" />
         <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc6335.txt" />
       </reference>
+      <reference anchor="RFC6454">
+        <front>
+          <title>The Web Origin Concept</title>
+          <author initials="A." surname="Barth" fullname="A. Barth">
+            <organization />
+          </author>
+          <date year="2011" month="December" />
+        </front>
+        <seriesInfo name="RFC" value="6454" />
+        <format type="TXT" target="http://www.rfc-editor.org/rfc/rfc6454.txt" />
+      </reference>
       <reference anchor="RFC6585">
         <front>
           <title>Additional HTTP Status Codes</title>
@@ -1806,7 +1742,7 @@ HEADERS      [stream 82] +END_STREAM
                 target="http://www.rfc-editor.org/rfc/rfc7540.txt" />
       </reference>
 
-      <reference anchor="I-D.ietf-httpbis-alt-svc">
+      <reference anchor="RFC7838">
         <front>
           <title>HTTP Alternative Services</title>
           <author initials="M" surname="Nottingham" fullname="Mark Nottingham">
@@ -1818,11 +1754,11 @@ HEADERS      [stream 82] +END_STREAM
           <author initials="J" surname="Reschke" fullname="Julian Reschke">
             <organization />
           </author>
-          <date month="March" day="8" year="2016" />
+          <date year="2016" month="April" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-alt-svc-14" />
+        <seriesInfo name="RFC" value="7838" />
         <format type="TXT"
-                target="http://www.ietf.org/internet-drafts/draft-ietf-httpbis-alt-svc-14.txt" />
+                target="http://www.rfc-editor.org/rfc/rfc7838.txt" />
       </reference>
 
       <reference anchor="CAP-URI" target="http://www.w3.org/TR/capability-urls/">
