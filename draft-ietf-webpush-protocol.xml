@@ -1772,6 +1772,23 @@ HEADERS      [stream 82] +END_STREAM
     </references>
 
     <references title="Informative References">
+      <reference anchor="I-D.ietf-webpush-encryption" target="https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-02.pdf">
+        <front>
+          <title>Message Encryption for Web Push</title>
+          <author initials="M." surname="Thomson" fullname="Martin Thomson" />
+          <date month="March" year="2016" />
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-encryption-02"/>
+      </reference>
+      <reference anchor="I-D.ietf-webpush-vapid" target="https://tools.ietf.org/pdf/draft-ietf-webpush-vapid-00.pdf">
+        <front>
+          <title>Voluntary Application Server Identification for Web Push</title>
+          <author initials="M." surname="Thomson" fullname="Martin Thomson" />
+          <author initials="P." surname="Beverloo" fullname="Peter Beverloo" />
+          <date month="April" year="2016" />
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-vapid-00"/>
+      </reference>
       <reference anchor="API" target="https://w3c.github.io/push-api/">
         <front>
           <title>Web Push API</title>
