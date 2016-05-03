@@ -107,7 +107,7 @@
         overhead costs.
       </t>
       <t>
-        The <xref target="API">W3C Web Push API</xref> describes an API that
+        The <xref target="API">W3C Push API</xref> describes an API that
         enables the use of a consolidated push service from web applications.
         This expands on that work by describing a protocol that can be used to:
         <list style="symbols">
@@ -123,7 +123,7 @@
         </list>
       </t>
       <t>
-        Requesting the delivery of events is particularly important for the Web
+        Requesting the delivery of events is particularly important for the W3C
         Push API.  The subscription, management and monitoring functions are
         currently fulfilled by proprietary protocols; these are adequate, but do
         not offer any of the advantages that standardization affords.
@@ -1153,11 +1153,11 @@ HEADERS      [stream 82] +END_STREAM
       <section title="Confidentiality from Push Service Access">
         <t>
           The protection afforded by TLS does not protect content from the push
-          service.  Without additional safeguards, a push service is able to see
-          and modify the content of the messages.
+          service.  Without additional safeguards, a push service can inspect
+          and modify the message content.
         </t>
         <t>
-          Applications are able to provide additional confidentiality, integrity
+          Applications are able to provide additional confidentiality, integrity,
           or authentication mechanisms within the push message itself.  The
           application server sending the push message and the application on the
           user agent that receives it are frequently just different instances of
@@ -1167,19 +1167,10 @@ HEADERS      [stream 82] +END_STREAM
           medium for key agreement.
         </t>
         <t>
-          <!-- Scrub references to specific API(s) -->
-          The Web Push API codifies this practice by requiring that each push
-          subscription created by the browser be bound to a browser generated
-          encryption key.  Pushed messages are authenticated and decrypted by
-          the browser before delivery to applications.  This scheme ensures that
-          the push service is unable to examine the contents of push messages.
-        </t>
-        <t>
-          The public key for a subscription ensures that applications using that
-          subscription can identify messages from unknown sources and discard
-          them.  This depends on the public key only being disclosed to entities
-          that are authorized to send messages on the channel.  The push service
-          does not require access to this public key.
+          For its requirements, the <xref target="API">W3C Push API</xref> has adopted 
+          <xref target="I-D.ietf-webpush-encryption">Message Encryption for WebPush</xref>
+          to secure the content of messages from the push service. Other scenarios can 
+          be addressed by similar policies.
         </t>
         <t>
           The Topic header field exposes information that allows more granular
@@ -1270,16 +1261,23 @@ HEADERS      [stream 82] +END_STREAM
 
      <section title="Denial of Service Considerations">
        <t>
-         Discarding unwanted messages at the user agent based on message
-         authentication doesn't protect against a denial of service attack on
-         the user agent.  Even a relatively small volume of push messages can
-         cause battery-powered devices to exhaust power reserves.
+         End-to-end confidentiality mechanisms, such as those in <xref
+         target="API"/>, prevent an entity with a valid push message
+         subscription URI from learning the contents of push messages.  Push
+         messages that are not successfully authenticated will not be delivered
+         by the API, but this can present a denial of service risk. Even a
+         relatively small volume of push messages can cause battery-powered devices
+         to exhaust power reserves.
        </t>
        <t>
-         An application can limit where valid push messages can originate by
-         limiting the distribution of push URIs to authorized entities.
+         A user agent can control where valid push messages originate by
+         limiting the distribution of push URIs to authorized application servers.
          Ensuring that push URIs are hard to guess ensures that only application
-         servers that have been given a push URI can use it.
+         servers that have received a push URI can use it. A further refinement is
+         <xref target="I-D.ietf-webpush-vapid">Voluntary Application Server Identification</xref>,
+         which allows a user agent to restrict a subscription to a specific application
+         server. The push service then rejects any requests for message delivery with missing
+         or invalid credentials.
        </t>
        <t>
          A malicious application with a valid push URI could use the greater
@@ -1299,14 +1297,7 @@ HEADERS      [stream 82] +END_STREAM
          that receive too many push messages.
        </t>
        <t>
-         End-to-end confidentiality mechanisms, such as those in <xref
-         target="API"/>, prevent an entity with a valid push message
-         subscription URI from learning the contents of push messages.  Push
-         messages that are not successfully authenticated will not be delivered
-         by the API, but this can present a denial of service risk.
-       </t>
-       <t>
-         Conversely, a push service is also able to deny service to user agents.
+         A push service is also able to deny service to user agents.
          Intentional failure to deliver messages is difficult to distinguish
          from faults, which might occur due to transient network errors,
          interruptions in user agent availability, or genuine service outages.
@@ -1315,16 +1306,10 @@ HEADERS      [stream 82] +END_STREAM
 
      <section title="Logging Risks">
        <t>
-         Server request logs can reveal subscription-related URIs. Acquiring a
-         push message subscription URI enables the receipt of messages or
-         deletion of the subscription. Acquiring a push URI permits the sending
-         of push messages.  Logging could also reveal relationships between
-         different subscription-related URIs for the same user agent.  Encrypted
-         message contents are not revealed to the push service.
-       </t>
-       <t>
+         Server request logs can reveal subscription-related URIs or relationships
+         between subscription-related URIs for the same user agent. 
          Limitations on log retention and strong access control mechanisms can
-         ensure that URIs are not learned by unauthorized entities.
+         ensure that URIs are not revealed to unauthorized entities.
        </t>
      </section>
 
@@ -1791,7 +1776,7 @@ HEADERS      [stream 82] +END_STREAM
       </reference>
       <reference anchor="API" target="https://w3c.github.io/push-api/">
         <front>
-          <title>Web Push API</title>
+          <title>W3C Push API</title>
           <author initials="M." surname="van Ouwerkerk" fullname="Michael van Ouwerkerk"/>
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <author initials="B." surname="Sullivan" fullname="Bryan Sullivan"/>
