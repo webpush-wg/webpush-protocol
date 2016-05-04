@@ -1151,7 +1151,12 @@ HEADERS      [stream 82] +END_STREAM
       </t>
       <t>
         Applications using this protocol MUST use mechanisms that provide confidentiality,
-        integrity and data origin authentication.
+        integrity and data origin authentication. The application server sending the push
+        message and the application on the user agent that receives it are frequently just
+        different instances of the same application, so no standardized protocol is needed to
+        establish a proper security context. The distribution of subscription information
+        from the user agent to its application server also offers a convenient medium for
+        key agreement.
       </t>
 
       <section title="Confidentiality from Push Service Access">
@@ -1159,16 +1164,6 @@ HEADERS      [stream 82] +END_STREAM
           The protection afforded by TLS does not protect content from the push
           service.  Without additional safeguards, a push service can inspect
           and modify the message content.
-        </t>
-        <t>
-          Applications are able to provide additional confidentiality, integrity,
-          or authentication mechanisms within the push message itself.  The
-          application server sending the push message and the application on the
-          user agent that receives it are frequently just different instances of
-          the same application, so no standardized protocol is needed to
-          establish a proper security context.  The process of providing the
-          application server with subscription information provides a convenient
-          medium for key agreement.
         </t>
         <t>
           For its requirements, the <xref target="API">W3C Push API</xref> has adopted
