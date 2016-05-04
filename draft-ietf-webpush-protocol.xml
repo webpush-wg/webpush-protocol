@@ -1149,6 +1149,10 @@ HEADERS      [stream 82] +END_STREAM
         and integrity protection for subscriptions and push messages from
         external parties.
       </t>
+      <t>
+        Applications using this protocol MUST use mechanisms that provide confidentiality,
+        integrity and data origin authentication.
+      </t>
 
       <section title="Confidentiality from Push Service Access">
         <t>
@@ -1167,7 +1171,7 @@ HEADERS      [stream 82] +END_STREAM
           medium for key agreement.
         </t>
         <t>
-          For its requirements, the <xref target="API">W3C Push API</xref> has adopted 
+          For its requirements, the <xref target="API">W3C Push API</xref> has adopted
           <xref target="I-D.ietf-webpush-encryption">Message Encryption for WebPush</xref>
           to secure the content of messages from the push service. Other scenarios can 
           be addressed by similar policies.
@@ -1261,23 +1265,23 @@ HEADERS      [stream 82] +END_STREAM
 
      <section title="Denial of Service Considerations">
        <t>
-         End-to-end confidentiality mechanisms, such as those in <xref
-         target="API"/>, prevent an entity with a valid push message
-         subscription URI from learning the contents of push messages.  Push
-         messages that are not successfully authenticated will not be delivered
-         by the API, but this can present a denial of service risk. Even a
+         A user agent can control where valid push messages originate by
+         limiting the distribution of push URIs to authorized application servers.
+         Ensuring that push URIs are hard to guess ensures that only application
+         servers that have received a push URI can use it.
+       </t>
+       <t>
+         Push messages that are not successfully authenticated by the user agent
+         will not be delivered, but this can present a denial of service risk. Even a
          relatively small volume of push messages can cause battery-powered devices
          to exhaust power reserves.
        </t>
        <t>
-         A user agent can control where valid push messages originate by
-         limiting the distribution of push URIs to authorized application servers.
-         Ensuring that push URIs are hard to guess ensures that only application
-         servers that have received a push URI can use it. A further refinement is
+         To address this case, the <xref target="API">W3C Push API</xref> has adopted
          <xref target="I-D.ietf-webpush-vapid">Voluntary Application Server Identification</xref>,
          which allows a user agent to restrict a subscription to a specific application
-         server. The push service then rejects any requests for message delivery with missing
-         or invalid credentials.
+         server. The push service can then identity and reject unwanted messages without
+         contacting the user agent.
        </t>
        <t>
          A malicious application with a valid push URI could use the greater
