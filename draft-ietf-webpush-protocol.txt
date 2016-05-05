@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: October 30, 2016                                 B. Raymor, Ed.
+Expires: November 6, 2016                                 B. Raymor, Ed.
                                                                Microsoft
-                                                          April 28, 2016
+                                                             May 5, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 30, 2016.
+   This Internet-Draft will expire on November 6, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 1]
+Thomson, et al.         Expires November 6, 2016                [Page 1]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
 Table of Contents
@@ -85,15 +85,15 @@ Table of Contents
      7.5.  Subscription Sets and Concurrent HTTP/2 streams . . . . .  21
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
      8.1.  Confidentiality from Push Service Access  . . . . . . . .  22
-     8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  23
+     8.2.  Privacy Considerations  . . . . . . . . . . . . . . . . .  22
      8.3.  Authorization . . . . . . . . . . . . . . . . . . . . . .  23
      8.4.  Denial of Service Considerations  . . . . . . . . . . . .  24
      8.5.  Logging Risks . . . . . . . . . . . . . . . . . . . . . .  25
    9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  25
      9.1.  Header Field Registrations  . . . . . . . . . . . . . . .  25
-     9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  26
+     9.2.  Link Relation URNs  . . . . . . . . . . . . . . . . . . .  25
      9.3.  Service Name and Port Number Registration . . . . . . . .  27
-   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  28
+   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  27
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  28
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  28
      11.2.  Informative References . . . . . . . . . . . . . . . . .  29
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 2]
+Thomson, et al.         Expires November 6, 2016                [Page 2]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
 1.  Introduction
@@ -141,7 +141,7 @@ Internet-Draft                HTTP Web Push                   April 2016
    they arrive.  This requires just one session, avoiding duplicated
    overhead costs.
 
-   The W3C Web Push API [API] describes an API that enables the use of a
+   The W3C Push API [API] describes an API that enables the use of a
    consolidated push service from web applications.  This expands on
    that work by describing a protocol that can be used to:
 
@@ -152,7 +152,7 @@ Internet-Draft                HTTP Web Push                   April 2016
    o  monitor for new push messages.
 
    Requesting the delivery of events is particularly important for the
-   Web Push API.  The subscription, management and monitoring functions
+   W3C Push API.  The subscription, management and monitoring functions
    are currently fulfilled by proprietary protocols; these are adequate,
    but do not offer any of the advantages that standardization affords.
 
@@ -165,9 +165,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 3]
+Thomson, et al.         Expires November 6, 2016                [Page 3]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
 1.1.  Conventions and Terminology
@@ -221,9 +221,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 4]
+Thomson, et al.         Expires November 6, 2016                [Page 4]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
     +-------+           +--------------+       +-------------+
@@ -277,9 +277,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 5]
+Thomson, et al.         Expires November 6, 2016                [Page 5]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
 2.1.  HTTP Resources
@@ -333,9 +333,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 6]
+Thomson, et al.         Expires November 6, 2016                [Page 6]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    Advertising the alternate port (1001) allows middleboxes to optimize
@@ -389,9 +389,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 7]
+Thomson, et al.         Expires November 6, 2016                [Page 7]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    When a subscription set is returned in a push message subscription
@@ -445,9 +445,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 8]
+Thomson, et al.         Expires November 6, 2016                [Page 8]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -501,9 +501,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016                [Page 9]
+Thomson, et al.         Expires November 6, 2016                [Page 9]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    A 202 (Accepted) response indicates that the push message was
@@ -557,9 +557,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 10]
+Thomson, et al.         Expires November 6, 2016               [Page 10]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    An application server MUST include the TTL (Time-To-Live) header
@@ -613,9 +613,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 11]
+Thomson, et al.         Expires November 6, 2016               [Page 11]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    message and if the user agent can request that the push server only
@@ -669,9 +669,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 12]
+Thomson, et al.         Expires November 6, 2016               [Page 12]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    Only push messages that have been assigned a topic can be updated.  A
@@ -725,9 +725,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 13]
+Thomson, et al.         Expires November 6, 2016               [Page 13]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    If the push service identifies an outstanding push message with a
@@ -781,9 +781,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 14]
+Thomson, et al.         Expires November 6, 2016               [Page 14]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    The push service permits the request to remain outstanding.  When a
@@ -837,9 +837,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 15]
+Thomson, et al.         Expires November 6, 2016               [Page 15]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    respond to this request, it instead uses HTTP/2 server push [RFC7540]
@@ -893,9 +893,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 16]
+Thomson, et al.         Expires November 6, 2016               [Page 16]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    The push service permits the request to remain outstanding.  When a
@@ -949,9 +949,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 17]
+Thomson, et al.         Expires November 6, 2016               [Page 17]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    If the push service receives the acknowledgement and the application
@@ -1005,9 +1005,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 18]
+Thomson, et al.         Expires November 6, 2016               [Page 18]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    The push service permits the request to remain outstanding.  When the
@@ -1061,9 +1061,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 19]
+Thomson, et al.         Expires November 6, 2016               [Page 19]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    A user agent that does not actively monitor for push messages will
@@ -1117,9 +1117,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 20]
+Thomson, et al.         Expires November 6, 2016               [Page 20]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
 7.3.1.  Subscription Set Expiration
@@ -1173,9 +1173,9 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 21]
+Thomson, et al.         Expires November 6, 2016               [Page 21]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    limited to one concurrent stream to manage push message subscriptions
@@ -1192,47 +1192,29 @@ Internet-Draft                HTTP Web Push                   April 2016
    and integrity protection for subscriptions and push messages from
    external parties.
 
+   Applications using this protocol MUST use mechanisms that provide
+   confidentiality, integrity and data origin authentication.  The
+   application server sending the push message and the application on
+   the user agent that receives it are frequently just different
+   instances of the same application, so no standardized protocol is
+   needed to establish a proper security context.  The distribution of
+   subscription information from the user agent to its application
+   server also offers a convenient medium for key agreement.
+
 8.1.  Confidentiality from Push Service Access
 
    The protection afforded by TLS does not protect content from the push
-   service.  Without additional safeguards, a push service is able to
-   see and modify the content of the messages.
+   service.  Without additional safeguards, a push service can inspect
+   and modify the message content.
 
-   Applications are able to provide additional confidentiality,
-   integrity or authentication mechanisms within the push message
-   itself.  The application server sending the push message and the
-   application on the user agent that receives it are frequently just
-   different instances of the same application, so no standardized
-   protocol is needed to establish a proper security context.  The
-   process of providing the application server with subscription
-   information provides a convenient medium for key agreement.
-
-   The Web Push API codifies this practice by requiring that each push
-   subscription created by the browser be bound to a browser generated
-   encryption key.  Pushed messages are authenticated and decrypted by
-   the browser before delivery to applications.  This scheme ensures
-   that the push service is unable to examine the contents of push
-   messages.
-
-   The public key for a subscription ensures that applications using
-   that subscription can identify messages from unknown sources and
-   discard them.  This depends on the public key only being disclosed to
-   entities that are authorized to send messages on the channel.  The
-   push service does not require access to this public key.
+   For its requirements, the W3C Push API [API] has adopted Message
+   Encryption for WebPush [I-D.ietf-webpush-encryption] to secure the
+   content of messages from the push service.  Other scenarios can be
+   addressed by similar policies.
 
    The Topic header field exposes information that allows more granular
    correlation of push messages on the same subject.  This might be used
    to aid traffic analysis of push messages by the push service.
-
-
-
-
-
-
-Thomson, et al.         Expires October 30, 2016               [Page 22]
-
-Internet-Draft                HTTP Web Push                   April 2016
-
 
 8.2.  Privacy Considerations
 
@@ -1243,6 +1225,15 @@ Internet-Draft                HTTP Web Push                   April 2016
    The URIs provided for push resources MUST NOT provide any basis to
    correlate communications for a given user agent.  It MUST NOT be
    possible to correlate any two push resource URIs based solely on
+
+
+
+
+Thomson, et al.         Expires November 6, 2016               [Page 22]
+
+Internet-Draft                HTTP Web Push                     May 2016
+
+
    their contents.  This allows a user agent to control correlation
    across different applications, or over time.
 
@@ -1281,15 +1272,6 @@ Internet-Draft                HTTP Web Push                   April 2016
 
    Authorization is managed using capability URLs for the push message
    subscription, push, and receipt subscription resources ([CAP-URI]).
-
-
-
-
-Thomson, et al.         Expires October 30, 2016               [Page 23]
-
-Internet-Draft                HTTP Web Push                   April 2016
-
-
    A capability URL grants access to a resource based solely on
    knowledge of the URL.
 
@@ -1300,6 +1282,14 @@ Internet-Draft                HTTP Web Push                   April 2016
 
    Capability URLs act as bearer tokens.  Knowledge of a push message
    subscription URI implies authorization to either receive push
+
+
+
+Thomson, et al.         Expires November 6, 2016               [Page 23]
+
+Internet-Draft                HTTP Web Push                     May 2016
+
+
    messages or delete the subscription.  Knowledge of a push URI implies
    authorization to send push messages.  Knowledge of a push message URI
    allows for reading and acknowledging that specific message.
@@ -1312,15 +1302,21 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 8.4.  Denial of Service Considerations
 
-   Discarding unwanted messages at the user agent based on message
-   authentication doesn't protect against a denial of service attack on
-   the user agent.  Even a relatively small volume of push messages can
-   cause battery-powered devices to exhaust power reserves.
+   A user agent can control where valid push messages originate by
+   limiting the distribution of push URIs to authorized application
+   servers.  Ensuring that push URIs are hard to guess ensures that only
+   application servers that have received a push URI can use it.
 
-   An application can limit where valid push messages can originate by
-   limiting the distribution of push URIs to authorized entities.
-   Ensuring that push URIs are hard to guess ensures that only
-   application servers that have been given a push URI can use it.
+   Push messages that are not successfully authenticated by the user
+   agent will not be delivered, but this can present a denial of service
+   risk.  Even a relatively small volume of push messages can cause
+   battery-powered devices to exhaust power reserves.
+
+   To address this case, the W3C Push API [API] has adopted Voluntary
+   Application Server Identification [I-D.ietf-webpush-vapid], which
+   allows a user agent to restrict a subscription to a specific
+   application server.  The push service can then identity and reject
+   unwanted messages without contacting the user agent.
 
    A malicious application with a valid push URI could use the greater
    resources of a push service to mount a denial of service attack on a
@@ -1337,38 +1333,26 @@ Internet-Draft                HTTP Web Push                   April 2016
    A push service or user agent MAY also terminate subscriptions
    (Section 7.3) that receive too many push messages.
 
+   A push service is also able to deny service to user agents.
+   Intentional failure to deliver messages is difficult to distinguish
+   from faults, which might occur due to transient network errors,
+   interruptions in user agent availability, or genuine service outages.
 
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 24]
+Thomson, et al.         Expires November 6, 2016               [Page 24]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
-
-   End-to-end confidentiality mechanisms, such as those in [API],
-   prevent an entity with a valid push message subscription URI from
-   learning the contents of push messages.  Push messages that are not
-   successfully authenticated will not be delivered by the API, but this
-   can present a denial of service risk.
-
-   Conversely, a push service is also able to deny service to user
-   agents.  Intentional failure to deliver messages is difficult to
-   distinguish from faults, which might occur due to transient network
-   errors, interruptions in user agent availability, or genuine service
-   outages.
 
 8.5.  Logging Risks
 
-   Server request logs can reveal subscription-related URIs.  Acquiring
-   a push message subscription URI enables the receipt of messages or
-   deletion of the subscription.  Acquiring a push URI permits the
-   sending of push messages.  Logging could also reveal relationships
-   between different subscription-related URIs for the same user agent.
-   Encrypted message contents are not revealed to the push service.
-
-   Limitations on log retention and strong access control mechanisms can
-   ensure that URIs are not learned by unauthorized entities.
+   Server request logs can reveal subscription-related URIs or
+   relationships between subscription-related URIs for the same user
+   agent.  Limitations on log retention and strong access control
+   mechanisms can ensure that URIs are not revealed to unauthorized
+   entities.
 
 9.  IANA Considerations
 
@@ -1394,14 +1378,6 @@ Internet-Draft                HTTP Web Push                   April 2016
    | Topic             | http     | standard | Section 5.4  |
    +-------------------+----------+----------+--------------+
 
-
-
-
-Thomson, et al.         Expires October 30, 2016               [Page 25]
-
-Internet-Draft                HTTP Web Push                   April 2016
-
-
    The change controller is: "IETF (iesg@ietf.org) - Internet
    Engineering Task Force".
 
@@ -1417,6 +1393,14 @@ Internet-Draft                HTTP Web Push                   April 2016
    policy [RFC5226].
 
    Registry name:  Web Push Identifiers
+
+
+
+
+Thomson, et al.         Expires November 6, 2016               [Page 25]
+
+Internet-Draft                HTTP Web Push                     May 2016
+
 
    URN Prefix:  urn:ietf:params:push
 
@@ -1450,14 +1434,6 @@ Internet-Draft                HTTP Web Push                   April 2016
 
    URN:  urn:ietf:params:push
 
-
-
-
-Thomson, et al.         Expires October 30, 2016               [Page 26]
-
-Internet-Draft                HTTP Web Push                   April 2016
-
-
    Description:  This link relation type is used to identify a resource
       for sending push messages.
 
@@ -1473,6 +1449,14 @@ Internet-Draft                HTTP Web Push                   April 2016
    Specification:  (this document)
 
    Contact:  The Web Push WG (webpush@ietf.org)
+
+
+
+
+Thomson, et al.         Expires November 6, 2016               [Page 26]
+
+Internet-Draft                HTTP Web Push                     May 2016
+
 
    URN:  urn:ietf:params:push:receipt
 
@@ -1506,14 +1490,6 @@ Internet-Draft                HTTP Web Push                   April 2016
       The Web Push WG (webpush@ietf.org)
 
    Description.
-
-
-
-Thomson, et al.         Expires October 30, 2016               [Page 27]
-
-Internet-Draft                HTTP Web Push                   April 2016
-
-
       HTTP Web Push
 
    Reference.
@@ -1527,6 +1503,16 @@ Internet-Draft                HTTP Web Push                   April 2016
    Significant technical input to this document has been provided by Ben
    Bangert, Kit Cambridge, JR Conlin, Matthew Kaufman, Costin Manolache,
    Mark Nottingham, Robert Sparks, Darshak Thakore and many others.
+
+
+
+
+
+
+Thomson, et al.         Expires November 6, 2016               [Page 27]
+
+Internet-Draft                HTTP Web Push                     May 2016
+
 
 11.  References
 
@@ -1562,14 +1548,6 @@ Internet-Draft                HTTP Web Push                   April 2016
 
    [RFC5988]  Nottingham, M., "Web Linking", RFC 5988, October 2010.
 
-
-
-
-Thomson, et al.         Expires October 30, 2016               [Page 28]
-
-Internet-Draft                HTTP Web Push                   April 2016
-
-
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
               Procedures for the Management of the Service Name and
@@ -1581,6 +1559,16 @@ Internet-Draft                HTTP Web Push                   April 2016
 
    [RFC6585]  Nottingham, M. and R. Fielding, "Additional HTTP Status
               Codes", RFC 6585, April 2012.
+
+
+
+
+
+
+Thomson, et al.         Expires November 6, 2016               [Page 28]
+
+Internet-Draft                HTTP Web Push                     May 2016
+
 
    [RFC7230]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Message Syntax and Routing", RFC 7230, June
@@ -1603,8 +1591,21 @@ Internet-Draft                HTTP Web Push                   April 2016
 11.2.  Informative References
 
    [API]      van Ouwerkerk, M., Thomson, M., Sullivan, B., and E.
-              Fullea, "Web Push API", ED push-api, January 2016,
+              Fullea, "W3C Push API", ED push-api, January 2016,
               <https://w3c.github.io/push-api/>.
+
+   [I-D.ietf-webpush-encryption]
+              Thomson, M., "Message Encryption for Web Push", draft-
+              ietf-webpush-encryption-02 (work in progress), March 2016,
+              <https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-
+              02.pdf>.
+
+   [I-D.ietf-webpush-vapid]
+              Thomson, M. and P. Beverloo, "Voluntary Application Server
+              Identification for Web Push", draft-ietf-webpush-vapid-00
+              (work in progress), April 2016,
+              <https://tools.ietf.org/pdf/draft-ietf-webpush-vapid-
+              00.pdf>.
 
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
               Morris, J., Hansen, M., and R. Smith, "Privacy
@@ -1620,10 +1621,9 @@ Appendix A.  Change Log
 
 
 
-
-Thomson, et al.         Expires October 30, 2016               [Page 29]
+Thomson, et al.         Expires November 6, 2016               [Page 29]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
 A.1.  Since draft-ietf-webpush-protocol-00
@@ -1677,9 +1677,9 @@ Authors' Addresses
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 30]
+Thomson, et al.         Expires November 6, 2016               [Page 30]
 
-Internet-Draft                HTTP Web Push                   April 2016
+Internet-Draft                HTTP Web Push                     May 2016
 
 
    Elio Damaggio
@@ -1733,4 +1733,4 @@ Internet-Draft                HTTP Web Push                   April 2016
 
 
 
-Thomson, et al.         Expires October 30, 2016               [Page 31]
+Thomson, et al.         Expires November 6, 2016               [Page 31]

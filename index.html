@@ -313,7 +313,7 @@ ol, ul {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-4-28" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-5-5" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -337,7 +337,7 @@ ol, ul {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 30, 2016</td>
+  <td class="left">Expires: November 6, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -346,7 +346,7 @@ ol, ul {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 28, 2016</td>
+  <td class="right">May 5, 2016</td>
 </tr>
 
     	
@@ -366,7 +366,7 @@ ol, ul {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 30, 2016.</p>
+<p>This Internet-Draft will expire on November 6, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -430,7 +430,7 @@ ol, ul {
 <p id="rfc.section.1.p.2">One significant contributor to power usage is the radio.  Radio communications consume a significant portion of the energy budget on a wireless device.  </p>
 <p id="rfc.section.1.p.3">Uncoordinated use of persistent connections or sessions from multiple applications can contribute to unnecessary use of the device radio, since each independent session independently incurs overheads.  In particular, keep alive traffic used to ensure that middleboxes do not prematurely time out sessions, can result in significant waste.  Maintenance traffic tends to dominate over the long term, since events are relatively rare.  </p>
 <p id="rfc.section.1.p.4">Consolidating all real-time events into a single session ensures more efficient use of network and radio resources.  A single service consolidates all events, distributing those events to applications as they arrive.  This requires just one session, avoiding duplicated overhead costs.  </p>
-<p id="rfc.section.1.p.5">The <a href="#API">W3C Web Push API</a> <cite title="NONE">[API]</cite> describes an API that enables the use of a consolidated push service from web applications.  This expands on that work by describing a protocol that can be used to: </p>
+<p id="rfc.section.1.p.5">The <a href="#API">W3C Push API</a> <cite title="NONE">[API]</cite> describes an API that enables the use of a consolidated push service from web applications.  This expands on that work by describing a protocol that can be used to: </p>
 
 <ul>
   <li>request the delivery of a push message to a user agent, </li>
@@ -439,7 +439,7 @@ ol, ul {
 </ul>
 
 <p> </p>
-<p id="rfc.section.1.p.6">Requesting the delivery of events is particularly important for the Web Push API.  The subscription, management and monitoring functions are currently fulfilled by proprietary protocols; these are adequate, but do not offer any of the advantages that standardization affords.  </p>
+<p id="rfc.section.1.p.6">Requesting the delivery of events is particularly important for the W3C Push API.  The subscription, management and monitoring functions are currently fulfilled by proprietary protocols; these are adequate, but do not offer any of the advantages that standardization affords.  </p>
 <p id="rfc.section.1.p.7">This document intentionally does not describe how a push service is discovered.  Discovery of push services is left for future efforts, if it turns out to be necessary at all.  User agents are expected to be configured with a URL for a push service.  </p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Conventions and Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119].  </p>
@@ -851,12 +851,11 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.7.5.p.1">If the push service requires that the user agent use push message subscription sets, then it MAY limit the number of concurrently active streams with the SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <a href="#RFC7540">[RFC7540]</a>.  The user agent MAY be limited to one concurrent stream to manage push message subscriptions and one concurrent stream for each subscription set returned by the push service.  This could force the user agent to serialize subscription requests to the push service.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
 <p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite>.  This includes any communications between user agent and push service, plus communications between the application and the push service.  All URIs therefore use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
+<p id="rfc.section.8.p.2">Applications using this protocol MUST use mechanisms that provide confidentiality, integrity and data origin authentication. The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context. The distribution of subscription information from the user agent to its application server also offers a convenient medium for key agreement.  </p>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> Confidentiality from Push Service Access</h1>
-<p id="rfc.section.8.1.p.1">The protection afforded by TLS does not protect content from the push service.  Without additional safeguards, a push service is able to see and modify the content of the messages.  </p>
-<p id="rfc.section.8.1.p.2">Applications are able to provide additional confidentiality, integrity or authentication mechanisms within the push message itself.  The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context.  The process of providing the application server with subscription information provides a convenient medium for key agreement.  </p>
-<p id="rfc.section.8.1.p.3">The Web Push API codifies this practice by requiring that each push subscription created by the browser be bound to a browser generated encryption key.  Pushed messages are authenticated and decrypted by the browser before delivery to applications.  This scheme ensures that the push service is unable to examine the contents of push messages.  </p>
-<p id="rfc.section.8.1.p.4">The public key for a subscription ensures that applications using that subscription can identify messages from unknown sources and discard them.  This depends on the public key only being disclosed to entities that are authorized to send messages on the channel.  The push service does not require access to this public key.  </p>
-<p id="rfc.section.8.1.p.5">The Topic header field exposes information that allows more granular correlation of push messages on the same subject.  This might be used to aid traffic analysis of push messages by the push service.  </p>
+<p id="rfc.section.8.1.p.1">The protection afforded by TLS does not protect content from the push service.  Without additional safeguards, a push service can inspect and modify the message content.  </p>
+<p id="rfc.section.8.1.p.2">For its requirements, the <a href="#API">W3C Push API</a> <cite title="NONE">[API]</cite> has adopted <a href="#I-D.ietf-webpush-encryption">Message Encryption for WebPush</a> <cite title="NONE">[I-D.ietf-webpush-encryption]</cite> to secure the content of messages from the push service. Other scenarios can be addressed by similar policies.  </p>
+<p id="rfc.section.8.1.p.3">The Topic header field exposes information that allows more granular correlation of push messages on the same subject.  This might be used to aid traffic analysis of push messages by the push service.  </p>
 <h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> Privacy Considerations</h1>
 <p id="rfc.section.8.2.p.1">Push message confidentiality does not ensure that the identity of who is communicating and when they are communicating is protected.  However, the amount of information that is exposed can be limited.  </p>
 <p id="rfc.section.8.2.p.2">The URIs provided for push resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two push resource URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  </p>
@@ -878,16 +877,15 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.8.3.p.4">Capability URLs act as bearer tokens.  Knowledge of a push message subscription URI implies authorization to either receive push messages or delete the subscription. Knowledge of a push URI implies authorization to send push messages.  Knowledge of a push message URI allows for reading and acknowledging that specific message.  Knowledge of a receipt subscription URI implies authorization to receive push receipts.  </p>
 <p id="rfc.section.8.3.p.5">Encoding a large amount of random entropy (at least 120 bits) in the path component ensures that it is difficult to successfully guess a valid capability URL.  </p>
 <h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> Denial of Service Considerations</h1>
-<p id="rfc.section.8.4.p.1">Discarding unwanted messages at the user agent based on message authentication doesn't protect against a denial of service attack on the user agent.  Even a relatively small volume of push messages can cause battery-powered devices to exhaust power reserves.  </p>
-<p id="rfc.section.8.4.p.2">An application can limit where valid push messages can originate by limiting the distribution of push URIs to authorized entities.  Ensuring that push URIs are hard to guess ensures that only application servers that have been given a push URI can use it.  </p>
-<p id="rfc.section.8.4.p.3">A malicious application with a valid push URI could use the greater resources of a push service to mount a denial of service attack on a user agent.  Push services SHOULD limit the rate at which push messages are sent to individual user agents.  </p>
-<p id="rfc.section.8.4.p.4">A push service MAY return a 429 (Too Many Requests) status code <a href="#RFC6585">[RFC6585]</a> when an application server has exceeded its rate limit for push message delivery to a push resource. The push service SHOULD also include a Retry-After header <a href="#RFC7231">[RFC7231]</a> to indicate how long the application server is requested to wait before it makes another request to the push resource.  </p>
-<p id="rfc.section.8.4.p.5">A push service or user agent MAY also <a href="#delete">terminate subscriptions</a> <cite title="NONE">[delete]</cite> that receive too many push messages.  </p>
-<p id="rfc.section.8.4.p.6">End-to-end confidentiality mechanisms, such as those in <a href="#API">[API]</a>, prevent an entity with a valid push message subscription URI from learning the contents of push messages.  Push messages that are not successfully authenticated will not be delivered by the API, but this can present a denial of service risk.  </p>
-<p id="rfc.section.8.4.p.7">Conversely, a push service is also able to deny service to user agents.  Intentional failure to deliver messages is difficult to distinguish from faults, which might occur due to transient network errors, interruptions in user agent availability, or genuine service outages.  </p>
+<p id="rfc.section.8.4.p.1">A user agent can control where valid push messages originate by limiting the distribution of push URIs to authorized application servers.  Ensuring that push URIs are hard to guess ensures that only application servers that have received a push URI can use it.  </p>
+<p id="rfc.section.8.4.p.2">Push messages that are not successfully authenticated by the user agent will not be delivered, but this can present a denial of service risk. Even a relatively small volume of push messages can cause battery-powered devices to exhaust power reserves.  </p>
+<p id="rfc.section.8.4.p.3">To address this case, the <a href="#API">W3C Push API</a> <cite title="NONE">[API]</cite> has adopted <a href="#I-D.ietf-webpush-vapid">Voluntary Application Server Identification</a> <cite title="NONE">[I-D.ietf-webpush-vapid]</cite>, which allows a user agent to restrict a subscription to a specific application server. The push service can then identity and reject unwanted messages without contacting the user agent.  </p>
+<p id="rfc.section.8.4.p.4">A malicious application with a valid push URI could use the greater resources of a push service to mount a denial of service attack on a user agent.  Push services SHOULD limit the rate at which push messages are sent to individual user agents.  </p>
+<p id="rfc.section.8.4.p.5">A push service MAY return a 429 (Too Many Requests) status code <a href="#RFC6585">[RFC6585]</a> when an application server has exceeded its rate limit for push message delivery to a push resource. The push service SHOULD also include a Retry-After header <a href="#RFC7231">[RFC7231]</a> to indicate how long the application server is requested to wait before it makes another request to the push resource.  </p>
+<p id="rfc.section.8.4.p.6">A push service or user agent MAY also <a href="#delete">terminate subscriptions</a> <cite title="NONE">[delete]</cite> that receive too many push messages.  </p>
+<p id="rfc.section.8.4.p.7">A push service is also able to deny service to user agents.  Intentional failure to deliver messages is difficult to distinguish from faults, which might occur due to transient network errors, interruptions in user agent availability, or genuine service outages.  </p>
 <h1 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a> Logging Risks</h1>
-<p id="rfc.section.8.5.p.1">Server request logs can reveal subscription-related URIs. Acquiring a push message subscription URI enables the receipt of messages or deletion of the subscription. Acquiring a push URI permits the sending of push messages.  Logging could also reveal relationships between different subscription-related URIs for the same user agent.  Encrypted message contents are not revealed to the push service.  </p>
-<p id="rfc.section.8.5.p.2">Limitations on log retention and strong access control mechanisms can ensure that URIs are not learned by unauthorized entities.  </p>
+<p id="rfc.section.8.5.p.1">Server request logs can reveal subscription-related URIs or relationships between subscription-related URIs for the same user agent.  Limitations on log retention and strong access control mechanisms can ensure that URIs are not revealed to unauthorized entities.  </p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <p id="rfc.section.9.p.1">This protocol defines new HTTP header fields in <a href="#iana.header.fields">Section 9.1</a>.  New link relation types are identified using the URNs defined in <a href="#iana.urns">Section 9.2</a>. Port registration is defined in <a href="#iana.port">Section 9.3</a> </p>
 <h1 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a> <a href="#iana.header.fields" id="iana.header.fields">Header Field Registrations</a></h1>
@@ -1148,7 +1146,19 @@ HEADERS      [stream 82] +END_STREAM
       <td class="reference">
         <b id="API">[API]</b>
       </td>
-      <td class="top"><a>van Ouwerkerk, M.</a>, <a>Thomson, M.</a>, <a>Sullivan, B.</a> and <a>E. Fullea</a>, "<a href="https://w3c.github.io/push-api/">Web Push API</a>", ED push-api, January 2016.</td>
+      <td class="top"><a>van Ouwerkerk, M.</a>, <a>Thomson, M.</a>, <a>Sullivan, B.</a> and <a>E. Fullea</a>, "<a href="https://w3c.github.io/push-api/">W3C Push API</a>", ED push-api, January 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-webpush-encryption">[I-D.ietf-webpush-encryption]</b>
+      </td>
+      <td class="top"><a>Thomson, M.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-webpush-encryption-02">Message Encryption for Web Push</a>", Internet-Draft draft-ietf-webpush-encryption-02, March 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-webpush-vapid">[I-D.ietf-webpush-vapid]</b>
+      </td>
+      <td class="top"><a>Thomson, M.</a> and <a>P. Beverloo</a>, "<a href="http://tools.ietf.org/html/draft-ietf-webpush-vapid-00">Voluntary Application Server Identification for Web Push</a>", Internet-Draft draft-ietf-webpush-vapid-00, April 2016.</td>
     </tr>
     <tr>
       <td class="reference">
