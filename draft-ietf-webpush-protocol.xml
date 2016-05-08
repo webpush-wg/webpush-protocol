@@ -1858,6 +1858,17 @@ HEADERS      [stream 82] +END_STREAM
               Added Push Message Urgency header field
             </t>
           </section>
-      </section>
+          <section title="Since draft-ietf-webpush-protocol-04" anchor="changes.since.draft-ietf-webpush-protocol-04">
+            <t>
+              Simplified design for Push Receipts and eliminated the urn:ietf:params:push:receipts link
+              relation
+            </t>
+            <t>
+              Clarified Security Considerations section and added informative references to
+              Message Encryption and Voluntary Application Server Identification
+            </t>
+          </section>
+
+        </section>
   </back>
 </rfc>
