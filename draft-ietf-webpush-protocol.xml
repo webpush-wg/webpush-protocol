@@ -691,8 +691,7 @@ Topic = token / quoted-string
           matching topic.  In effect, the information that is stored for the
           push message is updated, but a new resource is created to avoid
           problems with in flight acknowledgments for the old message.  The push
-          service MAY suppress acknowledgement receipts for the replaced
-          message.
+          service MAY suppress delivery receipts for the replaced message.
         </t>
         <t>
           A push message with a topic that is not shared by an outstanding
