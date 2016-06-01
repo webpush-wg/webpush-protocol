@@ -151,8 +151,8 @@
               other components that run on servers.
             </t>
             <t hangText="application server:">
-              The component of an application that runs on a server and requests
-              the delivery of a push message.
+              The component of an application that usually runs on a server and
+              requests the delivery of a push message.
             </t>
             <t hangText="push message subscription:">
               A message delivery context that is established between the user
