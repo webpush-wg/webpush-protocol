@@ -333,9 +333,9 @@ Host: push.example.net
 ]]></artwork>
       </figure>
       <t>
-        A 201 (Created) response indicates that the a push subscription was 
+        A 201 (Created) response indicates that the a push subscription was
         created. A URI for the push message subscription resource that was
-        created in response to the request MUST be returned in the Location 
+        created in response to the request MUST be returned in the Location
         header field.
       </t>
       <t>
@@ -565,12 +565,11 @@ TTL = 1*DIGIT
           TTL header field value.
         </t>
         <t>
-          A Push message with a zero TTL is immediately delivered if the user agent is
-          available to receive the message. After delivery, the push service is permitted
-          to immediately remove a push message with a zero TTL. This might occur before the
-          user agent acknowledges receipt of the message by performing a HTTP DELETE on the
-          push message resource. Consequently, an application server cannot rely on receiving
-          acknowledgement receipts for zero TTL push messages.
+          A push service MUST NOT generate a delivery receipt for a push message
+          with zero TTL. A push message with a zero TTL is immediately delivered
+          to the user agent without being stored. A delivery receipt cannot be
+          reliably provided if an acknowledgment from the user agent arrives
+          after the push service has removed the push message.
         </t>
         <t>
           If the user agent is unavailable, a push message with a zero TTL expires and
@@ -795,7 +794,7 @@ HEADERS      [stream 4] +END_HEADERS
 
 DATA         [stream 4] +END_STREAM
   iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
-  
+
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :status        = 200
 ]]>
@@ -1168,7 +1167,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           For its requirements, the <xref target="API">W3C Push API</xref> has adopted
           <xref target="I-D.ietf-webpush-encryption">Message Encryption for WebPush</xref>
-          to secure the content of messages from the push service. Other scenarios can 
+          to secure the content of messages from the push service. Other scenarios can
           be addressed by similar policies.
         </t>
         <t>
@@ -1282,7 +1281,7 @@ HEADERS      [stream 82] +END_STREAM
          A malicious application with a valid push URI could use the greater
          resources of a push service to mount a denial of service attack on a
          user agent.  Push services SHOULD limit the rate at which push messages
-         are sent to individual user agents.  
+         are sent to individual user agents.
        </t>
        <t>
          A push service MAY return a 429 (Too Many Requests) status code <xref target="RFC6585"/>
@@ -1306,7 +1305,7 @@ HEADERS      [stream 82] +END_STREAM
      <section title="Logging Risks">
        <t>
          Server request logs can reveal subscription-related URIs or relationships
-         between subscription-related URIs for the same user agent. 
+         between subscription-related URIs for the same user agent.
          Limitations on log retention and strong access control mechanisms can
          ensure that URIs are not revealed to unauthorized entities.
        </t>
