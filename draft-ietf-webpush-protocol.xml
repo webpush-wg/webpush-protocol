@@ -354,11 +354,11 @@ Host: push.example.net
   <![CDATA[
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Link: </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+Link: </push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
         rel="urn:ietf:params:push"
-Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
+Link: </subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
         rel="urn:ietf:params:push:set"
-Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
 
 ]]></artwork>
       </figure>
@@ -385,7 +385,7 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
   <![CDATA[
 POST /subscribe HTTP/1.1
 Host: push.example.net
-Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
+Link: </subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
         rel="urn:ietf:params:push:set"
 ]]></artwork>
       </figure>
@@ -399,11 +399,11 @@ Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
   <![CDATA[
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Link: </p/YBJNBIMwwA_Ag8EtD47J4A>;
+Link: </push/YBJNBIMwwA_Ag8EtD47J4A>;
         rel="urn:ietf:params:push"
-Link: </set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
+Link: </subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
         rel="urn:ietf:params:push:set"
-Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
+Location: https://push.example.net/subscription/i-nQ3A9Zm4kgSWg8_ZijVQ
 ]]></artwork>
       </figure>
       <t>
@@ -432,7 +432,7 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
       <figure>
         <artwork type="inline">
   <![CDATA[
-POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 TTL: 15
 Content-Type: text/plain;charset=utf8
@@ -451,7 +451,7 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
         <artwork type="inline"><![CDATA[
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
-Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]></artwork>
       </figure>
 
@@ -465,7 +465,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         <figure>
           <artwork type="inline">
             <![CDATA[
-POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 Prefer: respond-async
 TTL: 15
@@ -488,9 +488,9 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
             <![CDATA[
 HTTP/1.1 202 Accepted
 Date: Thu, 11 Dec 2014 23:56:55 GMT
-Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
+Link: </receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
         rel="urn:ietf:params:push:receipt"
-Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]>
           </artwork>
         </figure>
@@ -703,7 +703,7 @@ Topic = token / quoted-string
             to be updated:
           </preamble>
           <artwork type="inline"><![CDATA[
-POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 TTL: 600
 Topic: "upd"
@@ -764,7 +764,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
         <artwork><![CDATA[
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+  :path          = /subscription/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
   :authority     = push.example.net
 ]]></artwork>
       </figure>
@@ -780,7 +780,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
           <![CDATA[
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
-  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
 
 HEADERS      [stream 4] +END_HEADERS
@@ -788,7 +788,7 @@ HEADERS      [stream 4] +END_HEADERS
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
   cache-control  = private
-  :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+  :link          = </push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
                     rel="urn:ietf:params:push"
   content-type   = text/plain;charset=utf8
   content-length = 36
@@ -851,7 +851,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             <![CDATA[
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy
+  :path          = /subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy
   :authority     = push.example.net
 ]]>
           </artwork>
@@ -868,9 +868,9 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             <![CDATA[
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
-  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
-  :link          = </p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+  :link          = </push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
                     rel="urn:ietf:params:push"
 
 HEADERS      [stream 4] +END_HEADERS
@@ -913,7 +913,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         <figure>
           <artwork type="inline">
             <![CDATA[
-DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
+DELETE /message/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
 Host: push.example.net
 ]]>
           </artwork>
@@ -961,7 +961,7 @@ Host: push.example.net
             <![CDATA[
 HEADERS      [stream 13] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
+  :path          = /receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
   :authority     = push.example.net
 ]]>
           </artwork>
@@ -977,7 +977,7 @@ HEADERS      [stream 13] +END_STREAM +END_HEADERS
             <![CDATA[
 PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
   :method        = GET
-  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
   :authority     = push.example.net
 
 HEADERS      [stream 82] +END_STREAM
