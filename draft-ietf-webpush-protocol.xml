@@ -426,9 +426,9 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
-        a HTTP POST request to a push resource distributed to the application server
-        by a user agent. The push message is included in the body of the
-        request.
+        a HTTP POST request to a push resource distributed to the application
+        server by a user agent. The ciphertext of the push message is included
+        in the body of the request.
       </t>
       <figure>
         <artwork type="inline">
