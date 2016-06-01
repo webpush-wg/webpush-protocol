@@ -643,7 +643,7 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
         </t>
       </section>
 
-      <section anchor="update" title="Updating Push Messages">
+      <section anchor="replace" title="Replacing Push Messages">
         <t>
           A push message that has been stored by the push service can be
           replaced with new content.  If the user agent is offline during the
@@ -652,7 +652,7 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
           user agent.
         </t>
         <t>
-          Only push messages that have been assigned a topic can be updated.  A
+          Only push messages that have been assigned a topic can be replaced.  A
           push message with a topic replaces any outstanding push message with
           an identical topic.
         </t>
@@ -686,10 +686,10 @@ Topic = token / quoted-string
           a 400 (Bad Request) status code to the application server.
         </t>
         <t>
-          A push message update request creates a new push message resource and
-          simultaneously deletes any existing message resource that has a
+          A push message replacement request creates a new push message resource
+          and simultaneously deletes any existing message resource that has a
           matching topic.  In effect, the information that is stored for the
-          push message is updated, but a new resource is created to avoid
+          push message is replaced, but a new resource is created to avoid
           problems with in flight acknowledgments for the old message.  The push
           service MAY suppress delivery receipts for the replaced message.
         </t>
@@ -700,7 +700,7 @@ Topic = token / quoted-string
         <figure>
           <preamble>
             For example, the following message could cause an existing message
-            to be updated:
+            to be replaced:
           </preamble>
           <artwork type="inline"><![CDATA[
 POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -716,10 +716,10 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
         <figure>
           <preamble>
             If the push service identifies an outstanding push message with a
-            topic of "upd", then that message resource is deleted. A 201 (Created)
-            response indicates that the push message update was accepted. A URI for
-            the new push message resource that was created in response to the request
-            is included in the Location header field.
+            topic of "upd", then that message resource is deleted. A 201
+            (Created) response indicates that the push message replacement was
+            accepted. A URI for the new push message resource that was created
+            in response to the request is included in the Location header field.
           </preamble>
           <artwork type="inline"><![CDATA[
 HTTP/1.1 201 Created
@@ -1356,7 +1356,7 @@ HEADERS      [stream 82] +END_STREAM
           <c>http</c>
           <c>standard</c>
           <c>
-            <xref target="update"/>
+            <xref target="replace"/>
           </c>
         </texttable>
         <t>
