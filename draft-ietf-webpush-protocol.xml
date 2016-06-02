@@ -379,8 +379,7 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
           A user agent MAY omit the subscription set if it is unable to receive
           push messages in an aggregated way for the lifetime of the
           subscription. This might be necessary if the user agent is monitoring
-          subscriptions for other clients to allow a client to switch to
-          another user agent for monitoring its subscription.
+          subscriptions for other clients (see <xref target="sets-streams"/>).
         </t>
       <figure>
         <artwork type="inline">
@@ -510,8 +509,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
          unable to receive receipts in an aggregated way for the lifetime of
          the receipt subscription. This might be necessary if the application
          server is monitoring receipt subscriptions on the behalf of other
-         push message senders to allow these senders to switch to another
-         application server for monitoring its receipt subscription.
+         push message senders (see <xref target="sets-streams"/>).
         </t>
         <t>
           A push service MUST return a 400 (Bad Request) status code for requests which contain
@@ -1148,10 +1146,10 @@ HEADERS      [stream 82] +END_STREAM
           service.
         </t>
         <t>
-          Note: some user agents might need to use several subscription sets if
-          they are monitoring subscriptions for other clients, in order to
-          allow a client to switch to another user agent for monitoring its
-          subscription.
+         A user agent that monitors subscriptions for other clients might
+         require multiple subscription sets. Each subscription set can then be
+         managed independently, which might include being moved between user
+         agents.
         </t>
       </section>
     </section>
