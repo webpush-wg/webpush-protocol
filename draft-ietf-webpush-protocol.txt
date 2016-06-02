@@ -1127,8 +1127,8 @@ Internet-Draft                HTTP Web Push                    June 2016
    A push service MAY expire a subscription set at any time and MUST
    also expire all push message subscriptions in the set.  If a user
    agent has an outstanding request to a push subscription set
-   (Section 6.1) this can be signaled by returning a 400-series status
-   code, such as 410 (Gone).
+   (Section 6.1) this can be signaled by returning a 404 (Not Found)
+   status code.
 
    A user agent can request that a subscription set be removed by
    sending a DELETE request to the subscription set URI.  This MUST also
