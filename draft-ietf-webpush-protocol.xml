@@ -376,9 +376,11 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
           create new push message subscriptions.
         </t>
         <t>
-          A user agent MAY omit the subscription set if it is unable to receive push
-          messages that are aggregated for the lifetime of the subscription. This might
-          be necessary if the user agent is forwarding requests from other clients.
+          A user agent MAY omit the subscription set if it is unable to receive
+          push messages in an aggregated way for the lifetime of the
+          subscription. This might be necessary if the user agent is monitoring
+          subscriptions for other clients to allow a client to switch to
+          another user agent for monitoring its subscription.
         </t>
       <figure>
         <artwork type="inline">
