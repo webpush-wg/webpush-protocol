@@ -139,7 +139,7 @@
         <t>
           The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
           "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-          document are to be interpreted as described in [RFC2119].
+          document are to be interpreted as described in <xref target="RFC2119"/>.
         </t>
         <t>
           This document defines the following terms:
