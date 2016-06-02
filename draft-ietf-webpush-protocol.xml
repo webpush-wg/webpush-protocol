@@ -93,7 +93,7 @@
       <t>
         Uncoordinated use of persistent connections or sessions from multiple
         applications can contribute to unnecessary use of the device radio,
-        since each independent session independently incurs overheads.  In
+        since each independent session can incur its own overhead.  In
         particular, keep alive traffic used to ensure that middleboxes do not
         prematurely time out sessions, can result in significant waste.
         Maintenance traffic tends to dominate over the long term, since events
@@ -109,7 +109,7 @@
       <t>
         The <xref target="API">W3C Push API</xref> describes an API that
         enables the use of a consolidated push service from web applications.
-        This expands on that work by describing a protocol that can be used to:
+        This document expands on that work by describing a protocol that can be used to:
         <list style="symbols">
           <t>
             request the delivery of a push message to a user agent,
@@ -216,10 +216,12 @@
 ]]></artwork>
       </figure>
       <t>
-        At the very beginning of the process, a new  message subscription is
+        At the very beginning of the process, a new message subscription is
         created by the user agent and then distributed to its application
         server. This subscription is the basis of all future interactions between
-        the actors.
+        the actors. A subscription is used by the application server to send messages to
+        the push service for being delivered to the user agent. It is used by
+        the user agent to monitor the push service for any incomming message.
       </t>
       <t>
         To offer more control for authorization, a message subscription is
@@ -288,7 +290,7 @@
               <xref target="acknowledge_message">acknowledge receipt</xref> of a push message.
             </t>
             <t hangText="receipt subscription:">
-              An application server <xref target="request_receipt">receives
+              An application server <xref target="request-receipt">receives
               delivery confirmations</xref> for push messages using a receipt
               subscription.  A link relation of type "urn:ietf:params:push:receipt"
               identifies a receipt subscription.
@@ -377,8 +379,8 @@ Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
         </t>
         <t>
           A user agent MAY omit the subscription set if it is unable to receive push
-          messages that are aggregated for the lifetime of the subscription. This might
-          be necessary if the user agent is forwarding requests from other clients.
+          messages in an aggregated way for the lifetime of the subscription. This might
+          be necessary if the user agent is forwarding subscription requests from other clients.
         </t>
       <figure>
         <artwork type="inline">
@@ -455,7 +457,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 ]]></artwork>
       </figure>
 
-      <section anchor="request_receipt" title="Requesting Push Message Receipts">
+      <section anchor="request-receipt" title="Requesting Push Message Receipts">
         <t>
           An application server can include the <xref target="RFC7240">Prefer header
           field</xref> with the "respond-async" preference to request confirmation
@@ -595,7 +597,7 @@ TTL = 1*DIGIT
           An application server MAY include an Urgency header field in its
           request for push message delivery. This header field indicates the
           message urgency. The push service MUST not forward the Urgency header
-          field to the user agent.  An push message without the Urgency header
+          field to the user agent.  A push message without the Urgency header
           field defaults to a value of "normal".
         </t>
         <t>
@@ -749,7 +751,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
       </t>
       <t>
         Each push message is pushed as the response to a synthesized GET request
-        in a PUSH_PROMISE.  This GET request is made to the push message resource
+        sent in a PUSH_PROMISE.  This GET request is made to the push message resource
         that was created by the push service when the application server requested
         message delivery.  The response headers SHOULD provide a URI for the push
         resource corresponding to the push message subscription in a link relation
@@ -772,8 +774,8 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
       <figure>
         <preamble>
           The push service permits the request to remain outstanding.  When a
-          push message is sent by an application server, a server push is
-          associated with the initial request.  The response includes the push
+          push message is sent by an application server, a server push is generated
+          in association with the initial request.  The response for the server push includes the push
           message.
         </preamble>
         <artwork>
@@ -861,7 +863,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
           <preamble>
             The push service permits the request to remain outstanding.  When a
             push message is sent by an application server, a server push is
-            associated with the initial request.  The response includes the push
+            generated in association with the initial request.  The server push's response includes the push
             message.
           </preamble>
           <artwork>
@@ -933,7 +935,7 @@ Host: push.example.net
           The push service MAY cease to retry delivery of the message prior to its
           advertised expiration due to scenarios such as an unresponsive user agent or
           operational constraints. If the application has requested a delivery receipt,
-          then the push service MUST return a 410 (Gone) to the application server
+          then the push service MUST return a 410 (Gone) response to the application server
           monitoring the receipt subscription.
         </t>
       </section>
@@ -951,7 +953,7 @@ Host: push.example.net
           Each receipt is pushed as the response to a synthesized GET request sent in a
           PUSH_PROMISE.  This GET request is made to the same push message resource that
           was created by the push service when the application server requested message
-          delivery. A successful response includes a 204 (No Content) status code with no data.
+          delivery. The response includes a status code indicating the result of the message delivery and carries no data.
         </t>
         <figure>
           <preamble>
@@ -1032,7 +1034,7 @@ HEADERS      [stream 82] +END_STREAM
           receive messages that expire during that interval.
         </t>
         <t>
-          Push messages that are stored and not delivered to a user agent are
+          Push messages that are stored and have not been delivered to a user agent are
           delivered when the user agent recommences monitoring.  Stored push
           messages SHOULD include a Last-Modified header field (Section 2.2
           of <xref target="RFC7232"/>) indicating when delivery was requested by
@@ -1066,8 +1068,8 @@ HEADERS      [stream 82] +END_STREAM
         </t>
         <t>
           A push service can remove a subscription at any time. If a user agent
-          or application server has an outstanding request to a subscription
-          resource (<xref target="monitor-subscription"/>), this MUST be signaled by
+          or application server has an outstanding request to a push message subscription
+          resource (<xref target="monitor-subscription"/>) or to a receipt subscription resource (<xref target="receive_receipt"/>), this MUST be signaled by
           returning a 404 (Not Found) status code.
         </t>
         <t>
@@ -1081,7 +1083,7 @@ HEADERS      [stream 82] +END_STREAM
         </t>
         <section title="Subscription Set Expiration">
           <t>
-            A push service MAY expire a subscription set at any time which MUST also
+            A push service MAY expire a subscription set at any time and MUST also
             expire all push message subscriptions in the set. If a user agent has an
             outstanding request to a push subscription set (<xref target="monitor-set"/>)
             this can be signaled by returning a 400-series status code, such as 410 (Gone).
