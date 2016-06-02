@@ -435,9 +435,9 @@ li, p {
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
 <p id="rfc.section.1.p.1">Many applications on mobile and embedded devices require continuous access to network communications so that real-time events - such as incoming calls or messages - can be delivered (or "pushed") in a timely fashion. These devices typically have limited power reserves, so finding more efficient ways to serve application requirements greatly benefits the application ecosystem.  </p>
 <p id="rfc.section.1.p.2">One significant contributor to power usage is the radio.  Radio communications consume a significant portion of the energy budget on a wireless device.  </p>
-<p id="rfc.section.1.p.3">Uncoordinated use of persistent connections or sessions from multiple applications can contribute to unnecessary use of the device radio, since each independent session independently incurs overheads.  In particular, keep alive traffic used to ensure that middleboxes do not prematurely time out sessions, can result in significant waste.  Maintenance traffic tends to dominate over the long term, since events are relatively rare.  </p>
+<p id="rfc.section.1.p.3">Uncoordinated use of persistent connections or sessions from multiple applications can contribute to unnecessary use of the device radio, since each independent session can incur its own overhead.  In particular, keep alive traffic used to ensure that middleboxes do not prematurely time out sessions, can result in significant waste.  Maintenance traffic tends to dominate over the long term, since events are relatively rare.  </p>
 <p id="rfc.section.1.p.4">Consolidating all real-time events into a single session ensures more efficient use of network and radio resources.  A single service consolidates all events, distributing those events to applications as they arrive.  This requires just one session, avoiding duplicated overhead costs.  </p>
-<p id="rfc.section.1.p.5">The <a href="#API">W3C Push API</a> <cite title="NONE">[API]</cite> describes an API that enables the use of a consolidated push service from web applications.  This expands on that work by describing a protocol that can be used to: </p>
+<p id="rfc.section.1.p.5">The <a href="#API">W3C Push API</a> <cite title="NONE">[API]</cite> describes an API that enables the use of a consolidated push service from web applications.  This document expands on that work by describing a protocol that can be used to: </p>
 
 <ul>
   <li>request the delivery of a push message to a user agent, </li>
@@ -494,7 +494,7 @@ li, p {
      |&lt;---------------------|                      |
      |                      |                      |
 </pre>
-<p id="rfc.section.2.p.2">At the very beginning of the process, a new  message subscription is created by the user agent and then distributed to its application server. This subscription is the basis of all future interactions between the actors.  </p>
+<p id="rfc.section.2.p.2">At the very beginning of the process, a new message subscription is created by the user agent and then distributed to its application server. This subscription is the basis of all future interactions between the actors. A subscription is used by the application server to send messages to the push service for being delivered to the user agent. It is used by the user agent to monitor the push service for any incomming message.  </p>
 <p id="rfc.section.2.p.3">To offer more control for authorization, a message subscription is modeled as two resources with different capabilities: </p>
 
 <ul>
@@ -520,7 +520,7 @@ li, p {
   <dt>push message:</dt>
   <dd style="margin-left: 8">The push service creates a push message resource to identify push messages that have been <a href="#send">accepted for delivery</a> <cite title="NONE">[send]</cite>. The push message resource is also deleted by the user agent to <a href="#acknowledge_message">acknowledge receipt</a> <cite title="NONE">[acknowledge_message]</cite> of a push message.  </dd>
   <dt>receipt subscription:</dt>
-  <dd style="margin-left: 8">An application server <a href="#request_receipt">receives delivery confirmations</a> <cite title="NONE">[request_receipt]</cite> for push messages using a receipt subscription.  A link relation of type "urn:ietf:params:push:receipt" identifies a receipt subscription.  </dd>
+  <dd style="margin-left: 8">An application server <a href="#request-receipt">receives delivery confirmations</a> <cite title="NONE">[request-receipt]</cite> for push messages using a receipt subscription.  A link relation of type "urn:ietf:params:push:receipt" identifies a receipt subscription.  </dd>
 </dl>
 
 <p> </p>
@@ -553,7 +553,7 @@ Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> Collecting Subscriptions into Sets</h1>
 <p id="rfc.section.4.1.p.1">Collecting multiple push message subscriptions into a subscription set can represent a significant efficiency improvement for a push service. The push service MAY provide a URI for a subscription set resource in a link relation of type "urn:ietf:params:push:set".  </p>
 <p id="rfc.section.4.1.p.2">When a subscription set is returned in a push message subscription response, the user agent SHOULD include this subscription set in a link relation of type "urn:ietf:params:push:set" in subsequent requests to create new push message subscriptions.  </p>
-<p id="rfc.section.4.1.p.3">A user agent MAY omit the subscription set if it is unable to receive push messages that are aggregated for the lifetime of the subscription. This might be necessary if the user agent is forwarding requests from other clients.  </p>
+<p id="rfc.section.4.1.p.3">A user agent MAY omit the subscription set if it is unable to receive push messages in an aggregated way for the lifetime of the subscription. This might be necessary if the user agent is forwarding subscription requests from other clients.  </p>
 <pre>
   
 POST /subscribe HTTP/1.1
@@ -592,7 +592,7 @@ HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
 Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 </pre>
-<h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#request_receipt" id="request_receipt">Requesting Push Message Receipts</a></h1>
+<h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#request-receipt" id="request-receipt">Requesting Push Message Receipts</a></h1>
 <p id="rfc.section.5.1.p.1">An application server can include the <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with the "respond-async" preference to request confirmation from the push service when a push message is delivered and then acknowledged by the user agent.  </p>
 <pre>
             
@@ -635,7 +635,7 @@ TTL = 1*DIGIT
 <h1 id="rfc.section.5.3"><a href="#rfc.section.5.3">5.3.</a> <a href="#urgency" id="urgency">Push Message Urgency</a></h1>
 <p id="rfc.section.5.3.p.1">For a device that is battery-powered, it is often critical that it remains dormant for extended periods.  Radio communication in particular consumes significant power and limits the length of time that the device can operate.  </p>
 <p id="rfc.section.5.3.p.2">To avoid consuming resources to receive trivial messages, it is helpful if an application server can communicate the urgency of a message and if the user agent can request that the push server only forward messages of a specific urgency.  </p>
-<p id="rfc.section.5.3.p.3">An application server MAY include an Urgency header field in its request for push message delivery. This header field indicates the message urgency. The push service MUST not forward the Urgency header field to the user agent.  An push message without the Urgency header field defaults to a value of "normal".  </p>
+<p id="rfc.section.5.3.p.3">An application server MAY include an Urgency header field in its request for push message delivery. This header field indicates the message urgency. The push service MUST not forward the Urgency header field to the user agent.  A push message without the Urgency header field defaults to a value of "normal".  </p>
 <p id="rfc.section.5.3.p.4">A user agent MAY include the Urgency header field when monitoring for push messages to indicate the lowest urgency of push messages that it is willing to receive.  A push service MUST NOT deliver push messages with lower urgency than the value indicated by the user agent in its monitoring request.  Push messages of any urgency are delivered to a user agent that does not include an Urgency header field when monitoring for messages.  </p>
 <pre>
             
@@ -714,7 +714,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.6.p.2">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
-<p id="rfc.section.6.p.3">Each push message is pushed as the response to a synthesized GET request in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
+<p id="rfc.section.6.p.3">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
@@ -722,7 +722,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :path          = /subscription/LBhhw0OohO-Wl4Oi971UG
   :authority     = push.example.net
 </pre>
-<p>The push service permits the request to remain outstanding.  When a push message is sent by an application server, a server push is associated with the initial request.  The response includes the push message.  </p>
+<p>The push service permits the request to remain outstanding.  When a push message is sent by an application server, a server push is generated in association with the initial request.  The response for the server push includes the push message.  </p>
 <pre>
           
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
@@ -763,7 +763,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :authority     = push.example.net
 
           </pre>
-<p>The push service permits the request to remain outstanding.  When a push message is sent by an application server, a server push is associated with the initial request.  The response includes the push message.  </p>
+<p>The push service permits the request to remain outstanding.  When a push message is sent by an application server, a server push is generated in association with the initial request.  The server push's response includes the push message.  </p>
 <pre>
             
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
@@ -800,10 +800,10 @@ Host: push.example.net
           </pre>
 <p id="rfc.section.6.2.p.2">If the push service receives the acknowledgement and the application has requested a delivery receipt, the push service MUST return a 204 (No Content) response to the application server monitoring the receipt subscription.  </p>
 <p id="rfc.section.6.2.p.3">If the push service does not receive the acknowledgement within a reasonable amount of time, then the message is considered to be not yet delivered. The push service SHOULD continue to retry delivery of the message until its advertised expiration.  </p>
-<p id="rfc.section.6.2.p.4">The push service MAY cease to retry delivery of the message prior to its advertised expiration due to scenarios such as an unresponsive user agent or operational constraints. If the application has requested a delivery receipt, then the push service MUST return a 410 (Gone) to the application server monitoring the receipt subscription.  </p>
+<p id="rfc.section.6.2.p.4">The push service MAY cease to retry delivery of the message prior to its advertised expiration due to scenarios such as an unresponsive user agent or operational constraints. If the application has requested a delivery receipt, then the push service MUST return a 410 (Gone) response to the application server monitoring the receipt subscription.  </p>
 <h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#receive_receipt" id="receive_receipt">Receiving Push Message Receipts</a></h1>
 <p id="rfc.section.6.3.p.1">The application server requests the delivery of receipts from the push service by making a HTTP GET request to the receipt subscription resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send push receipts when messages are acknowledged (<a href="#acknowledge_message">Section 6.2</a>) by the user agent.  </p>
-<p id="rfc.section.6.3.p.2">Each receipt is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE.  This GET request is made to the same push message resource that was created by the push service when the application server requested message delivery. A successful response includes a 204 (No Content) status code with no data.  </p>
+<p id="rfc.section.6.3.p.2">Each receipt is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE.  This GET request is made to the same push message resource that was created by the push service when the application server requested message delivery. The response includes a status code indicating the result of the message delivery and carries no data.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
             
@@ -836,17 +836,17 @@ HEADERS      [stream 82] +END_STREAM
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#storage" id="storage">Push Message Expiration</a></h1>
 <p id="rfc.section.7.2.p.1">Storage of push messages based on the TTL header field comprises a potentially significant amount of storage for a push service.  A push service is not obligated to store messages indefinitely.  A push service is able to indicate how long it intends to retain a message to an application server using the TTL header field (<a href="#ttl">Section 5.2</a>).  </p>
 <p id="rfc.section.7.2.p.2">A user agent that does not actively monitor for push messages will not receive messages that expire during that interval.  </p>
-<p id="rfc.section.7.2.p.3">Push messages that are stored and not delivered to a user agent are delivered when the user agent recommences monitoring.  Stored push messages SHOULD include a Last-Modified header field (Section 2.2 of <a href="#RFC7232">[RFC7232]</a>) indicating when delivery was requested by an application server.  </p>
+<p id="rfc.section.7.2.p.3">Push messages that are stored and have not been delivered to a user agent are delivered when the user agent recommences monitoring.  Stored push messages SHOULD include a Last-Modified header field (Section 2.2 of <a href="#RFC7232">[RFC7232]</a>) indicating when delivery was requested by an application server.  </p>
 <p id="rfc.section.7.2.p.4">A GET request to a push message subscription resource with only expired messages results in a response as though no push message was ever sent.  </p>
 <p id="rfc.section.7.2.p.5">Push services might need to limit the size and number of stored push messages to avoid overloading.  To limit the size of messages, the push service MAY return a 413 (Payload Too Large) status code <a href="#RFC7231">[RFC7231]</a> in response to requests that include an entity body that is too large.  Push services MUST NOT return a 413 status code in responses to an entity body that is 4k (4096 bytes) or less in size.  </p>
 <p id="rfc.section.7.2.p.6">To limit the number of stored push messages, the push service MAY either expire messages prior to their advertised Time-To-Live or reduce their advertised Time-To-Live.  </p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#delete" id="delete">Subscription Expiration</a></h1>
 <p id="rfc.section.7.3.p.1">In some cases, it may be necessary to terminate subscriptions so that they can be refreshed.  This applies to both push message subscriptions and receipt subscriptions.  </p>
-<p id="rfc.section.7.3.p.2">A push service can remove a subscription at any time. If a user agent or application server has an outstanding request to a subscription resource (<a href="#monitor-subscription">Section 6</a>), this MUST be signaled by returning a 404 (Not Found) status code.  </p>
+<p id="rfc.section.7.3.p.2">A push service can remove a subscription at any time. If a user agent or application server has an outstanding request to a push message subscription resource (<a href="#monitor-subscription">Section 6</a>) or to a receipt subscription resource (<a href="#receive_receipt">Section 6.3</a>), this MUST be signaled by returning a 404 (Not Found) status code.  </p>
 <p id="rfc.section.7.3.p.3">A push service MUST return a 404 (Not Found) status code if an application server attempts to send a push message to a removed or expired push message subscription.  </p>
 <p id="rfc.section.7.3.p.4">A user agent can remove its push message subscription by sending a DELETE request to the corresponding URI. An application server can remove its receipt subscription by sending a DELETE request to the corresponding URI.  </p>
 <h1 id="rfc.section.7.3.1"><a href="#rfc.section.7.3.1">7.3.1.</a> Subscription Set Expiration</h1>
-<p id="rfc.section.7.3.1.p.1">A push service MAY expire a subscription set at any time which MUST also expire all push message subscriptions in the set. If a user agent has an outstanding request to a push subscription set (<a href="#monitor-set">Section 6.1</a>) this can be signaled by returning a 400-series status code, such as 410 (Gone).  </p>
+<p id="rfc.section.7.3.1.p.1">A push service MAY expire a subscription set at any time and MUST also expire all push message subscriptions in the set. If a user agent has an outstanding request to a push subscription set (<a href="#monitor-set">Section 6.1</a>) this can be signaled by returning a 400-series status code, such as 410 (Gone).  </p>
 <p id="rfc.section.7.3.1.p.2">A user agent can request that a subscription set be removed by sending a DELETE request to the subscription set URI. This MUST also remove all push message subscriptions in the set.  </p>
 <p id="rfc.section.7.3.1.p.3">If a specific push message subscription that is a member of a subscription set is expired or removed, then it MUST also be removed from its subscription set.  </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Implications for Application Reliability</h1>

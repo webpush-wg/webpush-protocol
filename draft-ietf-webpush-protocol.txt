@@ -129,7 +129,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
    Uncoordinated use of persistent connections or sessions from multiple
    applications can contribute to unnecessary use of the device radio,
-   since each independent session independently incurs overheads.  In
+   since each independent session can incur its own overhead.  In
    particular, keep alive traffic used to ensure that middleboxes do not
    prematurely time out sessions, can result in significant waste.
    Maintenance traffic tends to dominate over the long term, since
@@ -142,8 +142,8 @@ Internet-Draft                HTTP Web Push                    June 2016
    overhead costs.
 
    The W3C Push API [API] describes an API that enables the use of a
-   consolidated push service from web applications.  This expands on
-   that work by describing a protocol that can be used to:
+   consolidated push service from web applications.  This document
+   expands on that work by describing a protocol that can be used to:
 
    o  request the delivery of a push message to a user agent,
 
@@ -247,7 +247,10 @@ Internet-Draft                HTTP Web Push                    June 2016
    At the very beginning of the process, a new message subscription is
    created by the user agent and then distributed to its application
    server.  This subscription is the basis of all future interactions
-   between the actors.
+   between the actors.  A subscription is used by the application server
+   to send messages to the push service for being delivered to the user
+   agent.  It is used by the user agent to monitor the push service for
+   any incomming message.
 
    To offer more control for authorization, a message subscription is
    modeled as two resources with different capabilities:
@@ -270,9 +273,6 @@ Internet-Draft                HTTP Web Push                    June 2016
    by either the push service or user agent at any time.  User agents
    and application servers must be prepared to manage changes in
    subscription state.
-
-
-
 
 
 
@@ -400,9 +400,9 @@ Internet-Draft                HTTP Web Push                    June 2016
    requests to create new push message subscriptions.
 
    A user agent MAY omit the subscription set if it is unable to receive
-   push messages that are aggregated for the lifetime of the
+   push messages in an aggregated way for the lifetime of the
    subscription.  This might be necessary if the user agent is
-   forwarding requests from other clients.
+   forwarding subscription requests from other clients.
 
 
    POST /subscribe HTTP/1.1
@@ -624,7 +624,7 @@ Internet-Draft                HTTP Web Push                    June 2016
    An application server MAY include an Urgency header field in its
    request for push message delivery.  This header field indicates the
    message urgency.  The push service MUST not forward the Urgency
-   header field to the user agent.  An push message without the Urgency
+   header field to the user agent.  A push message without the Urgency
    header field defaults to a value of "normal".
 
    A user agent MAY include the Urgency header field when monitoring for
@@ -756,7 +756,7 @@ Internet-Draft                HTTP Web Push                    June 2016
    value of the header field as defined in the Table of Urgency Values.
 
    Each push message is pushed as the response to a synthesized GET
-   request in a PUSH_PROMISE.  This GET request is made to the push
+   request sent in a PUSH_PROMISE.  This GET request is made to the push
    message resource that was created by the push service when the
    application server requested message delivery.  The response headers
    SHOULD provide a URI for the push resource corresponding to the push
@@ -788,8 +788,8 @@ Internet-Draft                HTTP Web Push                    June 2016
 
    The push service permits the request to remain outstanding.  When a
    push message is sent by an application server, a server push is
-   associated with the initial request.  The response includes the push
-   message.
+   generated in association with the initial request.  The response for
+   the server push includes the push message.
 
 
    PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
@@ -900,8 +900,8 @@ Internet-Draft                HTTP Web Push                    June 2016
 
    The push service permits the request to remain outstanding.  When a
    push message is sent by an application server, a server push is
-   associated with the initial request.  The response includes the push
-   message.
+   generated in association with the initial request.  The server push's
+   response includes the push message.
 
 
    PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
@@ -968,7 +968,8 @@ Internet-Draft                HTTP Web Push                    June 2016
    its advertised expiration due to scenarios such as an unresponsive
    user agent or operational constraints.  If the application has
    requested a delivery receipt, then the push service MUST return a 410
-   (Gone) to the application server monitoring the receipt subscription.
+   (Gone) response to the application server monitoring the receipt
+   subscription.
 
 6.3.  Receiving Push Message Receipts
 
@@ -981,8 +982,9 @@ Internet-Draft                HTTP Web Push                    June 2016
    Each receipt is pushed as the response to a synthesized GET request
    sent in a PUSH_PROMISE.  This GET request is made to the same push
    message resource that was created by the push service when the
-   application server requested message delivery.  A successful response
-   includes a 204 (No Content) status code with no data.
+   application server requested message delivery.  The response includes
+   a status code indicating the result of the message delivery and
+   carries no data.
 
    The following example request is made over HTTP/2.
 
@@ -991,8 +993,6 @@ Internet-Draft                HTTP Web Push                    June 2016
      :method        = GET
      :path          = /receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
      :authority     = push.example.net
-
-
 
 
 
@@ -1069,11 +1069,11 @@ Internet-Draft                HTTP Web Push                    June 2016
    A user agent that does not actively monitor for push messages will
    not receive messages that expire during that interval.
 
-   Push messages that are stored and not delivered to a user agent are
-   delivered when the user agent recommences monitoring.  Stored push
-   messages SHOULD include a Last-Modified header field (Section 2.2 of
-   [RFC7232]) indicating when delivery was requested by an application
-   server.
+   Push messages that are stored and have not been delivered to a user
+   agent are delivered when the user agent recommences monitoring.
+   Stored push messages SHOULD include a Last-Modified header field
+   (Section 2.2 of [RFC7232]) indicating when delivery was requested by
+   an application server.
 
    A GET request to a push message subscription resource with only
    expired messages results in a response as though no push message was
@@ -1097,9 +1097,10 @@ Internet-Draft                HTTP Web Push                    June 2016
    subscriptions and receipt subscriptions.
 
    A push service can remove a subscription at any time.  If a user
-   agent or application server has an outstanding request to a
-   subscription resource (Section 6), this MUST be signaled by returning
-   a 404 (Not Found) status code.
+   agent or application server has an outstanding request to a push
+   message subscription resource (Section 6) or to a receipt
+   subscription resource (Section 6.3), this MUST be signaled by
+   returning a 404 (Not Found) status code.
 
    A push service MUST return a 404 (Not Found) status code if an
    application server attempts to send a push message to a removed or
@@ -1116,7 +1117,6 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-
 Thomson, et al.         Expires December 4, 2016               [Page 20]
 
 Internet-Draft                HTTP Web Push                    June 2016
@@ -1124,7 +1124,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 7.3.1.  Subscription Set Expiration
 
-   A push service MAY expire a subscription set at any time which MUST
+   A push service MAY expire a subscription set at any time and MUST
    also expire all push message subscriptions in the set.  If a user
    agent has an outstanding request to a push subscription set
    (Section 6.1) this can be signaled by returning a 400-series status
