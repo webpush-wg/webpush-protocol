@@ -71,7 +71,7 @@ Table of Contents
      5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .   9
      5.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .  10
      5.3.  Push Message Urgency  . . . . . . . . . . . . . . . . . .  11
-     5.4.  Updating Push Messages  . . . . . . . . . . . . . . . . .  12
+     5.4.  Replacing Push Messages . . . . . . . . . . . . . . . . .  12
    6.  Receiving Push Messages for a Subscription  . . . . . . . . .  14
      6.1.  Receiving Push Messages for a Subscription Set  . . . . .  15
      6.2.  Acknowledging Push Messages . . . . . . . . . . . . . . .  17
@@ -151,17 +151,17 @@ Internet-Draft                HTTP Web Push                    June 2016
 
    o  monitor for new push messages.
 
-   Requesting the delivery of events is particularly important for the
-   W3C Push API.  The subscription, management and monitoring functions
-   are currently fulfilled by proprietary protocols; these are adequate,
-   but do not offer any of the advantages that standardization affords.
+   A standardized method of event delivery is particularly important for
+   the W3C Push API, where application servers might need to use
+   multiple push services.  The subscription, management and monitoring
+   functions are currently fulfilled by proprietary protocols; these are
+   adequate, but do not offer any of the advantages that standardization
+   affords.
 
    This document intentionally does not describe how a push service is
    discovered.  Discovery of push services is left for future efforts,
    if it turns out to be necessary at all.  User agents are expected to
    be configured with a URL for a push service.
-
-
 
 
 
@@ -182,8 +182,8 @@ Internet-Draft                HTTP Web Push                    June 2016
       Many applications have components that are run on a user agent and
       other components that run on servers.
 
-   application server:  The component of an application that runs on a
-      server and requests the delivery of a push message.
+   application server:  The component of an application that usually
+      runs on a server and requests the delivery of a push message.
 
    push message subscription:  A message delivery context that is
       established between the user agent and the push service and shared
@@ -382,10 +382,10 @@ Internet-Draft                HTTP Web Push                    June 2016
 4.1.  Collecting Subscriptions into Sets
 
    Collecting multiple push message subscriptions into a subscription
-   set can represent a significant efficiency improvement for a push
-   service.  The push service MAY provide a URI for a subscription set
-   resource in a link relation of type "urn:ietf:params:push:set".
-
+   set can represent a significant efficiency improvement for push
+   services and user agents.  The push service MAY provide a URI for a
+   subscription set resource in a link relation of type
+   "urn:ietf:params:push:set".
 
 
 
@@ -438,8 +438,8 @@ Internet-Draft                HTTP Web Push                    June 2016
 
    An application server requests the delivery of a push message by
    sending a HTTP POST request to a push resource distributed to the
-   application server by a user agent.  The push message is included in
-   the body of the request.
+   application server by a user agent.  The ciphertext of the push
+   message is included in the body of the request.
 
 
 
@@ -658,7 +658,7 @@ Internet-Draft                HTTP Web Push                    June 2016
    requests; otherwise, the push service MUST return a 400 (Bad Request)
    status code.
 
-5.4.  Updating Push Messages
+5.4.  Replacing Push Messages
 
    A push message that has been stored by the push service can be
    replaced with new content.  If the user agent is offline during the
@@ -674,9 +674,9 @@ Thomson, et al.         Expires December 4, 2016               [Page 12]
 Internet-Draft                HTTP Web Push                    June 2016
 
 
-   Only push messages that have been assigned a topic can be updated.  A
-   push message with a topic replaces any outstanding push message with
-   an identical topic.
+   Only push messages that have been assigned a topic can be replaced.
+   A push message with a topic replaces any outstanding push message
+   with an identical topic.
 
    A push message topic is a string carried in a Topic header field.  A
    topic is used to correlate push messages sent to the same
@@ -698,19 +698,19 @@ Internet-Draft                HTTP Web Push                    June 2016
    Topic header field that does not meet these constraints MUST return a
    400 (Bad Request) status code to the application server.
 
-   A push message update request creates a new push message resource and
-   simultaneously deletes any existing message resource that has a
-   matching topic.  In effect, the information that is stored for the
-   push message is updated, but a new resource is created to avoid
-   problems with in flight acknowledgments for the old message.  The
-   push service MAY suppress acknowledgement receipts for the replaced
+   A push message replacement request creates a new push message
+   resource and simultaneously deletes any existing message resource
+   that has a matching topic.  In effect, the information that is stored
+   for the push message is replaced, but a new resource is created to
+   avoid problems with in flight acknowledgments for the old message.
+   The push service MAY suppress delivery receipts for the replaced
    message.
 
    A push message with a topic that is not shared by an outstanding
    message to the same subscription is stored or delivered as normal.
 
    For example, the following message could cause an existing message to
-   be updated:
+   be replaced:
 
    POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
    Host: push.example.net
@@ -732,7 +732,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
    If the push service identifies an outstanding push message with a
    topic of "upd", then that message resource is deleted.  A 201
-   (Created) response indicates that the push message update was
+   (Created) response indicates that the push message replacement was
    accepted.  A URI for the new push message resource that was created
    in response to the request is included in the Location header field.
 

@@ -279,7 +279,7 @@ li, p {
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Requesting Push Message Receipts"/>
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Push Message Time-To-Live"/>
 <link href="#rfc.section.5.3" rel="Chapter" title="5.3 Push Message Urgency"/>
-<link href="#rfc.section.5.4" rel="Chapter" title="5.4 Updating Push Messages"/>
+<link href="#rfc.section.5.4" rel="Chapter" title="5.4 Replacing Push Messages"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 Receiving Push Messages for a Subscription"/>
 <link href="#rfc.section.6.1" rel="Chapter" title="6.1 Receiving Push Messages for a Subscription Set"/>
 <link href="#rfc.section.6.2" rel="Chapter" title="6.2 Acknowledging Push Messages"/>
@@ -395,7 +395,7 @@ li, p {
 <ul><li>5.1.   <a href="#rfc.section.5.1">Requesting Push Message Receipts</a></li>
 <li>5.2.   <a href="#rfc.section.5.2">Push Message Time-To-Live</a></li>
 <li>5.3.   <a href="#rfc.section.5.3">Push Message Urgency</a></li>
-<li>5.4.   <a href="#rfc.section.5.4">Updating Push Messages</a></li>
+<li>5.4.   <a href="#rfc.section.5.4">Replacing Push Messages</a></li>
 </ul><li>6.   <a href="#rfc.section.6">Receiving Push Messages for a Subscription</a></li>
 <ul><li>6.1.   <a href="#rfc.section.6.1">Receiving Push Messages for a Subscription Set</a></li>
 <li>6.2.   <a href="#rfc.section.6.2">Acknowledging Push Messages</a></li>
@@ -446,7 +446,7 @@ li, p {
 </ul>
 
 <p> </p>
-<p id="rfc.section.1.p.6">Requesting the delivery of events is particularly important for the W3C Push API.  The subscription, management and monitoring functions are currently fulfilled by proprietary protocols; these are adequate, but do not offer any of the advantages that standardization affords.  </p>
+<p id="rfc.section.1.p.6">A standardized method of event delivery is particularly important for the W3C Push API, where application servers might need to use multiple push services.  The subscription, management and monitoring functions are currently fulfilled by proprietary protocols; these are adequate, but do not offer any of the advantages that standardization affords.  </p>
 <p id="rfc.section.1.p.7">This document intentionally does not describe how a push service is discovered.  Discovery of push services is left for future efforts, if it turns out to be necessary at all.  User agents are expected to be configured with a URL for a push service.  </p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Conventions and Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.  </p>
@@ -456,7 +456,7 @@ li, p {
   <dt>application:</dt>
   <dd style="margin-left: 8">Both the sender and ultimate consumer of push messages.  Many applications have components that are run on a user agent and other components that run on servers.  </dd>
   <dt>application server:</dt>
-  <dd style="margin-left: 8">The component of an application that runs on a server and requests the delivery of a push message.  </dd>
+  <dd style="margin-left: 8">The component of an application that usually runs on a server and requests the delivery of a push message.  </dd>
   <dt>push message subscription:</dt>
   <dd style="margin-left: 8">A message delivery context that is established between the user agent and the push service and shared with the application server.  All push messages are associated with a push message subscription.  </dd>
   <dt>push message subscription set:</dt>
@@ -551,7 +551,7 @@ Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
 
 </pre>
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> Collecting Subscriptions into Sets</h1>
-<p id="rfc.section.4.1.p.1">Collecting multiple push message subscriptions into a subscription set can represent a significant efficiency improvement for a push service. The push service MAY provide a URI for a subscription set resource in a link relation of type "urn:ietf:params:push:set".  </p>
+<p id="rfc.section.4.1.p.1">Collecting multiple push message subscriptions into a subscription set can represent a significant efficiency improvement for push services and user agents. The push service MAY provide a URI for a subscription set resource in a link relation of type "urn:ietf:params:push:set".  </p>
 <p id="rfc.section.4.1.p.2">When a subscription set is returned in a push message subscription response, the user agent SHOULD include this subscription set in a link relation of type "urn:ietf:params:push:set" in subsequent requests to create new push message subscriptions.  </p>
 <p id="rfc.section.4.1.p.3">A user agent MAY omit the subscription set if it is unable to receive push messages in an aggregated way for the lifetime of the subscription. This might be necessary if the user agent is forwarding subscription requests from other clients.  </p>
 <pre>
@@ -575,7 +575,7 @@ Location: https://push.example.net/subscription/i-nQ3A9Zm4kgSWg8_ZijV
 <p id="rfc.section.4.1.p.5">A push service MUST return a 400 (Bad Request) status code for requests which contain an invalid subscription set. A push service MAY return a 429 (Too Many Requests) status code <a href="#RFC6585">[RFC6585]</a> to reject requests which omit a subscription set.  </p>
 <p id="rfc.section.4.1.p.6">How a push service detects that requests originate from the same user agent is implementation-specific but could take ambient information into consideration, such as the TLS connection, source IP address and port.  Implementers are reminded that some heuristics can produce false positives and cause requests to be rejected incorrectly.  </p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#send" id="send">Requesting Push Message Delivery</a></h1>
-<p id="rfc.section.5.p.1">An application server requests the delivery of a push message by sending a HTTP POST request to a push resource distributed to the application server by a user agent. The push message is included in the body of the request.  </p>
+<p id="rfc.section.5.p.1">An application server requests the delivery of a push message by sending a HTTP POST request to a push resource distributed to the application server by a user agent. The ciphertext of the push message is included in the body of the request.  </p>
 <pre>
   
 POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -679,9 +679,9 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
   </tbody>
 </table>
 <p id="rfc.section.5.3.p.5">Multiple values for the Urgency header field MUST NOT be included in requests; otherwise, the push service MUST return a 400 (Bad Request) status code.  </p>
-<h1 id="rfc.section.5.4"><a href="#rfc.section.5.4">5.4.</a> <a href="#update" id="update">Updating Push Messages</a></h1>
+<h1 id="rfc.section.5.4"><a href="#rfc.section.5.4">5.4.</a> <a href="#replace" id="replace">Replacing Push Messages</a></h1>
 <p id="rfc.section.5.4.p.1">A push message that has been stored by the push service can be replaced with new content.  If the user agent is offline during the time that the push messages are sent, updating a push message avoids the situation where outdated or redundant messages are sent to the user agent.  </p>
-<p id="rfc.section.5.4.p.2">Only push messages that have been assigned a topic can be updated.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
+<p id="rfc.section.5.4.p.2">Only push messages that have been assigned a topic can be replaced.  A push message with a topic replaces any outstanding push message with an identical topic.  </p>
 <p id="rfc.section.5.4.p.3">A push message topic is a string carried in a Topic header field.  A topic is used to correlate push messages sent to the same subscription and does not convey any other semantics.  </p>
 <p id="rfc.section.5.4.p.4">The grammar for the Topic header field uses the <samp>token</samp> and <samp>quoted-string</samp> rules defined in <a href="#RFC7230">[RFC7230]</a>.  </p>
 <pre>
@@ -691,9 +691,9 @@ Topic = token / quoted-string
           </pre>
 <p id="rfc.section.5.4.p.5">Any double quotes from the <samp>quoted-string</samp> form are removed before comparing topics for equality.  </p>
 <p id="rfc.section.5.4.p.6">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return a 400 (Bad Request) status code to the application server.  </p>
-<p id="rfc.section.5.4.p.7">A push message update request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is updated, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress acknowledgement receipts for the replaced message.  </p>
+<p id="rfc.section.5.4.p.7">A push message replacement request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is replaced, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress delivery receipts for the replaced message.  </p>
 <p id="rfc.section.5.4.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
-<p>For example, the following message could cause an existing message to be updated: </p>
+<p>For example, the following message could cause an existing message to be replaced: </p>
 <pre>
 POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
@@ -704,7 +704,7 @@ Content-Length: 36
 
 ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
 </pre>
-<p>If the push service identifies an outstanding push message with a topic of "upd", then that message resource is deleted. A 201 (Created) response indicates that the push message update was accepted. A URI for the new push message resource that was created in response to the request is included in the Location header field.  </p>
+<p>If the push service identifies an outstanding push message with a topic of "upd", then that message resource is deleted. A 201 (Created) response indicates that the push message replacement was accepted. A URI for the new push message resource that was created in response to the request is included in the Location header field.  </p>
 <pre>
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
@@ -926,7 +926,7 @@ HEADERS      [stream 82] +END_STREAM
       <td class="left">Topic</td>
       <td class="left">http</td>
       <td class="left">standard</td>
-      <td class="left"><a href="#update">Section 5.4</a> </td>
+      <td class="left"><a href="#replace">Section 5.4</a> </td>
     </tr>
   </tbody>
 </table>
