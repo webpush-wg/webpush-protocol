@@ -216,10 +216,10 @@
 ]]></artwork>
       </figure>
       <t>
-        At the very beginning of the process, a new  message subscription is
+        At the very beginning of the process, a new message subscription is
         created by the user agent and then distributed to its application
         server. This subscription is the basis of all future interactions between
-        the actors. It is used by the  application server to send messages to
+        the actors. A subscription is used by the application server to send messages to
         the push service for being delivered to the user agent. It is used by
         the user agent to monitor the push service for any incomming message.
       </t>
@@ -775,7 +775,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         <preamble>
           The push service permits the request to remain outstanding.  When a
           push message is sent by an application server, a server push is generated
-          in association with the initial request.  The server push's response includes the push
+          in association with the initial request.  The response for the server push includes the push
           message.
         </preamble>
         <artwork>
