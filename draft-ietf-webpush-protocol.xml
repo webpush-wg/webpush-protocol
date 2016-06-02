@@ -506,6 +506,14 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
           server.
         </t>
         <t>
+         An application server MAY omit the receipt subscription if it is
+         unable to receive receipts in an aggregated way for the lifetime of
+         the receipt subscription. This might be necessary if the application
+         server is monitoring receipt subscriptions on the behalf of other
+         push message senders to allow these senders to switch to another
+         application server for monitoring its receipt subscription.
+        </t>
+        <t>
           A push service MUST return a 400 (Bad Request) status code for requests which contain
           an invalid receipt subscription. If a push service wishes to limit the number of
           receipt subscriptions that it maintains, it MAY return a 429 (Too Many Requests)
