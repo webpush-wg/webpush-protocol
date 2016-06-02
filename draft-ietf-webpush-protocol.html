@@ -543,11 +543,11 @@ Host: push.example.net
   
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Link: &lt;/p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
+Link: &lt;/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
         rel="urn:ietf:params:push"
-Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
+Link: &lt;/subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
         rel="urn:ietf:params:push:set"
-Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
 
 </pre>
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> Collecting Subscriptions into Sets</h1>
@@ -558,7 +558,7 @@ Location: https://push.example.net/s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
   
 POST /subscribe HTTP/1.1
 Host: push.example.net
-Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
+Link: &lt;/subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
         rel="urn:ietf:params:push:set"
 </pre>
 <p id="rfc.section.4.1.p.4">The push service SHOULD return the same subscription set in its response, although it MAY return a new subscription set if it is unable to reuse the one provided by the user agent.  </p>
@@ -566,11 +566,11 @@ Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
   
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:52 GMT
-Link: &lt;/p/YBJNBIMwwA_Ag8EtD47J4A&gt;;
+Link: &lt;/push/YBJNBIMwwA_Ag8EtD47J4A&gt;;
         rel="urn:ietf:params:push"
-Link: &lt;/set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
+Link: &lt;/subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy&gt;;
         rel="urn:ietf:params:push:set"
-Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
+Location: https://push.example.net/subscription/i-nQ3A9Zm4kgSWg8_ZijV
 </pre>
 <p id="rfc.section.4.1.p.5">A push service MUST return a 400 (Bad Request) status code for requests which contain an invalid subscription set. A push service MAY return a 429 (Too Many Requests) status code <a href="#RFC6585">[RFC6585]</a> to reject requests which omit a subscription set.  </p>
 <p id="rfc.section.4.1.p.6">How a push service detects that requests originate from the same user agent is implementation-specific but could take ambient information into consideration, such as the TLS connection, source IP address and port.  Implementers are reminded that some heuristics can produce false positives and cause requests to be rejected incorrectly.  </p>
@@ -578,7 +578,7 @@ Location: https://push.example.net/s/i-nQ3A9Zm4kgSWg8_ZijVQ
 <p id="rfc.section.5.p.1">An application server requests the delivery of a push message by sending a HTTP POST request to a push resource distributed to the application server by a user agent. The push message is included in the body of the request.  </p>
 <pre>
   
-POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 TTL: 15
 Content-Type: text/plain;charset=utf8
@@ -590,13 +590,13 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 <pre>
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:56:55 GMT
-Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 </pre>
 <h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#request_receipt" id="request_receipt">Requesting Push Message Receipts</a></h1>
 <p id="rfc.section.5.1.p.1">An application server can include the <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with the "respond-async" preference to request confirmation from the push service when a push message is delivered and then acknowledged by the user agent.  </p>
 <pre>
             
-POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 Prefer: respond-async
 TTL: 15
@@ -611,9 +611,9 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
             
 HTTP/1.1 202 Accepted
 Date: Thu, 11 Dec 2014 23:56:55 GMT
-Link: &lt;/r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM&gt;;
+Link: &lt;/receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM&gt;;
         rel="urn:ietf:params:push:receipt"
-Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 
           </pre>
 <p id="rfc.section.5.1.p.2">For subsequent receipt requests to the same origin <a href="#RFC6454">[RFC6454]</a>, the application server SHOULD include the returned receipt subscription in a link relation of type "urn:ietf:params:push:receipt". This gives the push service an option to aggregate the receipts. The push service SHOULD return the same receipt subscription in its response, although it MAY return a new receipt subscription if it is unable to reuse the one provided by the application server.  </p>
@@ -695,7 +695,7 @@ Topic = token / quoted-string
 <p id="rfc.section.5.4.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
 <p>For example, the following message could cause an existing message to be updated: </p>
 <pre>
-POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
+POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 TTL: 600
 Topic: "upd"
@@ -708,7 +708,7 @@ ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
 <pre>
 HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
-Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 </pre>
 <p id="rfc.section.5.4.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
@@ -719,7 +719,7 @@ Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 <pre>
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /s/LBhhw0OohO-Wl4Oi971UGsB7sdQGUibx
+  :path          = /subscription/LBhhw0OohO-Wl4Oi971UG
   :authority     = push.example.net
 </pre>
 <p>The push service permits the request to remain outstanding.  When a push message is sent by an application server, a server push is associated with the initial request.  The response includes the push message.  </p>
@@ -727,7 +727,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
           
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
-  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
   :authority     = push.example.net
 
 HEADERS      [stream 4] +END_HEADERS
@@ -735,7 +735,7 @@ HEADERS      [stream 4] +END_HEADERS
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
   cache-control  = private
-  :link          = &lt;/p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
+  :link          = &lt;/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
                     rel="urn:ietf:params:push"
   content-type   = text/plain;charset=utf8
   content-length = 36
@@ -759,7 +759,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             
 HEADERS      [stream 7] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy
+  :path          = /subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy
   :authority     = push.example.net
 
           </pre>
@@ -768,9 +768,9 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
             
 PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
-  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
   :authority     = push.example.net
-  :link          = &lt;/p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
+  :link          = &lt;/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV&gt;;
                     rel="urn:ietf:params:push"
 
 HEADERS      [stream 4] +END_HEADERS
@@ -794,7 +794,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
 <p id="rfc.section.6.2.p.1">To ensure that a push message is properly delivered to the user agent at least once, the user agent MUST acknowledge receipt of the message by performing a HTTP DELETE on the push message resource.  </p>
 <pre>
             
-DELETE /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk HTTP/1.1
+DELETE /message/qDIYHNcfAIPP_5ITvURr-d6BGt HTTP/1.1
 Host: push.example.net
 
           </pre>
@@ -809,7 +809,7 @@ Host: push.example.net
             
 HEADERS      [stream 13] +END_STREAM +END_HEADERS
   :method        = GET
-  :path          = /r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
+  :path          = /receipt-subscription/3ZtI4YVNBnUUZhuoChl6omUvG4ZM
   :authority     = push.example.net
 
           </pre>
@@ -818,7 +818,7 @@ HEADERS      [stream 13] +END_STREAM +END_HEADERS
             
 PUSH_PROMISE [stream 13; promised stream 82] +END_HEADERS
   :method        = GET
-  :path          = /d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
+  :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
   :authority     = push.example.net
 
 HEADERS      [stream 82] +END_STREAM
