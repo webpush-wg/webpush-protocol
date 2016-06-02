@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: November 9, 2016                                 B. Raymor, Ed.
+Expires: December 4, 2016                                 B. Raymor, Ed.
                                                                Microsoft
-                                                             May 8, 2016
+                                                            June 2, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 9, 2016.
+   This Internet-Draft will expire on December 4, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 1]
+Thomson, et al.         Expires December 4, 2016                [Page 1]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 2]
+Thomson, et al.         Expires December 4, 2016                [Page 2]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 3]
+Thomson, et al.         Expires December 4, 2016                [Page 3]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 1.1.  Conventions and Terminology
@@ -221,9 +221,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 4]
+Thomson, et al.         Expires December 4, 2016                [Page 4]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
     +-------+           +--------------+       +-------------+
@@ -277,9 +277,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 5]
+Thomson, et al.         Expires December 4, 2016                [Page 5]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 2.1.  HTTP Resources
@@ -333,9 +333,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 6]
+Thomson, et al.         Expires December 4, 2016                [Page 6]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    Advertising the alternate port (1001) allows middleboxes to optimize
@@ -389,9 +389,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 7]
+Thomson, et al.         Expires December 4, 2016                [Page 7]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    When a subscription set is returned in a push message subscription
@@ -445,9 +445,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 8]
+Thomson, et al.         Expires December 4, 2016                [Page 8]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    POST /p/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -501,9 +501,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016                [Page 9]
+Thomson, et al.         Expires December 4, 2016                [Page 9]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    A 202 (Accepted) response indicates that the push message was
@@ -557,9 +557,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 10]
+Thomson, et al.         Expires December 4, 2016               [Page 10]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    An application server MUST include the TTL (Time-To-Live) header
@@ -613,9 +613,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 11]
+Thomson, et al.         Expires December 4, 2016               [Page 11]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    message and if the user agent can request that the push server only
@@ -669,9 +669,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 12]
+Thomson, et al.         Expires December 4, 2016               [Page 12]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    Only push messages that have been assigned a topic can be updated.  A
@@ -725,9 +725,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 13]
+Thomson, et al.         Expires December 4, 2016               [Page 13]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    If the push service identifies an outstanding push message with a
@@ -781,9 +781,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 14]
+Thomson, et al.         Expires December 4, 2016               [Page 14]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    The push service permits the request to remain outstanding.  When a
@@ -837,9 +837,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 15]
+Thomson, et al.         Expires December 4, 2016               [Page 15]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    respond to this request, it instead uses HTTP/2 server push [RFC7540]
@@ -893,9 +893,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 16]
+Thomson, et al.         Expires December 4, 2016               [Page 16]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    The push service permits the request to remain outstanding.  When a
@@ -949,9 +949,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 17]
+Thomson, et al.         Expires December 4, 2016               [Page 17]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    If the push service receives the acknowledgement and the application
@@ -1005,9 +1005,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 18]
+Thomson, et al.         Expires December 4, 2016               [Page 18]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    The push service permits the request to remain outstanding.  When the
@@ -1061,9 +1061,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 19]
+Thomson, et al.         Expires December 4, 2016               [Page 19]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    A user agent that does not actively monitor for push messages will
@@ -1117,9 +1117,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 20]
+Thomson, et al.         Expires December 4, 2016               [Page 20]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 7.3.1.  Subscription Set Expiration
@@ -1173,9 +1173,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 21]
+Thomson, et al.         Expires December 4, 2016               [Page 21]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    limited to one concurrent stream to manage push message subscriptions
@@ -1229,9 +1229,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 22]
+Thomson, et al.         Expires December 4, 2016               [Page 22]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    their contents.  This allows a user agent to control correlation
@@ -1285,9 +1285,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 23]
+Thomson, et al.         Expires December 4, 2016               [Page 23]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    messages or delete the subscription.  Knowledge of a push URI implies
@@ -1341,9 +1341,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 24]
+Thomson, et al.         Expires December 4, 2016               [Page 24]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 8.5.  Logging Risks
@@ -1397,9 +1397,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 25]
+Thomson, et al.         Expires December 4, 2016               [Page 25]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    URN Prefix:  urn:ietf:params:push
@@ -1453,9 +1453,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 26]
+Thomson, et al.         Expires December 4, 2016               [Page 26]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    URN:  urn:ietf:params:push:receipt
@@ -1509,9 +1509,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 27]
+Thomson, et al.         Expires December 4, 2016               [Page 27]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 11.  References
@@ -1565,9 +1565,9 @@ Internet-Draft                HTTP Web Push                     May 2016
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 28]
+Thomson, et al.         Expires December 4, 2016               [Page 28]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
    [RFC7230]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
@@ -1621,9 +1621,9 @@ Appendix A.  Change Log
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 29]
+Thomson, et al.         Expires December 4, 2016               [Page 29]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 A.1.  Since draft-ietf-webpush-protocol-00
@@ -1677,9 +1677,9 @@ A.5.  Since draft-ietf-webpush-protocol-04
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 30]
+Thomson, et al.         Expires December 4, 2016               [Page 30]
 
-Internet-Draft                HTTP Web Push                     May 2016
+Internet-Draft                HTTP Web Push                    June 2016
 
 
 Authors' Addresses
@@ -1733,4 +1733,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.         Expires November 9, 2016               [Page 31]
+Thomson, et al.         Expires December 4, 2016               [Page 31]
