@@ -490,6 +490,7 @@ HTTP/1.1 202 Accepted
 Date: Thu, 11 Dec 2014 23:56:55 GMT
 Link: </r/3ZtI4YVNBnUUZhuoChl6omUvG4ZM>;
         rel="urn:ietf:params:push:receipt"
+Preference-Applied: respond-async
 Location: https://push.example.net/d/qDIYHNcfAIPP_5ITvURr-d6BGtYnTRnk
 ]]>
           </artwork>
