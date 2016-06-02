@@ -17,7 +17,7 @@
   zoom: 1.0;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1024px) {
   ul.toc, #rfc\.toc {
     position: fixed;
     bottom: 0;
@@ -47,7 +47,7 @@ body {
   font-size-adjust: 0.5;
   line-height: 130%;
   margin: 2.5em auto;
-  max-width: 700px;
+  max-width: 724px;
 }
 
 .title, .filename, h1, h2, h3, h4 {
@@ -62,7 +62,7 @@ body {
 h1 { font-size: 30px; }
 h2 { font-size: 24px; }
 h3, h4 { font-size: 18px; }
-h1 a:link, h2 a:link, h3 a:link, h4 a:link {
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
   color: #333;
 }
 
@@ -71,6 +71,7 @@ ul.toc li {
   text-indent: -2.5em;
   padding-left: 2.5em;
   padding-bottom: 5px;
+  margin: 0;
 }
 ul.toc, ul.toc ul {
   margin: 0 0 0 1.5em;
@@ -80,31 +81,33 @@ table {
   margin-left: 0em;
   border-collapse: collapse;
 }
-table > thead > th {
+th {
+  text-align: left;
   border-bottom: 2px solid #ddd;
 }
-table > tbody > tr > td, table > tbody > tr > th {
+td {
   border-top: 1px solid #ddd;
+  vertical-align: top;
 }
-table > tbody > tr:nth-child(2n+1) > td,
-table > tbody > tr:nth-child(2n+1) > th {
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
   background-color: #f9f9f9;
-}
-td.right {
-  text-align: right;
 }
 td.reference {
   max-width: 200px;
-}
-td.right, td.left, td.reference, td.top {
   border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
 }
 
 
 table.header {
   width: 100%;
 }
-table.header > tbody > tr > td {
+table.header td {
+  border: none;
   background-color: transparent;
   color: black;
 }
@@ -115,7 +118,7 @@ table.header > tbody > tr > td {
   height: auto;
   line-height: 100%;
 }
-#rfc\.abstract+p, #rfc\.abstract +p {
+#rfc\.abstract+p {
   font-size: 20px;
   font-weight: 300;
   line-height: 130%;
@@ -128,10 +131,13 @@ samp, tt, code, pre {
 pre {
   background-color: #eee;
   border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
 }
-
-pre.text, pre.text2 {
-  width: 90%;
+.figure {
+  font-style: italic;
+  margin: 0 1.5em;
 }
 
 address {
@@ -179,10 +185,6 @@ ul.empty {
 ul.empty li {
   margin-top: .5em;
 }
-td.reference {
-  padding-right: 1em;
-  vertical-align: top;
-}
 
 hr {
   border: 0;
@@ -192,16 +194,19 @@ hr {
 a {
   text-decoration: none;
 }
-a:link {
+a[href] {
   color: #2a6496;
 }
-a:link:hover {
+a[href]:hover {
   background-color: #eee;
 }
 
-ol, ul {
+ol, ul, li, p {
   padding: 0;
   margin: 0.5em 0 0.5em 2em;
+}
+li, p {
+  margin-left: 0;
 }
 
 .github-fork-ribbon-wrapper {
