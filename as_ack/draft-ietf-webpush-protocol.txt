@@ -971,10 +971,10 @@ Internet-Draft                HTTP Web Push                    June 2016
    (Gone) response to the application server monitoring the receipt
    subscription.
 
-   Note:  An application server also receives the push message resource
-      URI when it sends a push message.  This allows an application
-      server to acknowledge messages it sends.  This causes further
-      attempts to deliver the message to cease.
+   An application server also receives the push message resource URI
+   when it sends a push message.  This allows an application server to
+   acknowledge messages it sends.  This causes further attempts to
+   deliver the message to cease.
 
 6.3.  Receiving Push Message Receipts
 

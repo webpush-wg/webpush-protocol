@@ -801,12 +801,7 @@ Host: push.example.net
 <p id="rfc.section.6.2.p.2">If the push service receives the acknowledgement and the application has requested a delivery receipt, the push service MUST return a 204 (No Content) response to the application server monitoring the receipt subscription.  </p>
 <p id="rfc.section.6.2.p.3">If the push service does not receive the acknowledgement within a reasonable amount of time, then the message is considered to be not yet delivered. The push service SHOULD continue to retry delivery of the message until its advertised expiration.  </p>
 <p id="rfc.section.6.2.p.4">The push service MAY cease to retry delivery of the message prior to its advertised expiration due to scenarios such as an unresponsive user agent or operational constraints. If the application has requested a delivery receipt, then the push service MUST return a 410 (Gone) response to the application server monitoring the receipt subscription.  </p>
-<p/>
-
-<dl>
-  <dt>Note:</dt>
-  <dd style="margin-left: 8">An application server also receives the push message resource URI when it sends a push message.  This allows an application server to acknowledge messages it sends.  This causes further attempts to deliver the message to cease.  </dd>
-</dl>
+<p id="rfc.section.6.2.p.5">An application server also receives the push message resource URI when it sends a push message.  This allows an application server to acknowledge messages it sends.  This causes further attempts to deliver the message to cease.  </p>
 <h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#receive_receipt" id="receive_receipt">Receiving Push Message Receipts</a></h1>
 <p id="rfc.section.6.3.p.1">The application server requests the delivery of receipts from the push service by making a HTTP GET request to the receipt subscription resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send push receipts when messages are acknowledged (<a href="#acknowledge_message">Section 6.2</a>) by the user agent.  </p>
 <p id="rfc.section.6.3.p.2">Each receipt is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE.  This GET request is made to the same push message resource that was created by the push service when the application server requested message delivery. The response includes a status code indicating the result of the message delivery and carries no data.  </p>
