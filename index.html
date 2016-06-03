@@ -690,8 +690,9 @@ Topic = token
           
           </pre>
 <p id="rfc.section.5.4.p.5">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return a 400 (Bad Request) status code to the application server.  </p>
-<p id="rfc.section.5.4.p.6">A push message replacement request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic.  In effect, the information that is stored for the push message is replaced, but a new resource is created to avoid problems with in flight acknowledgments for the old message.  The push service MAY suppress delivery receipts for the replaced message.  </p>
-<p id="rfc.section.5.4.p.7">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
+<p id="rfc.section.5.4.p.6">A push message replacement request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic. Delivery receipts for the deleted message SHOULD be suppressed.  </p>
+<p id="rfc.section.5.4.p.7">The replacement request also replaces the stored TTL, Urgency, and any receipt subscription associated with the previous message in the matching topic.  </p>
+<p id="rfc.section.5.4.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
 <p>For example, the following message could cause an existing message to be replaced: </p>
 <pre>
 POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
@@ -709,7 +710,7 @@ HTTP/1.1 201 Created
 Date: Thu, 11 Dec 2014 23:57:02 GMT
 Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 </pre>
-<p id="rfc.section.5.4.p.8">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
+<p id="rfc.section.5.4.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.6.p.2">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
