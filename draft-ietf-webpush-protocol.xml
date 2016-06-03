@@ -940,8 +940,8 @@ Host: push.example.net
         </t>
         <t>
           An application server also receives the push message resource URI when it sends
-          a push message.  This allows an application server to acknowledge messages it
-          sends.  This causes further attempts to deliver the message to cease.
+          a push message.  This allows an application server to delete messages it sends.
+          A successful DELETE causes further attempts to deliver the message to cease.
         </t>
       </section>
 
