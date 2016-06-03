@@ -665,21 +665,15 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
         </t>
         <t>
           The grammar for the Topic header field uses the <spanx
-          style="verb">token</spanx> and <spanx
-          style="verb">quoted-string</spanx> rules defined in <xref
-          target="RFC7230"/>.
+          style="verb">token</spanx> rule defined in <xref target="RFC7230"/>.
         </t>
         <figure>
           <artwork type="abnf">
             <![CDATA[
-Topic = token / quoted-string
+Topic = token
           ]]>
           </artwork>
         </figure>
-        <t>
-          Any double quotes from the <spanx style="verb">quoted-string</spanx>
-          form are removed before comparing topics for equality.
-        </t>
         <t>
           For use with this protocol, the Topic header field MUST be restricted
           to no more than 32 characters from the URL and filename safe Base 64
@@ -708,7 +702,7 @@ Topic = token / quoted-string
 POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
 Host: push.example.net
 TTL: 600
-Topic: "upd"
+Topic: upd
 Content-Type: text/plain;charset=utf8
 Content-Length: 36
 
