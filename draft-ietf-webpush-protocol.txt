@@ -682,15 +682,12 @@ Internet-Draft                HTTP Web Push                    June 2016
    topic is used to correlate push messages sent to the same
    subscription and does not convey any other semantics.
 
-   The grammar for the Topic header field uses the "token" and "quoted-
-   string" rules defined in [RFC7230].
+   The grammar for the Topic header field uses the "token" rule defined
+   in [RFC7230].
 
 
-   Topic = token / quoted-string
+   Topic = token
 
-
-   Any double quotes from the "quoted-string" form are removed before
-   comparing topics for equality.
 
    For use with this protocol, the Topic header field MUST be restricted
    to no more than 32 characters from the URL and filename safe Base 64
@@ -715,11 +712,14 @@ Internet-Draft                HTTP Web Push                    June 2016
    POST /push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV HTTP/1.1
    Host: push.example.net
    TTL: 600
-   Topic: "upd"
+   Topic: upd
    Content-Type: text/plain;charset=utf8
    Content-Length: 36
 
    ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
+
+
+
 
 
 
