@@ -465,6 +465,10 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           from the push service when a push message is delivered and then acknowledged
           by the user agent.
        </t>
+       <t>
+        A push service that doesn't support sending request confirmation can
+        ignore the Prefer header field.
+       </t>
         <figure>
           <artwork type="inline">
             <![CDATA[
