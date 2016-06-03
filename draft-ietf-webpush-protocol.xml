@@ -691,9 +691,10 @@ Topic = token / quoted-string
           A push message replacement request creates a new push message resource
           and simultaneously deletes any existing message resource that has a
           matching topic.  In effect, the information that is stored for the
-          push message is replaced, but a new resource is created to avoid
-          problems with in flight acknowledgments for the old message.  The push
-          service MAY suppress delivery receipts for the replaced message.
+          push message - including TTL, Urgency and any receipt subscription -
+          is replaced, but a new resource is created to avoid problems with in
+          flight acknowledgments for the old message.  Delivery receipts for the
+          deleted message SHOULD be suppressed.
         </t>
         <t>
           A push message with a topic that is not shared by an outstanding
