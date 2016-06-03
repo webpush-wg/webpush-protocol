@@ -938,11 +938,11 @@ Host: push.example.net
           then the push service MUST return a 410 (Gone) response to the application server
           monitoring the receipt subscription.
         </t>
-        <t><list style="hanging"><t hangText="Note:">
+        <t>
           An application server also receives the push message resource URI when it sends
           a push message.  This allows an application server to acknowledge messages it
           sends.  This causes further attempts to deliver the message to cease.
-        </t></list></t>
+        </t>
       </section>
 
       <section anchor="receive_receipt" title="Receiving Push Message Receipts">
