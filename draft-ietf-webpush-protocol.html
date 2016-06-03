@@ -319,7 +319,7 @@ li, p {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-6-2" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-6-3" />
   <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
   <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
@@ -343,7 +343,7 @@ li, p {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: December 4, 2016</td>
+  <td class="left">Expires: December 5, 2016</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -352,7 +352,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">June 2, 2016</td>
+  <td class="right">June 3, 2016</td>
 </tr>
 
     	
@@ -372,7 +372,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 4, 2016.</p>
+<p>This Internet-Draft will expire on December 5, 2016.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -842,7 +842,7 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.7.2.p.6">To limit the number of stored push messages, the push service MAY either expire messages prior to their advertised Time-To-Live or reduce their advertised Time-To-Live.  </p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#delete" id="delete">Subscription Expiration</a></h1>
 <p id="rfc.section.7.3.p.1">In some cases, it may be necessary to terminate subscriptions so that they can be refreshed.  This applies to both push message subscriptions and receipt subscriptions.  </p>
-<p id="rfc.section.7.3.p.2">A push service can remove a subscription at any time. If a user agent or application server has an outstanding request to a push message subscription resource (<a href="#monitor-subscription">Section 6</a>) or to a receipt subscription resource (<a href="#receive_receipt">Section 6.3</a>), this MUST be signaled by returning a 404 (Not Found) status code.  </p>
+<p id="rfc.section.7.3.p.2">A push service MAY expire a subscription at any time. If there are outstanding requests to a push message subscription resource (<a href="#monitor-subscription">Section 6</a>) from a user agent or to a receipt subscription resource (<a href="#receive_receipt">Section 6.3</a>) from an application server, this MUST be signaled by returning a 404 (Not Found) status code.  </p>
 <p id="rfc.section.7.3.p.3">A push service MUST return a 404 (Not Found) status code if an application server attempts to send a push message to a removed or expired push message subscription.  </p>
 <p id="rfc.section.7.3.p.4">A user agent can remove its push message subscription by sending a DELETE request to the corresponding URI. An application server can remove its receipt subscription by sending a DELETE request to the corresponding URI.  </p>
 <h1 id="rfc.section.7.3.1"><a href="#rfc.section.7.3.1">7.3.1.</a> Subscription Set Expiration</h1>
