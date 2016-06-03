@@ -1067,10 +1067,10 @@ HEADERS      [stream 82] +END_STREAM
           subscriptions and receipt subscriptions.
         </t>
         <t>
-          A push service can remove a subscription at any time. If a user agent
-          or application server has an outstanding request to a push message subscription
-          resource (<xref target="monitor-subscription"/>) or to a receipt subscription resource (<xref target="receive_receipt"/>), this MUST be signaled by
-          returning a 404 (Not Found) status code.
+          A push service MAY expire a subscription at any time. If there are outstanding
+          requests to a push message subscription resource (<xref target="monitor-subscription"/>)
+          from a user agent or to a receipt subscription resource (<xref target="receive_receipt"/>)
+          from an application server, this MUST be signaled by returning a 404 (Not Found) status code.
         </t>
         <t>
           A push service MUST return a 404 (Not Found) status code if an application server
