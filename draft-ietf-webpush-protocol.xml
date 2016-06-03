@@ -279,7 +279,7 @@
               link relation of type "urn:ietf:params:push:set" identifies a push message
               subscription set.
             </t>
-            <t hangText="push:">
+            <t hangText="push send:">
               An application server <xref target="send">requests the delivery</xref> of a
               push message using a push resource.  A link relation of type "urn:ietf:params:push"
               identifies a push resource.
@@ -342,14 +342,14 @@ Host: push.example.net
         header field.
       </t>
       <t>
-        The push service MUST provide a URI for the push resource corresponding
+        The push service MUST provide a URI for the push send resource corresponding
         to the push message subscription in a link relation of type
         "urn:ietf:params:push".
       </t>
       <t>
-        An application-specific method is used to distribute the push URI to the
-        application server.  Confidentiality protection and application server
-        authentication MUST be used to ensure that this URI is not disclosed
+        An application-specific method is used to distribute the push send resource 
+        URI to the application server.  Confidentiality protection and application
+        server authentication MUST be used to ensure that this URI is not disclosed
         to unauthorized recipients (<xref target="authorization"/>).
       </t>
       <figure>
@@ -428,9 +428,10 @@ Location: https://push.example.net/subscription/i-nQ3A9Zm4kgSWg8_ZijV
     <section anchor="send" title="Requesting Push Message Delivery">
       <t>
         An application server requests the delivery of a push message by sending
-        a HTTP POST request to a push resource distributed to the application
-        server by a user agent. The ciphertext of the push message is included
-        in the body of the request.
+        a HTTP POST request to a push send resource distributed to the application
+        server by a user agent, corresponding to the push message subscription in the
+        link relation of type "urn:ietf:params:push". The ciphertext of the push 
+        message is included in the body of the request.
       </t>
       <figure>
         <artwork type="inline">
@@ -750,7 +751,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
         message delivery.  The response headers SHOULD provide a URI for the push
         resource corresponding to the push message subscription in a link relation
         of type "urn:ietf:params:push". The response body is the entity body from
-        the most recent request sent to the push resource by the application server.
+        the most recent request to the push send resource by the application server.
       </t>
 
       <figure>
@@ -832,7 +833,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
           Each push message is pushed as the response to a synthesized GET request
           sent in a PUSH_PROMISE. This GET request is made to the push message resource
           that was created by the push service when the application server requested
-          message delivery. The synthetic request MUST provide a URI for the push resource
+          message delivery. The synthetic request MUST provide a URI for the push send resource
           corresponding to the push message subscription in a link relation of type
           "urn:ietf:params:push". This enables the user agent to differentiate the source
           of the message. The response body is the entity body from the most recent request
