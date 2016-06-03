@@ -466,8 +466,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           by the user agent.
        </t>
        <t>
-          A push service MUST support sending request confirmation receipt to
-          an application server asking for it.
+          A push service MUST support the processing of push message receipts.
        </t>
         <figure>
           <artwork type="inline">
