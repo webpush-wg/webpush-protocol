@@ -1109,7 +1109,7 @@ Internet-Draft                HTTP Web Push                    June 2016
    A user agent can remove its push message subscription by sending a
    DELETE request to the push message subscription URI.  An application
    server can remove its receipt subscription by sending a DELETE
-   request to the receipt subscription URI.  A push service MOST NOT
+   request to the receipt subscription URI.  A push service MUST NOT
    generate a 404 (Not Found) status code for deleted subscriptions.
 
 
