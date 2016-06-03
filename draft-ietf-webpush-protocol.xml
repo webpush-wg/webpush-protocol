@@ -379,9 +379,10 @@ Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
           create new push message subscriptions.
         </t>
         <t>
-          A user agent MAY omit the subscription set if it is unable to receive push
-          messages in an aggregated way for the lifetime of the subscription. This might
-          be necessary if the user agent is forwarding subscription requests from other clients.
+          A user agent MAY omit the subscription set if it is unable to receive
+          push messages in an aggregated way for the lifetime of the
+          subscription. This might be necessary if the user agent is monitoring
+          subscriptions for other clients (see <xref target="sets-streams"/>).
         </t>
       <figure>
         <artwork type="inline">
@@ -505,6 +506,13 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           the same receipt subscription in its response, although it MAY return a new
           receipt subscription if it is unable to reuse the one provided by the application
           server.
+        </t>
+        <t>
+         An application server MAY omit the receipt subscription if it is
+         unable to receive receipts in an aggregated way for the lifetime of
+         the receipt subscription. This might be necessary if the application
+         server is monitoring receipt subscriptions on the behalf of other
+         push message senders (see <xref target="sets-streams"/>).
         </t>
         <t>
           A push service MUST return a 400 (Bad Request) status code for requests which contain
@@ -1138,6 +1146,12 @@ HEADERS      [stream 82] +END_STREAM
           subscriptions and one concurrent stream for each subscription set returned by the push service.
           This could force the user agent to serialize subscription requests to the push
           service.
+        </t>
+        <t>
+         A user agent that monitors subscriptions for other clients might
+         require multiple subscription sets. Each subscription set can then be
+         managed independently, which might include being moved between user
+         agents.
         </t>
       </section>
     </section>
