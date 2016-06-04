@@ -1065,13 +1065,13 @@ HEADERS      [stream 82] +END_STREAM
         </t>
         <t>
           A push service MAY expire a subscription at any time. If there are outstanding
-          requests to a push message subscription resource (<xref target="monitor-subscription"/>)
-          from a user agent or to a receipt subscription resource (<xref target="receive_receipt"/>)
+          requests to an expired push message subscription resource (<xref target="monitor-subscription"/>)
+          from a user agent or to an expired receipt subscription resource (<xref target="receive_receipt"/>)
           from an application server, this MUST be signaled by returning a 404 (Not Found) status code.
         </t>
         <t>
           A push service MUST return a 404 (Not Found) status code if an application server
-          attempts to send a push message to a removed or expired push message subscription.
+          attempts to send a push message to an expired push message subscription.
         </t>
         <t>
           A user agent can remove its push message subscription by sending a DELETE request to
@@ -1083,7 +1083,7 @@ HEADERS      [stream 82] +END_STREAM
             A push service MAY expire a subscription set at any time and MUST also
             expire all push message subscriptions in the set. If a user agent has an
             outstanding request to a push subscription set (<xref target="monitor-set"/>)
-            this can be signaled by returning a 404 (Not Found) status code.
+            this MUST be signaled by returning a 404 (Not Found) status code.
           </t>
           <t>
             A user agent can request that a subscription set be removed by sending a DELETE
