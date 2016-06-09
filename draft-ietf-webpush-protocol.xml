@@ -463,7 +463,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           An application server can include the <xref target="RFC7240">Prefer header
           field</xref> with the "respond-async" preference to request confirmation
           from the push service when a push message is delivered and then acknowledged
-          by the user agent.
+          by the user agent. The push service MUST support delivery confirmations.
        </t>
         <figure>
           <artwork type="inline">
@@ -481,11 +481,11 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
         </figure>
         <figure>
           <preamble>
-            A 202 (Accepted) response indicates that the push message was accepted. A
-            URI for the push message resource that was created in response to the request
-            MUST be returned in the Location header field. The push service MUST also provide
-            a URI for the receipt subscription resource in a link relation of type
-            "urn:ietf:params:push:receipt".
+            When the push service accepts the message for delivery, it MUST return a
+            202 (Accepted) response. A URI for the push message resource that was created
+            in response to the request MUST be returned in the Location header field. The
+            push service MUST also provide a URI for the receipt subscription resource in
+            a link relation of type "urn:ietf:params:push:receipt".
           </preamble>
           <artwork type="inline">
             <![CDATA[
