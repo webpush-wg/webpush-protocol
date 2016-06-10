@@ -481,10 +481,10 @@ iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
         </figure>
         <figure>
           <preamble>
-            When the push service accepts the message for delivery, it MUST return a
-            202 (Accepted) response. A URI for the push message resource that was created
-            in response to the request MUST be returned in the Location header field. The
-            push service MUST also provide a URI for the receipt subscription resource in
+            When the push service accepts the message for delivery with confirmation, it MUST
+            return a 202 (Accepted) response. A URI for the push message resource that was
+            created in response to the request MUST be returned in the Location header field.
+            The push service MUST also provide a URI for the receipt subscription resource in
             a link relation of type "urn:ietf:params:push:receipt".
           </preamble>
           <artwork type="inline">
