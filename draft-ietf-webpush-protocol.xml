@@ -465,6 +465,9 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           from the push service when a push message is delivered and then acknowledged
           by the user agent. The push service MUST support delivery confirmations.
        </t>
+       <t>
+          A push service MUST support the processing of push message receipts.
+       </t>
         <figure>
           <artwork type="inline">
             <![CDATA[
