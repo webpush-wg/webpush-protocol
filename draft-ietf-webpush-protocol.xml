@@ -222,7 +222,7 @@
         server. This subscription is the basis of all future interactions between
         the actors. A subscription is used by the application server to send messages to
         the push service for being delivered to the user agent. It is used by
-        the user agent to monitor the push service for any incomming message.
+        the user agent to monitor the push service for any incoming message.
       </t>
       <t>
         To offer more control for authorization, a message subscription is
