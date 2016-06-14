@@ -187,6 +187,14 @@
           HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format
           from <xref target="RFC7540"/> is used.
         </t>
+        <t>
+          Examples do not include specific methods for push message encryption
+          or application server authentication because the protocol does not define
+          a mandatory system. The examples in <xref target="I-D.ietf-webpush-vapid">Voluntary Application Server Identification</xref>
+          and <xref target="I-D.ietf-webpush-encryption">Message Encryption for WebPush</xref>
+          demonstrate the approach adopted by the <xref target="API">W3C Push API</xref> for
+          its requirements.
+        </t>
       </section>
     </section>
 
@@ -430,7 +438,7 @@ Location: https://push.example.net/subscription/i-nQ3A9Zm4kgSWg8_ZijV
       <t>
         An application server requests the delivery of a push message by sending
         a HTTP POST request to a push resource distributed to the application
-        server by a user agent. The ciphertext of the push message is included
+        server by a user agent. The content of the push message is included
         in the body of the request.
       </t>
       <figure>
