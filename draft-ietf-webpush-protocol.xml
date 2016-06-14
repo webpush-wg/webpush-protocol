@@ -187,6 +187,14 @@
           HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format
           from <xref target="RFC7540"/> is used.
         </t>
+        <t>
+          Examples do not include specific methods for push message encryption
+          or application server authentication because the protocol does not define
+          a mandatory system. The examples in <xref target="I-D.ietf-webpush-vapid">Voluntary Application Server Identification</xref>
+          and <xref target="I-D.ietf-webpush-encryption">Message Encryption for WebPush</xref>
+          demonstrate the approach adopted by the <xref target="API">W3C Push API</xref> for
+          its requirements.
+        </t>
       </section>
     </section>
 
