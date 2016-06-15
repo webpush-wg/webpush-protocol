@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: December 16, 2016                                B. Raymor, Ed.
+Expires: December 17, 2016                                B. Raymor, Ed.
                                                                Microsoft
-                                                           June 14, 2016
+                                                           June 15, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 16, 2016.
+   This Internet-Draft will expire on December 17, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 1]
+Thomson, et al.         Expires December 17, 2016               [Page 1]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -103,13 +103,13 @@ Table of Contents
      A.3.  Since draft-ietf-webpush-protocol-02  . . . . . . . . . .  30
      A.4.  Since draft-ietf-webpush-protocol-03  . . . . . . . . . .  30
      A.5.  Since draft-ietf-webpush-protocol-04  . . . . . . . . . .  30
+     A.6.  Since draft-ietf-webpush-protocol-05  . . . . . . . . . .  31
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 
 
 
-
-Thomson, et al.         Expires December 16, 2016               [Page 2]
+Thomson, et al.         Expires December 17, 2016               [Page 2]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 3]
+Thomson, et al.         Expires December 17, 2016               [Page 3]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 4]
+Thomson, et al.         Expires December 17, 2016               [Page 4]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 5]
+Thomson, et al.         Expires December 17, 2016               [Page 5]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 6]
+Thomson, et al.         Expires December 17, 2016               [Page 6]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 7]
+Thomson, et al.         Expires December 17, 2016               [Page 7]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 8]
+Thomson, et al.         Expires December 17, 2016               [Page 8]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016               [Page 9]
+Thomson, et al.         Expires December 17, 2016               [Page 9]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 10]
+Thomson, et al.         Expires December 17, 2016              [Page 10]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 11]
+Thomson, et al.         Expires December 17, 2016              [Page 11]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -669,7 +669,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 12]
+Thomson, et al.         Expires December 17, 2016              [Page 12]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -725,7 +725,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 13]
+Thomson, et al.         Expires December 17, 2016              [Page 13]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 14]
+Thomson, et al.         Expires December 17, 2016              [Page 14]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 15]
+Thomson, et al.         Expires December 17, 2016              [Page 15]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 16]
+Thomson, et al.         Expires December 17, 2016              [Page 16]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 17]
+Thomson, et al.         Expires December 17, 2016              [Page 17]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 18]
+Thomson, et al.         Expires December 17, 2016              [Page 18]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 19]
+Thomson, et al.         Expires December 17, 2016              [Page 19]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 20]
+Thomson, et al.         Expires December 17, 2016              [Page 20]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 21]
+Thomson, et al.         Expires December 17, 2016              [Page 21]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 22]
+Thomson, et al.         Expires December 17, 2016              [Page 22]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 23]
+Thomson, et al.         Expires December 17, 2016              [Page 23]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 24]
+Thomson, et al.         Expires December 17, 2016              [Page 24]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 25]
+Thomson, et al.         Expires December 17, 2016              [Page 25]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 26]
+Thomson, et al.         Expires December 17, 2016              [Page 26]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 27]
+Thomson, et al.         Expires December 17, 2016              [Page 27]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                HTTP Web Push                    June 2016
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 28]
+Thomson, et al.         Expires December 17, 2016              [Page 28]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1621,7 +1621,7 @@ Appendix A.  Change Log
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 29]
+Thomson, et al.         Expires December 17, 2016              [Page 29]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
@@ -1677,10 +1677,14 @@ A.5.  Since draft-ietf-webpush-protocol-04
 
 
 
-Thomson, et al.         Expires December 16, 2016              [Page 30]
+Thomson, et al.         Expires December 17, 2016              [Page 30]
 
 Internet-Draft                HTTP Web Push                    June 2016
 
+
+A.6.  Since draft-ietf-webpush-protocol-05
+
+   Addressed feedback from Working Group Last Call
 
 Authors' Addresses
 
@@ -1729,8 +1733,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-Thomson, et al.         Expires December 16, 2016              [Page 31]
+Thomson, et al.         Expires December 17, 2016              [Page 31]
