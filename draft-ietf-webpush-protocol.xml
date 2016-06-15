@@ -1884,7 +1884,11 @@ HEADERS      [stream 82] +END_STREAM
               Message Encryption and Voluntary Application Server Identification
             </t>
           </section>
-
+          <section title="Since draft-ietf-webpush-protocol-05" anchor="changes.since.draft-ietf-webpush-protocol-05">
+            <t>
+              Addressed feedback from Working Group Last Call
+            </t>
+          </section>
         </section>
   </back>
 </rfc>
