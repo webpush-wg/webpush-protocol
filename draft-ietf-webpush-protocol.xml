@@ -69,7 +69,7 @@
 
     <abstract>
       <t>
-        A simple protocol for the delivery of realtime events to user agents is
+        A simple protocol for the delivery of real-time events to user agents is
         described.  This scheme uses HTTP/2 server push.
       </t>
     </abstract>
@@ -831,7 +831,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
       <section anchor="monitor-set" title="Receiving Push Messages for a Subscription Set">
         <t>
           There are minor differences between receiving push messages for a subscription and
-          a subscripion set. If a subscription set is available, the user agent SHOULD use the
+          a subscription set. If a subscription set is available, the user agent SHOULD use the
           subscription set to monitor for push messages rather than individual push message
           subscriptions.
         </t>
@@ -1139,7 +1139,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           However, reliability might not be necessary for messages that are
           transient (e.g. an incoming call) or messages that are quickly
-          superceded (e.g. the current number of unread emails).
+          superseded (e.g. the current number of unread emails).
         </t>
       </section>
       <section anchor="sets-streams" title="Subscription Sets and Concurrent HTTP/2 streams">
