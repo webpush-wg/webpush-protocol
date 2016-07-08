@@ -1139,7 +1139,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           However, reliability might not be necessary for messages that are
           transient (e.g. an incoming call) or messages that are quickly
-          superseded (e.g. the current number of unread emails).
+          superceded (e.g. the current number of unread emails).
         </t>
       </section>
       <section anchor="sets-streams" title="Subscription Sets and Concurrent HTTP/2 streams">
@@ -1497,7 +1497,7 @@ HEADERS      [stream 82] +END_STREAM
       </section>
     </section>
 
-    <section anchor="ack" title="Acknowledgements">
+    <section title="Acknowledgements">
       <t>
         Significant technical input to this document has been provided by Ben
         Bangert, Peter Beverloo, Kit Cambridge, JR Conlin, Matthew Kaufman,
@@ -1505,11 +1505,9 @@ HEADERS      [stream 82] +END_STREAM
         Darshak Thakore and many others.
       </t>
     </section>
-
   </middle>
 
   <back>
-
     <references title="Normative References">
       <reference anchor="RFC2119">
         <front>
@@ -1772,22 +1770,22 @@ HEADERS      [stream 82] +END_STREAM
     </references>
 
     <references title="Informative References">
-      <reference anchor="I-D.ietf-webpush-encryption" target="https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-02.pdf">
+      <reference anchor="I-D.ietf-webpush-encryption" target="https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-03.pdf">
         <front>
           <title>Message Encryption for Web Push</title>
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <date month="March" year="2016" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-encryption-02"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-encryption-03"/>
       </reference>
-      <reference anchor="I-D.ietf-webpush-vapid" target="https://tools.ietf.org/pdf/draft-ietf-webpush-vapid-00.pdf">
+      <reference anchor="I-D.ietf-webpush-vapid" target="https://tools.ietf.org/pdf/draft-ietf-webpush-vapid-01.pdf">
         <front>
           <title>Voluntary Application Server Identification for Web Push</title>
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <author initials="P." surname="Beverloo" fullname="Peter Beverloo" />
           <date month="April" year="2016" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-vapid-00"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-vapid-01"/>
       </reference>
       <reference anchor="API" target="https://w3c.github.io/push-api/">
         <front>
@@ -1796,7 +1794,7 @@ HEADERS      [stream 82] +END_STREAM
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <author initials="B." surname="Sullivan" fullname="Bryan Sullivan"/>
           <author initials="E." surname="Fullea" fullname="Eduardo Fullea"/>
-          <date month="January" year="2016" />
+          <date month="July" year="2016" />
         </front>
         <seriesInfo name="ED" value="push-api" />
       </reference>
@@ -1826,69 +1824,75 @@ HEADERS      [stream 82] +END_STREAM
 
     </references>
 
-        <section title="Change Log">
-        <t>[[The RFC Editor is requested to remove this section at publication.]]</t>
-          <section title="Since draft-ietf-webpush-protocol-00" anchor="changes.since.draft-ietf-webpush-protocol-00">
-            <t>
-              Editorial changes for Push Message Time-To-Live
-            </t>
-            <t>
-              Editorial changes for Push Acknowledgements
-            </t>
-            <t>
-              Removed subscription expiration based on HTTP cache headers
-            </t>
-          </section>
-          <section title="Since draft-ietf-webpush-protocol-01" anchor="changes.since.draft-ietf-webpush-protocol-01">
-            <t>
-              Added Subscription Sets
-            </t>
-            <t>
-              Added System Port as an alternate service with guidance for idle timeouts
-            </t>
-            <t>
-              Finalized status codes for acknowledgements
-            </t>
-            <t>
-              Editorial changes for Rate Limits
-            </t>
-          </section>
-          <section title="Since draft-ietf-webpush-protocol-02" anchor="changes.since.draft-ietf-webpush-protocol-02">
-            <t>
-              Added explicit correlation for Subscription Sets
-            </t>
-            <t>
-              Added Push Message Updates (message collapsing)
-            </t>
-            <t>
-              Renamed the push:receipt link relation to push:receipts and transitioned the
-              Push-Receipt header field to the push:receipt link relation type
-            </t>
-          </section>
-          <section title="Since draft-ietf-webpush-protocol-03" anchor="changes.since.draft-ietf-webpush-protocol-03">
-            <t>
-              An application server MUST include the TTL (Time-To-Live) header field in
-              its request for push message delivery.
-            </t>
-            <t>
-              Added Push Message Urgency header field
-            </t>
-          </section>
-          <section title="Since draft-ietf-webpush-protocol-04" anchor="changes.since.draft-ietf-webpush-protocol-04">
-            <t>
-              Simplified design for Push Receipts and eliminated the urn:ietf:params:push:receipts link
-              relation
-            </t>
-            <t>
-              Clarified Security Considerations section and added informative references to
-              Message Encryption and Voluntary Application Server Identification
-            </t>
-          </section>
-          <section title="Since draft-ietf-webpush-protocol-05" anchor="changes.since.draft-ietf-webpush-protocol-05">
-            <t>
-              Addressed feedback from Working Group Last Call
-            </t>
-          </section>
-        </section>
+    <section title="Change Log">
+      <t>[[The RFC Editor is requested to remove this section at publication.]]</t>
+      <section title="Since draft-ietf-webpush-protocol-00" anchor="changes.since.draft-ietf-webpush-protocol-00">
+        <t>
+          Editorial changes for Push Message Time-To-Live
+        </t>
+        <t>
+          Editorial changes for Push Acknowledgements
+        </t>
+        <t>
+          Removed subscription expiration based on HTTP cache headers
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-01" anchor="changes.since.draft-ietf-webpush-protocol-01">
+        <t>
+          Added Subscription Sets
+        </t>
+        <t>
+          Added System Port as an alternate service with guidance for idle timeouts
+        </t>
+        <t>
+          Finalized status codes for acknowledgements
+        </t>
+        <t>
+          Editorial changes for Rate Limits
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-02" anchor="changes.since.draft-ietf-webpush-protocol-02">
+        <t>
+          Added explicit correlation for Subscription Sets
+        </t>
+        <t>
+          Added Push Message Updates (message collapsing)
+        </t>
+        <t>
+          Renamed the push:receipt link relation to push:receipts and transitioned the
+          Push-Receipt header field to the push:receipt link relation type
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-03" anchor="changes.since.draft-ietf-webpush-protocol-03">
+        <t>
+          An application server MUST include the TTL (Time-To-Live) header field in
+          its request for push message delivery.
+        </t>
+        <t>
+          Added Push Message Urgency header field
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-04" anchor="changes.since.draft-ietf-webpush-protocol-04">
+        <t>
+          Simplified design for Push Receipts and eliminated the urn:ietf:params:push:receipts link
+          relation
+        </t>
+        <t>
+          Clarified Security Considerations section and added informative references to
+          Message Encryption and Voluntary Application Server Identification
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-05" anchor="changes.since.draft-ietf-webpush-protocol-05">
+        <t>
+          Addressed feedback from Working Group Last Call
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-06" anchor="changes.since.draft-ietf-webpush-protocol-06">
+        <t>
+          Updated informative references to W3C Push API, Message Encryption, and Voluntary
+          Application Server Identification
+        </t>
+      </section>
+    </section>
   </back>
 </rfc>
