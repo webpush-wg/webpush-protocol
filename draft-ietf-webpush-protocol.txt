@@ -104,8 +104,8 @@ Table of Contents
      A.4.  Since draft-ietf-webpush-protocol-03  . . . . . . . . . .  30
      A.5.  Since draft-ietf-webpush-protocol-04  . . . . . . . . . .  30
      A.6.  Since draft-ietf-webpush-protocol-05  . . . . . . . . . .  31
+     A.7.  Since draft-ietf-webpush-protocol-06  . . . . . . . . . .  31
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
-
 
 
 
@@ -1162,7 +1162,7 @@ Internet-Draft                HTTP Web Push                    July 2016
 
    However, reliability might not be necessary for messages that are
    transient (e.g. an incoming call) or messages that are quickly
-   superseded (e.g. the current number of unread emails).
+   superceded (e.g. the current number of unread emails).
 
 7.5.  Subscription Sets and Concurrent HTTP/2 streams
 
@@ -1591,21 +1591,21 @@ Internet-Draft                HTTP Web Push                    July 2016
 11.2.  Informative References
 
    [API]      van Ouwerkerk, M., Thomson, M., Sullivan, B., and E.
-              Fullea, "W3C Push API", ED push-api, January 2016,
+              Fullea, "W3C Push API", ED push-api, July 2016,
               <https://w3c.github.io/push-api/>.
 
    [I-D.ietf-webpush-encryption]
               Thomson, M., "Message Encryption for Web Push", draft-
-              ietf-webpush-encryption-02 (work in progress), March 2016,
+              ietf-webpush-encryption-03 (work in progress), March 2016,
               <https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-
-              02.pdf>.
+              03.pdf>.
 
    [I-D.ietf-webpush-vapid]
               Thomson, M. and P. Beverloo, "Voluntary Application Server
-              Identification for Web Push", draft-ietf-webpush-vapid-00
+              Identification for Web Push", draft-ietf-webpush-vapid-01
               (work in progress), April 2016,
               <https://tools.ietf.org/pdf/draft-ietf-webpush-vapid-
-              00.pdf>.
+              01.pdf>.
 
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
               Morris, J., Hansen, M., and R. Smith, "Privacy
@@ -1686,6 +1686,11 @@ A.6.  Since draft-ietf-webpush-protocol-05
 
    Addressed feedback from Working Group Last Call
 
+A.7.  Since draft-ietf-webpush-protocol-06
+
+   Updated informative references to W3C Push API, Message Encryption,
+   and Voluntary Application Server Identification
+
 Authors' Addresses
 
    Martin Thomson
@@ -1713,11 +1718,6 @@ Authors' Addresses
    US
 
    Email: brian.raymor@microsoft.com
-
-
-
-
-
 
 
 

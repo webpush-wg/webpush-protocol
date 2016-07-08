@@ -312,6 +312,7 @@ li, p {
 <link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 Since draft-ietf-webpush-protocol-03"/>
 <link href="#rfc.appendix.A.5" rel="Chapter" title="A.5 Since draft-ietf-webpush-protocol-04"/>
 <link href="#rfc.appendix.A.6" rel="Chapter" title="A.6 Since draft-ietf-webpush-protocol-05"/>
+<link href="#rfc.appendix.A.7" rel="Chapter" title="A.7 Since draft-ietf-webpush-protocol-06"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -429,6 +430,7 @@ li, p {
 <li>A.4.   <a href="#rfc.appendix.A.4">Since draft-ietf-webpush-protocol-03</a></li>
 <li>A.5.   <a href="#rfc.appendix.A.5">Since draft-ietf-webpush-protocol-04</a></li>
 <li>A.6.   <a href="#rfc.appendix.A.6">Since draft-ietf-webpush-protocol-05</a></li>
+<li>A.7.   <a href="#rfc.appendix.A.7">Since draft-ietf-webpush-protocol-06</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -857,7 +859,7 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.7.4.p.1">A push service that does not support reliable delivery over intermittent network connections or failing applications on devices, forces the device to acknowledge receipt directly to the application server, incurring additional power drain in order to establish (usually secure) connections to the individual application servers.  </p>
 <p id="rfc.section.7.4.p.2">Push message reliability can be important if messages contain information critical to the state of an application.  Repairing state can be expensive, particularly for devices with limited communications capacity.  Knowing that a push message has been correctly received avoids retransmissions, polling, and state resynchronization.  </p>
 <p id="rfc.section.7.4.p.3">The availability of push message delivery receipts ensures that the application developer is not tempted to create alternative mechanisms for message delivery in case the push service fails to deliver a critical message. Setting up a polling mechanism or a backup messaging channel in order to compensate for these shortcomings negates almost all of the advantages a push service provides.  </p>
-<p id="rfc.section.7.4.p.4">However, reliability might not be necessary for messages that are transient (e.g. an incoming call) or messages that are quickly superseded (e.g. the current number of unread emails).  </p>
+<p id="rfc.section.7.4.p.4">However, reliability might not be necessary for messages that are transient (e.g. an incoming call) or messages that are quickly superceded (e.g. the current number of unread emails).  </p>
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#sets-streams" id="sets-streams">Subscription Sets and Concurrent HTTP/2 streams</a></h1>
 <p id="rfc.section.7.5.p.1">If the push service requires that the user agent use push message subscription sets, then it MAY limit the number of concurrently active streams with the SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <a href="#RFC7540">[RFC7540]</a>.  The user agent MAY be limited to one concurrent stream to manage push message subscriptions and one concurrent stream for each subscription set returned by the push service.  This could force the user agent to serialize subscription requests to the push service.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
@@ -1034,7 +1036,7 @@ HEADERS      [stream 82] +END_STREAM
 </dl>
 
 <p> </p>
-<h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#ack" id="ack">Acknowledgements</a></h1>
+<h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> Acknowledgements</h1>
 <p id="rfc.section.10.p.1">Significant technical input to this document has been provided by Ben Bangert, Peter Beverloo, Kit Cambridge, JR Conlin, Matthew Kaufman, Costin Manolache, Mark Nottingham, Idel Pivnitskiy, Robert Sparks, Darshak Thakore and many others.  </p>
 <h1 id="rfc.references"><a href="#rfc.references">11.</a> References</h1>
 <h1 id="rfc.references.1"><a href="#rfc.references.1">11.1.</a> Normative References</h1>
@@ -1157,19 +1159,19 @@ HEADERS      [stream 82] +END_STREAM
       <td class="reference">
         <b id="API">[API]</b>
       </td>
-      <td class="top"><a>van Ouwerkerk, M.</a>, <a>Thomson, M.</a>, <a>Sullivan, B.</a> and <a>E. Fullea</a>, "<a href="https://w3c.github.io/push-api/">W3C Push API</a>", ED push-api, January 2016.</td>
+      <td class="top"><a>van Ouwerkerk, M.</a>, <a>Thomson, M.</a>, <a>Sullivan, B.</a> and <a>E. Fullea</a>, "<a href="https://w3c.github.io/push-api/">W3C Push API</a>", ED push-api, July 2016.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="I-D.ietf-webpush-encryption">[I-D.ietf-webpush-encryption]</b>
       </td>
-      <td class="top"><a>Thomson, M.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-webpush-encryption-02">Message Encryption for Web Push</a>", Internet-Draft draft-ietf-webpush-encryption-02, March 2016.</td>
+      <td class="top"><a>Thomson, M.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-webpush-encryption-03">Message Encryption for Web Push</a>", Internet-Draft draft-ietf-webpush-encryption-03, March 2016.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="I-D.ietf-webpush-vapid">[I-D.ietf-webpush-vapid]</b>
       </td>
-      <td class="top"><a>Thomson, M.</a> and <a>P. Beverloo</a>, "<a href="http://tools.ietf.org/html/draft-ietf-webpush-vapid-00">Voluntary Application Server Identification for Web Push</a>", Internet-Draft draft-ietf-webpush-vapid-00, April 2016.</td>
+      <td class="top"><a>Thomson, M.</a> and <a>P. Beverloo</a>, "<a href="http://tools.ietf.org/html/draft-ietf-webpush-vapid-01">Voluntary Application Server Identification for Web Push</a>", Internet-Draft draft-ietf-webpush-vapid-01, April 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1202,6 +1204,8 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.A.5.p.2">Clarified Security Considerations section and added informative references to Message Encryption and Voluntary Application Server Identification </p>
 <h1 id="rfc.appendix.A.6"><a href="#rfc.appendix.A.6">A.6.</a> <a href="#changes.since.draft-ietf-webpush-protocol-05" id="changes.since.draft-ietf-webpush-protocol-05">Since draft-ietf-webpush-protocol-05</a></h1>
 <p id="rfc.section.A.6.p.1">Addressed feedback from Working Group Last Call </p>
+<h1 id="rfc.appendix.A.7"><a href="#rfc.appendix.A.7">A.7.</a> <a href="#changes.since.draft-ietf-webpush-protocol-06" id="changes.since.draft-ietf-webpush-protocol-06">Since draft-ietf-webpush-protocol-06</a></h1>
+<p id="rfc.section.A.7.p.1">Updated informative references to W3C Push API, Message Encryption, and Voluntary Application Server Identification </p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
