@@ -320,9 +320,9 @@ li, p {
 
   <meta name="dct.creator" content="Thomson, M., Damaggio, E., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-webpush-protocol-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-6-15" />
-  <meta name="dct.abstract" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
-  <meta name="description" content="A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  " />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-7-8" />
+  <meta name="dct.abstract" content="A simple protocol for the delivery of real-time events to user agents is described.  This scheme uses HTTP/2 server push.  " />
+  <meta name="description" content="A simple protocol for the delivery of real-time events to user agents is described.  This scheme uses HTTP/2 server push.  " />
 
 </head>
 
@@ -344,7 +344,7 @@ li, p {
   <td class="right">E. Damaggio</td>
 </tr>
 <tr>
-  <td class="left">Expires: December 17, 2016</td>
+  <td class="left">Expires: January 9, 2017</td>
   <td class="right">B. Raymor, Ed.</td>
 </tr>
 <tr>
@@ -353,7 +353,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">June 15, 2016</td>
+  <td class="right">July 8, 2016</td>
 </tr>
 
     	
@@ -366,14 +366,14 @@ li, p {
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>A simple protocol for the delivery of realtime events to user agents is described.  This scheme uses HTTP/2 server push.  </p>
+<p>A simple protocol for the delivery of real-time events to user agents is described.  This scheme uses HTTP/2 server push.  </p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 17, 2016.</p>
+<p>This Internet-Draft will expire on January 9, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -754,7 +754,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
 <p id="rfc.section.6.p.4">A user agent can also request the contents of the push message subscription resource immediately by including a <a href="#RFC7240">Prefer header field</a> <cite title="NONE">[RFC7240]</cite> with a "wait" preference set to "0". In response to this request, the push service MUST generate a server push for all push messages that have not yet been delivered.  </p>
 <p id="rfc.section.6.p.5">A 204 (No Content) status code with no associated server pushes indicates that no messages are presently available.  This could be because push messages have expired.  </p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#monitor-set" id="monitor-set">Receiving Push Messages for a Subscription Set</a></h1>
-<p id="rfc.section.6.1.p.1">There are minor differences between receiving push messages for a subscription and a subscripion set. If a subscription set is available, the user agent SHOULD use the subscription set to monitor for push messages rather than individual push message subscriptions.  </p>
+<p id="rfc.section.6.1.p.1">There are minor differences between receiving push messages for a subscription and a subscription set. If a subscription set is available, the user agent SHOULD use the subscription set to monitor for push messages rather than individual push message subscriptions.  </p>
 <p id="rfc.section.6.1.p.2">A user agent requests the delivery of new push messages for a collection of push message subscriptions by making a GET request to a push message subscription set resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
 <p id="rfc.section.6.1.p.3">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
 <p id="rfc.section.6.1.p.4">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE. This GET request is made to the push message resource that was created by the push service when the application server requested message delivery. The synthetic request MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". This enables the user agent to differentiate the source of the message. The response body is the entity body from the most recent request sent to the push resource by an application server.  </p>
@@ -857,7 +857,7 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.7.4.p.1">A push service that does not support reliable delivery over intermittent network connections or failing applications on devices, forces the device to acknowledge receipt directly to the application server, incurring additional power drain in order to establish (usually secure) connections to the individual application servers.  </p>
 <p id="rfc.section.7.4.p.2">Push message reliability can be important if messages contain information critical to the state of an application.  Repairing state can be expensive, particularly for devices with limited communications capacity.  Knowing that a push message has been correctly received avoids retransmissions, polling, and state resynchronization.  </p>
 <p id="rfc.section.7.4.p.3">The availability of push message delivery receipts ensures that the application developer is not tempted to create alternative mechanisms for message delivery in case the push service fails to deliver a critical message. Setting up a polling mechanism or a backup messaging channel in order to compensate for these shortcomings negates almost all of the advantages a push service provides.  </p>
-<p id="rfc.section.7.4.p.4">However, reliability might not be necessary for messages that are transient (e.g. an incoming call) or messages that are quickly superceded (e.g. the current number of unread emails).  </p>
+<p id="rfc.section.7.4.p.4">However, reliability might not be necessary for messages that are transient (e.g. an incoming call) or messages that are quickly superseded (e.g. the current number of unread emails).  </p>
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#sets-streams" id="sets-streams">Subscription Sets and Concurrent HTTP/2 streams</a></h1>
 <p id="rfc.section.7.5.p.1">If the push service requires that the user agent use push message subscription sets, then it MAY limit the number of concurrently active streams with the SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <a href="#RFC7540">[RFC7540]</a>.  The user agent MAY be limited to one concurrent stream to manage push message subscriptions and one concurrent stream for each subscription set returned by the push service.  This could force the user agent to serialize subscription requests to the push service.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
