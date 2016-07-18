@@ -184,7 +184,7 @@
         <t>
           Examples in this document use the <xref target="RFC7230">HTTP/1.1
           message format</xref>.  Many of the exchanges can be completed using
-          HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format
+          HTTP/1.1. Where HTTP/2 is necessary, the more verbose frame format
           from <xref target="RFC7540"/> is used.
         </t>
         <t>
@@ -209,29 +209,37 @@
  |  UA   |           | Push Service |       | Application |
  +-------+           +--------------+       +-------------+
      |                      |                      |
-     |      Subscribe       |                      |
+     |     1. Subscribe     |                      |
      |--------------------->|                      |
-     |       Monitor        |                      |
+     |      2. Monitor      |                      |
      |<====================>|                      |
      |                      |                      |
-     |          Distribute Push Resource           |
+     |         3. Distribute Push Resource         |
      |-------------------------------------------->|
      |                      |                      |
      :                      :                      :
-     |                      |     Push Message     |
-     |    Push Message      |<---------------------|
+     |                      |    4. Push Message   |
+     |    5. Push Message   |<---------------------|
      |<---------------------|                      |
      |                      |                      |
 ]]></artwork>
       </figure>
       <t>
         At the very beginning of the process, a new message subscription is
-        created by the user agent and then distributed to its application
-        server. This subscription is the basis of all future interactions between
+        created by the user agent (1) and then distributed to its application
+        server (3). This subscription is the basis of all future interactions between
         the actors. A subscription is used by the application server to send messages to
-        the push service for being delivered to the user agent. It is used by
+        the push service (4) for being delivered to the user agent (5). It is used by
         the user agent to monitor the push service for any incoming message.
       </t>
+
+      <t>[LJ: The 'Monitor' part from the diagram is not further explained in the text.
+   I interpreted it as "this is
+   a finite action that happens before 'distribute push resources'". If I understand
+   correctly, it is intended to encapsulate what happens in Section 6. To me
+   personally, this did not become clear after much later into the document.]
+ </t>
+
       <t>
         To offer more control for authorization, a message subscription is
         modeled as two resources with different capabilities:
@@ -287,7 +295,7 @@
               link relation of type "urn:ietf:params:push:set" identifies a push message
               subscription set.
             </t>
-            <t hangText="push:">
+            <t hangText="push resource:">
               An application server <xref target="send">requests the delivery</xref> of a
               push message using a push resource.  A link relation of type "urn:ietf:params:push"
               identifies a push resource.
@@ -350,8 +358,8 @@ Host: push.example.net
         header field.
       </t>
       <t>
-        The push service MUST provide a URI for the push resource corresponding
-        to the push message subscription in a link relation of type
+        The push service MUST provide a URI for the push resource (push URI)
+        corresponding to the push message subscription in a link relation of type
         "urn:ietf:params:push".
       </t>
       <t>
@@ -580,7 +588,7 @@ TTL = 1*DIGIT
           A push service is not obligated to account for time spent by the
           application server in sending a push message to the push service, or
           delays incurred while sending a push message to the user agent.  An
-          application server needs to account for transit delays in selecting a
+          application server SHOULD account for transit delays in selecting a
           TTL header field value.
         </t>
         <t>
@@ -588,7 +596,7 @@ TTL = 1*DIGIT
           available to receive the message. After delivery, the push service is permitted
           to immediately remove a push message with a zero TTL. This might occur before the
           user agent acknowledges receipt of the message by performing a HTTP DELETE on the
-          push message resource. Consequently, an application server cannot rely on receiving
+          push message resource. Consequently, an application server MUST NOT rely on receiving
           acknowledgement receipts for zero TTL push messages.
         </t>
         <t>
@@ -613,7 +621,7 @@ TTL = 1*DIGIT
         <t>
           An application server MAY include an Urgency header field in its
           request for push message delivery. This header field indicates the
-          message urgency. The push service MUST not forward the Urgency header
+          message urgency. The push service MUST NOT forward the Urgency header
           field to the user agent.  A push message without the Urgency header
           field defaults to a value of "normal".
         </t>
@@ -788,7 +796,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
         <preamble>
           The push service permits the request to remain outstanding.  When a
           push message is sent by an application server, a server push is generated
-          in association with the initial request.  The response for the server push includes the push
+          [LJ: by the push service, towards the user agent?] in association with the initial request.  The response for the server push includes the push
           message.
         </preamble>
         <artwork>
@@ -1064,7 +1072,7 @@ HEADERS      [stream 82] +END_STREAM
           push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
           in response to requests that include an entity body that is too large.
           Push services MUST NOT return a 413 status code in responses to an entity
-          body that is 4k (4096 bytes) or less in size.
+          body that is 4096 bytes or less in size.
           </t>
         <t>
           To limit the number of stored push messages, the push service MAY either
@@ -1173,7 +1181,11 @@ HEADERS      [stream 82] +END_STREAM
         from the user agent to its application server also offers a convenient medium for
         key agreement.
       </t>
-
+      <t>
+      [LJ: I fail to come up with a good example for this (i.e. user agent application
+   and application server being instances of the same application). Propose to
+   add a clarifying example.]
+    </t>
       <section title="Confidentiality from Push Service Access">
         <t>
           The protection afforded by TLS does not protect content from the push
@@ -1191,6 +1203,11 @@ HEADERS      [stream 82] +END_STREAM
           correlation of push messages on the same subject.  This might be used
           to aid traffic analysis of push messages by the push service.
         </t>
+        <t> [LJ: If I understand correctly, this means that the topic field is
+   always to be transmitted in plain (apart from TLS)? Is the reason for
+   this that the topic cannot be encrypted, since a salt is used and thus
+   the encrypted topic value could never be compared and thus no replacing
+   existing messages could happen?]</t>
      </section>
 
      <section title="Privacy Considerations">
@@ -1290,7 +1307,7 @@ HEADERS      [stream 82] +END_STREAM
          To address this case, the <xref target="API">W3C Push API</xref> has adopted
          <xref target="I-D.ietf-webpush-vapid">Voluntary Application Server Identification</xref>,
          which allows a user agent to restrict a subscription to a specific application
-         server. The push service can then identity and reject unwanted messages without
+         server. The push service can then identify and reject unwanted messages without
          contacting the user agent.
        </t>
        <t>
@@ -1316,6 +1333,9 @@ HEADERS      [stream 82] +END_STREAM
          from faults, which might occur due to transient network errors,
          interruptions in user agent availability, or genuine service outages.
        </t>
+       <t>[LJ: The last sentence stands somewhat alone. Reading it, I expected
+   this to have some sort of implication. Or is this meant to be just
+   an informative side note?]</t>
      </section>
 
      <section title="Logging Risks">
