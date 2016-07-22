@@ -183,8 +183,8 @@
 
         <t>
           Examples in this document use the <xref target="RFC7230">HTTP/1.1
-          message format</xref>.  Many of the exchanges can be completed using
-          HTTP/1.1, where HTTP/2 is necessary, the more verbose frame format
+          message format</xref>. Many of the exchanges can be completed using
+          HTTP/1.1. Where HTTP/2 is necessary, the more verbose frame format
           from <xref target="RFC7540"/> is used.
         </t>
         <t>
@@ -613,7 +613,7 @@ TTL = 1*DIGIT
         <t>
           An application server MAY include an Urgency header field in its
           request for push message delivery. This header field indicates the
-          message urgency. The push service MUST not forward the Urgency header
+          message urgency. The push service MUST NOT forward the Urgency header
           field to the user agent.  A push message without the Urgency header
           field defaults to a value of "normal".
         </t>
@@ -1064,7 +1064,7 @@ HEADERS      [stream 82] +END_STREAM
           push service MAY return a 413 (Payload Too Large) status code <xref target="RFC7231"/>
           in response to requests that include an entity body that is too large.
           Push services MUST NOT return a 413 status code in responses to an entity
-          body that is 4k (4096 bytes) or less in size.
+          body that is 4096 bytes or less in size.
           </t>
         <t>
           To limit the number of stored push messages, the push service MAY either
@@ -1290,7 +1290,7 @@ HEADERS      [stream 82] +END_STREAM
          To address this case, the <xref target="API">W3C Push API</xref> has adopted
          <xref target="I-D.ietf-webpush-vapid">Voluntary Application Server Identification</xref>,
          which allows a user agent to restrict a subscription to a specific application
-         server. The push service can then identity and reject unwanted messages without
+         server. The push service can then identify and reject unwanted messages without
          contacting the user agent.
        </t>
        <t>
@@ -1500,7 +1500,7 @@ HEADERS      [stream 82] +END_STREAM
     <section title="Acknowledgements">
       <t>
         Significant technical input to this document has been provided by Ben
-        Bangert, Peter Beverloo, Kit Cambridge, JR Conlin, Matthew Kaufman,
+        Bangert, Peter Beverloo, Kit Cambridge, JR Conlin, Lucas Jenns, Matthew Kaufman,
         Costin Manolache, Mark Nottingham, Idel Pivnitskiy, Robert Sparks,
         Darshak Thakore and many others.
       </t>
@@ -1891,6 +1891,11 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           Updated informative references to W3C Push API, Message Encryption, and Voluntary
           Application Server Identification
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-07" anchor="changes.since.draft-ietf-webpush-protocol-07">
+        <t>
+          Minor editorial changes
         </t>
       </section>
     </section>
