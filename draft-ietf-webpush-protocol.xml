@@ -1774,7 +1774,7 @@ HEADERS      [stream 82] +END_STREAM
         <front>
           <title>Message Encryption for Web Push</title>
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
-          <date month="March" year="2016" />
+          <date month="June" year="2016" />
         </front>
         <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-encryption-03"/>
       </reference>
@@ -1783,7 +1783,7 @@ HEADERS      [stream 82] +END_STREAM
           <title>Voluntary Application Server Identification for Web Push</title>
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <author initials="P." surname="Beverloo" fullname="Peter Beverloo" />
-          <date month="April" year="2016" />
+          <date month="June" year="2016" />
         </front>
         <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-vapid-01"/>
       </reference>
@@ -1794,7 +1794,7 @@ HEADERS      [stream 82] +END_STREAM
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
           <author initials="B." surname="Sullivan" fullname="Bryan Sullivan"/>
           <author initials="E." surname="Fullea" fullname="Eduardo Fullea"/>
-          <date month="July" year="2016" />
+          <date month="August" year="2016" />
         </front>
         <seriesInfo name="ED" value="push-api" />
       </reference>
@@ -1898,6 +1898,14 @@ HEADERS      [stream 82] +END_STREAM
           Minor editorial changes
         </t>
       </section>
+      <section title="Since draft-ietf-webpush-protocol-08" anchor="changes.since.draft-ietf-webpush-protocol-08">
+        <t>
+          Minor correction to Acknowledgements
+        </t>
+        <t>
+          Updated dates for informative references
+        </t>
+      </section>      
     </section>
   </back>
 </rfc>
