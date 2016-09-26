@@ -115,6 +115,7 @@ Internet-Draft                HTTP Web Push               September 2016
 
 
      A.9.  Since draft-ietf-webpush-protocol-08  . . . . . . . . . .  32
+     A.10. Since draft-ietf-webpush-protocol-09  . . . . . . . . . .  32
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  32
 
 1.  Introduction
@@ -160,7 +161,6 @@ Internet-Draft                HTTP Web Push               September 2016
    functions are currently fulfilled by proprietary protocols; these are
    adequate, but do not offer any of the advantages that standardization
    affords.
-
 
 
 
@@ -1761,6 +1761,10 @@ A.9.  Since draft-ietf-webpush-protocol-08
 
    Updated dates for informative references
 
+A.10.  Since draft-ietf-webpush-protocol-09
+
+   Updates for Area Director (Alissa Cooper) evaluation
+
 Authors' Addresses
 
    Martin Thomson
@@ -1779,10 +1783,6 @@ Authors' Addresses
    US
 
    Email: elioda@microsoft.com
-
-
-
-
 
 
 
