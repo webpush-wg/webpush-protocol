@@ -1470,29 +1470,29 @@ HEADERS      [stream 82] +END_STREAM
           "webpush" in accordance with <xref target="RFC6335"/>.
 
         <list style="hanging">
-            <t hangText="Service Name.">
+            <t hangText="Service Name:">
               <vspace />
               webpush</t>
-            <t hangText="Transport Protocol.">
+            <t hangText="Transport Protocol:">
               <vspace />
               tcp</t>
-            <t hangText="Assignee.">
+            <t hangText="Assignee:">
               <vspace />
-              IESG (iesg@ietf.org)
+              The IESG (iesg@ietf.org)
             </t>
-            <t hangText="Contact.">
+            <t hangText="Contact:">
               <vspace />
-              The Web Push WG (webpush@ietf.org)
+              The IETF Chair (chair@ietf.org)
             </t>
-            <t hangText="Description.">
+            <t hangText="Description:">
               <vspace />
               HTTP Web Push
             </t>
-            <t hangText="Reference.">
+            <t hangText="Reference:">
               <vspace />
               [RFCthis]
             </t>
-            <t hangText="Port Number.">
+            <t hangText="Port Number:">
               <vspace />
               1001
             </t>
