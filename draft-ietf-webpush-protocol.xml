@@ -634,13 +634,13 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
           ]]>
           </artwork>
         </figure>
-        <texttable anchor="urgency_values" title="Table of Urgency Values">
+        <texttable anchor="urgency_values" title="Illustrative Urgency Values">
           <preamble>
               In order of increasing urgency:
           </preamble>
           <ttcol width='15%' align='center'>Urgency</ttcol>
           <ttcol width='45%' align='left'>Device State</ttcol>
-          <ttcol width='40%' align='left'>Application Scenario</ttcol>
+          <ttcol width='40%' align='left'>Example Application Scenario</ttcol>
           <c>very-low</c>
           <c>On power and wifi</c>
           <c>Advertisements</c>
@@ -700,8 +700,10 @@ Topic = token
         <t>
           A push message replacement request creates a new push message resource
           and simultaneously deletes any existing message resource that has a
-          matching topic. Delivery receipts for the deleted message SHOULD be
-          suppressed.
+          matching topic. If an attempt was made to deliver the deleted push
+          message, an acknowledgment could arrive at the push service after the
+          push message has been replaced.  Delivery receipts for such deleted
+          messages SHOULD be suppressed.
         </t>
         <t>
           The replacement request also replaces the stored TTL, Urgency, and any
@@ -1157,12 +1159,13 @@ HEADERS      [stream 82] +END_STREAM
 
     <section anchor="security" title="Security Considerations">
       <t>
-        This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>.
-        This includes any communications between user agent and push service,
-        plus communications between the application and the push service.  All
-        URIs therefore use the "https" scheme.  This provides confidentiality
-        and integrity protection for subscriptions and push messages from
-        external parties.
+        This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>
+        following the recommendations in <xref target="RFC7525"/>.  This
+        includes any communications between user agent and push service, plus
+        communications between the application and the push service.  All URIs
+        therefore use the "https" scheme.  This provides confidentiality and
+        integrity protection for subscriptions and push messages from external
+        parties.
       </t>
       <t>
         Applications using this protocol MUST use mechanisms that provide confidentiality,
@@ -1204,7 +1207,8 @@ HEADERS      [stream 82] +END_STREAM
          correlate communications for a given user agent.  It MUST NOT be
          possible to correlate any two push resource URIs based solely on their
          contents.  This allows a user agent to control correlation across
-         different applications, or over time.
+         different applications, or over time.  Of course, this does not prevent
+         correlation using other information that a user agent might expose.
        </t>
        <t>
          Similarly, the URIs provided by the push service to identify a push
@@ -1466,29 +1470,29 @@ HEADERS      [stream 82] +END_STREAM
           "webpush" in accordance with <xref target="RFC6335"/>.
 
         <list style="hanging">
-            <t hangText="Service Name.">
+            <t hangText="Service Name:">
               <vspace />
               webpush</t>
-            <t hangText="Transport Protocol.">
+            <t hangText="Transport Protocol:">
               <vspace />
               tcp</t>
-            <t hangText="Assignee.">
+            <t hangText="Assignee:">
               <vspace />
-              IESG (iesg@ietf.org)
+              The IESG (iesg@ietf.org)
             </t>
-            <t hangText="Contact.">
+            <t hangText="Contact:">
               <vspace />
-              The Web Push WG (webpush@ietf.org)
+              The IETF Chair (chair@ietf.org)
             </t>
-            <t hangText="Description.">
+            <t hangText="Description:">
               <vspace />
               HTTP Web Push
             </t>
-            <t hangText="Reference.">
+            <t hangText="Reference:">
               <vspace />
               [RFCthis]
             </t>
-            <t hangText="Port Number.">
+            <t hangText="Port Number:">
               <vspace />
               1001
             </t>
@@ -1721,6 +1725,27 @@ HEADERS      [stream 82] +END_STREAM
         <format type="TXT" octets="32796" target="http://www.rfc-editor.org/rfc/rfc7240.txt" />
       </reference>
 
+      <reference  anchor="RFC7525">
+        <front>
+          <title>Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</title>
+          <author initials="Y." surname="Sheffer" fullname="Y. Sheffer">
+            <organization />
+          </author>
+          <author initials="R." surname="Holz" fullname="R. Holz">
+            <organization />
+          </author>
+          <author initials="P." surname="Saint-Andre" fullname="P. Saint-Andre">
+            <organization />
+          </author>
+          <date year="2015" month="May" />
+        </front>
+        <seriesInfo name="BCP" value="195"/>
+        <seriesInfo name="RFC" value="7525"/>
+        <seriesInfo name="DOI" value="10.17487/RFC7525"/>
+        <format type="TXT"
+                target="http://www.rfc-editor.org/rfc/rfc7525.txt" />
+      </reference>
+
       <reference anchor="RFC7540">
         <front>
           <title>Hypertext Transfer Protocol Version 2</title>
@@ -1905,7 +1930,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           Updated dates for informative references
         </t>
-      </section>      
+      </section>
     </section>
   </back>
 </rfc>
