@@ -700,8 +700,10 @@ Topic = token
         <t>
           A push message replacement request creates a new push message resource
           and simultaneously deletes any existing message resource that has a
-          matching topic. Delivery receipts for the deleted message SHOULD be
-          suppressed.
+          matching topic. If an attempt was made to deliver the deleted push
+          message, an acknowledgment could arrive at the push service after the
+          push message has been replaced.  Delivery receipts for such deleted
+          messages SHOULD be suppressed.
         </t>
         <t>
           The replacement request also replaces the stored TTL, Urgency, and any
