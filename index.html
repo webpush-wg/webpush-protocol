@@ -657,12 +657,12 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
 <div id="urgency_values"/>
 <p>In order of increasing urgency: </p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
-  <caption>Table of Urgency Values</caption>
+  <caption>Illustrative Urgency Values</caption>
   <thead>
     <tr>
       <th class="center">Urgency</th>
       <th class="left">Device State</th>
-      <th class="left">Application Scenario</th>
+      <th class="left">Example Application Scenario</th>
     </tr>
   </thead>
   <tbody>
@@ -700,7 +700,7 @@ Topic = token
           
           </pre>
 <p id="rfc.section.5.4.p.5">For use with this protocol, the Topic header field MUST be restricted to no more than 32 characters from the URL and filename safe Base 64 alphabet <a href="#RFC4648">[RFC4648]</a>. A push service that receives a request with a Topic header field that does not meet these constraints MUST return a 400 (Bad Request) status code to the application server.  </p>
-<p id="rfc.section.5.4.p.6">A push message replacement request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic. Delivery receipts for the deleted message SHOULD be suppressed.  </p>
+<p id="rfc.section.5.4.p.6">A push message replacement request creates a new push message resource and simultaneously deletes any existing message resource that has a matching topic. If an attempt was made to deliver the deleted push message, an acknowledgment could arrive at the push service after the push message has been replaced.  Delivery receipts for such deleted messages SHOULD be suppressed.  </p>
 <p id="rfc.section.5.4.p.7">The replacement request also replaces the stored TTL, Urgency, and any receipt subscription associated with the previous message in the matching topic.  </p>
 <p id="rfc.section.5.4.p.8">A push message with a topic that is not shared by an outstanding message to the same subscription is stored or delivered as normal.  </p>
 <p>For example, the following message could cause an existing message to be replaced: </p>
@@ -723,7 +723,7 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
 <p id="rfc.section.5.4.p.9">The value of the Topic header field MUST NOT be forwarded to user agents.  Its value is neither encrypted nor authenticated.  </p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#monitor-subscription" id="monitor-subscription">Receiving Push Messages for a Subscription</a></h1>
 <p id="rfc.section.6.p.1">A user agent requests the delivery of new push messages by making a GET request to a push message subscription resource.  The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.6.p.2">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
+<p id="rfc.section.6.p.2">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Illustrative Urgency Values</a>.  </p>
 <p id="rfc.section.6.p.3">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE.  This GET request is made to the push message resource that was created by the push service when the application server requested message delivery.  The response headers SHOULD provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". The response body is the entity body from the most recent request sent to the push resource by the application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
@@ -762,7 +762,7 @@ HEADERS      [stream 7] +END_STREAM +END_HEADERS
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#monitor-set" id="monitor-set">Receiving Push Messages for a Subscription Set</a></h1>
 <p id="rfc.section.6.1.p.1">There are minor differences between receiving push messages for a subscription and a subscription set. If a subscription set is available, the user agent SHOULD use the subscription set to monitor for push messages rather than individual push message subscriptions.  </p>
 <p id="rfc.section.6.1.p.2">A user agent requests the delivery of new push messages for a collection of push message subscriptions by making a GET request to a push message subscription set resource. The push service does not respond to this request, it instead uses <a href="#RFC7540">HTTP/2 server push</a> <cite title="NONE">[RFC7540]</cite> to send the contents of push messages as they are sent by application servers.  </p>
-<p id="rfc.section.6.1.p.3">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Table of Urgency Values</a>.  </p>
+<p id="rfc.section.6.1.p.3">A user agent MAY include a Urgency header field in its request. The push service MUST NOT deliver messages with lower urgency than the value of the header field as defined in the <a href="#urgency_values">Illustrative Urgency Values</a>.  </p>
 <p id="rfc.section.6.1.p.4">Each push message is pushed as the response to a synthesized GET request sent in a PUSH_PROMISE. This GET request is made to the push message resource that was created by the push service when the application server requested message delivery. The synthetic request MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push". This enables the user agent to differentiate the source of the message. The response body is the entity body from the most recent request sent to the push resource by an application server.  </p>
 <p>The following example request is made over HTTP/2.  </p>
 <pre>
@@ -867,7 +867,7 @@ HEADERS      [stream 82] +END_STREAM
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#sets-streams" id="sets-streams">Subscription Sets and Concurrent HTTP/2 streams</a></h1>
 <p id="rfc.section.7.5.p.1">If the push service requires that the user agent use push message subscription sets, then it MAY limit the number of concurrently active streams with the SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <a href="#RFC7540">[RFC7540]</a>.  The user agent MAY be limited to one concurrent stream to manage push message subscriptions and one concurrent stream for each subscription set returned by the push service.  This could force the user agent to serialize subscription requests to the push service.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
-<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite>.  This includes any communications between user agent and push service, plus communications between the application and the push service.  All URIs therefore use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
+<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite> following the recommendations in <a href="#RFC7525">[RFC7525]</a>.  This includes any communications between user agent and push service, plus communications between the application and the push service.  All URIs therefore use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
 <p id="rfc.section.8.p.2">Applications using this protocol MUST use mechanisms that provide confidentiality, integrity and data origin authentication. The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context. The distribution of subscription information from the user agent to its application server also offers a convenient medium for key agreement.  </p>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> Confidentiality from Push Service Access</h1>
 <p id="rfc.section.8.1.p.1">The protection afforded by TLS does not protect content from the push service.  Without additional safeguards, a push service can inspect and modify the message content.  </p>
@@ -875,7 +875,7 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.8.1.p.3">The Topic header field exposes information that allows more granular correlation of push messages on the same subject.  This might be used to aid traffic analysis of push messages by the push service.  </p>
 <h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> Privacy Considerations</h1>
 <p id="rfc.section.8.2.p.1">Push message confidentiality does not ensure that the identity of who is communicating and when they are communicating is protected.  However, the amount of information that is exposed can be limited.  </p>
-<p id="rfc.section.8.2.p.2">The URIs provided for push resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two push resource URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  </p>
+<p id="rfc.section.8.2.p.2">The URIs provided for push resources MUST NOT provide any basis to correlate communications for a given user agent.  It MUST NOT be possible to correlate any two push resource URIs based solely on their contents.  This allows a user agent to control correlation across different applications, or over time.  Of course, this does not prevent correlation using other information that a user agent might expose.  </p>
 <p id="rfc.section.8.2.p.3">Similarly, the URIs provided by the push service to identify a push message MUST NOT provide any information that allows for correlation across subscriptions.  Push message URIs for the same subscription MAY contain information that would allow correlation with the associated subscription or other push messages for that subscription.  </p>
 <p id="rfc.section.8.2.p.4">User and device information MUST NOT be exposed through a push or push message URI.  </p>
 <p id="rfc.section.8.2.p.5">In addition, push URIs established by the same user agent or push message URIs for the same subscription MUST NOT include any information that allows them to be correlated with the user agent.  </p>
@@ -1023,19 +1023,19 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.9.3.p.2">IANA is requested to assign the System Port number 1001 and the service name "webpush" in accordance with <a href="#RFC6335">[RFC6335]</a>.  </p>
 
 <dl>
-  <dt>Service Name.</dt>
+  <dt>Service Name:</dt>
   <dd style="margin-left: 8"><br/> webpush</dd>
-  <dt>Transport Protocol.</dt>
+  <dt>Transport Protocol:</dt>
   <dd style="margin-left: 8"><br/> tcp</dd>
-  <dt>Assignee.</dt>
-  <dd style="margin-left: 8"><br/> IESG (iesg@ietf.org) </dd>
-  <dt>Contact.</dt>
-  <dd style="margin-left: 8"><br/> The Web Push WG (webpush@ietf.org) </dd>
-  <dt>Description.</dt>
+  <dt>Assignee:</dt>
+  <dd style="margin-left: 8"><br/> The IESG (iesg@ietf.org) </dd>
+  <dt>Contact:</dt>
+  <dd style="margin-left: 8"><br/> The IETF Chair (chair@ietf.org) </dd>
+  <dt>Description:</dt>
   <dd style="margin-left: 8"><br/> HTTP Web Push </dd>
-  <dt>Reference.</dt>
+  <dt>Reference:</dt>
   <dd style="margin-left: 8"><br/> [RFCthis] </dd>
-  <dt>Port Number.</dt>
+  <dt>Port Number:</dt>
   <dd style="margin-left: 8"><br/> 1001 </dd>
 </dl>
 
@@ -1141,6 +1141,12 @@ HEADERS      [stream 82] +END_STREAM
         <b id="RFC7240">[RFC7240]</b>
       </td>
       <td class="top"><a>Snell, J.</a>, "<a href="http://tools.ietf.org/html/rfc7240">Prefer Header for HTTP</a>", RFC 7240, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7525">[RFC7525]</b>
+      </td>
+      <td class="top"><a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="http://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
     </tr>
     <tr>
       <td class="reference">
