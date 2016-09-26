@@ -1207,7 +1207,8 @@ HEADERS      [stream 82] +END_STREAM
          correlate communications for a given user agent.  It MUST NOT be
          possible to correlate any two push resource URIs based solely on their
          contents.  This allows a user agent to control correlation across
-         different applications, or over time.
+         different applications, or over time.  Of course, this does not prevent
+         correlation using other information that a user agent might expose.
        </t>
        <t>
          Similarly, the URIs provided by the push service to identify a push
