@@ -634,13 +634,13 @@ urgency-option = ("very-low" / "low" / "normal" / "high")
           ]]>
           </artwork>
         </figure>
-        <texttable anchor="urgency_values" title="Table of Urgency Values">
+        <texttable anchor="urgency_values" title="Illustrative Urgency Values">
           <preamble>
               In order of increasing urgency:
           </preamble>
           <ttcol width='15%' align='center'>Urgency</ttcol>
           <ttcol width='45%' align='left'>Device State</ttcol>
-          <ttcol width='40%' align='left'>Application Scenario</ttcol>
+          <ttcol width='40%' align='left'>Example Application Scenario</ttcol>
           <c>very-low</c>
           <c>On power and wifi</c>
           <c>Advertisements</c>
@@ -1905,7 +1905,7 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           Updated dates for informative references
         </t>
-      </section>      
+      </section>
     </section>
   </back>
 </rfc>
