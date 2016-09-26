@@ -1931,6 +1931,11 @@ HEADERS      [stream 82] +END_STREAM
           Updated dates for informative references
         </t>
       </section>
+      <section title="Since draft-ietf-webpush-protocol-09" anchor="changes.since.draft-ietf-webpush-protocol-09">
+        <t>
+          Updates for Area Director (Alissa Cooper) evaluation
+        </t>
+      </section>
     </section>
   </back>
 </rfc>
