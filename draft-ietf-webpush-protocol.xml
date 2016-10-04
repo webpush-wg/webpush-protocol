@@ -184,8 +184,37 @@
         <t>
           Examples in this document use the <xref target="RFC7230">HTTP/1.1
           message format</xref>. Many of the exchanges can be completed using
-          HTTP/1.1. Where HTTP/2 is necessary, the more verbose frame format
-          from <xref target="RFC7540"/> is used.
+          HTTP/1.1:
+
+          <list style="symbols">
+            <t>
+              <xref target="message_subscription">Subscribing for Push Messages</xref>
+            </t>
+            <t>
+              <xref target="send">Requesting Push Message Delivery</xref>
+            </t>
+            <t>
+              <xref target="replace">Replacing Push Messages</xref>
+            </t>
+            <t>
+              <xref target="acknowledge_message">Acknowledging Push Messages</xref>
+            </t>
+          </list>
+
+          Where HTTP/2 server push is required, the more verbose frame format
+          from <xref target="RFC7540"/> is used:
+
+          <list style="symbols">
+            <t>
+              <xref target="monitor-subscription">Receiving Push Messages for a Subscription</xref>
+            </t>
+            <t>
+              <xref target="monitor-set">Receiving Push Messages for a Subscription Set</xref>
+            </t>
+            <t>
+              <xref target="receive_receipt">Receiving Push Message Receipts</xref>
+            </t>
+          </list>
         </t>
         <t>
           Examples do not include specific methods for push message encryption
@@ -1075,13 +1104,13 @@ HEADERS      [stream 82] +END_STREAM
           in response to requests that include an entity body that is too large.
           Push services MUST NOT return a 413 status code in responses to an entity
           body that is 4096 bytes or less in size.
-          </t>
+        </t>
         <t>
           To limit the number of stored push messages, the push service MAY respond with a shorter
           Time-To-Live than proposed by the application server in its request for push message delivery
           (<xref target="ttl"/>). Once a message has been accepted, the push service MAY later expire
           the message prior to its advertised Time-To-Live. If the application server requested a
-          delivery receipt, the push service MUST return a failure response (<xref target="acknowledge_message"/>).
+          delivery receipt, the push service MUST return a failure response (s<xref target="acknowledge_message"/>).
         </t>
       </section>
 
