@@ -310,6 +310,7 @@
     </section>
     <section title="Connecting to the Push Service">
       <t>
+        The push service MUST use HTTP over TLS [RFC2818] following the recommendations in [RFC7525].
         The push service shares the same default port number (443/TCP) with HTTPS, but MAY
         also advertise the IANA allocated TCP System Port 1001 using HTTP alternative services
         <xref target="RFC7838"/>.
