@@ -1077,9 +1077,11 @@ HEADERS      [stream 82] +END_STREAM
           body that is 4096 bytes or less in size.
           </t>
         <t>
-          To limit the number of stored push messages, the push service MAY either
-          expire messages prior to their advertised Time-To-Live or reduce their
-          advertised Time-To-Live.
+          To limit the number of stored push messages, the push service MAY respond with a shorter
+          Time-To-Live than proposed by the application server in its request for push message delivery
+          (<xref target="ttl"/>). Once a message has been accepted, the push service MAY later expire
+          the message prior to its advertised Time-To-Live. If the application server requested a
+          delivery receipt, the push service MUST return a failure response (<xref target="acknowledge_message"/>).
         </t>
       </section>
 
