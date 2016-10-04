@@ -557,6 +557,13 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           in seconds that suggests how long a push message is retained by the push service.
         </t>
         <figure>
+          <preamble>
+            The TTL rule specifies a non-negative integer, representing time in seconds.
+            A recipient parsing and converting a TTL value to binary form SHOULD use an
+            arithmetic type of at least 31 bits of non-negative integer range. If a recipient
+            receives a TTL value greater than the greatest integer it can represent, or if any
+            of its subsequent calculations overflows, it MUST consider the value to be 2147483648 (2^31).
+          </preamble>
           <artwork type="abnf"><![CDATA[
 TTL = 1*DIGIT
           ]]></artwork>
