@@ -201,7 +201,7 @@
             </t>
           </list>
 
-          Where HTTP/2 server push is required, the more verbose frame format
+          When an example depends on HTTP/2 server push, the more verbose frame format
           from <xref target="RFC7540"/> is used:
 
           <list style="symbols">
