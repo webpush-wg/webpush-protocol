@@ -184,8 +184,37 @@
         <t>
           Examples in this document use the <xref target="RFC7230">HTTP/1.1
           message format</xref>. Many of the exchanges can be completed using
-          HTTP/1.1. Where HTTP/2 is necessary, the more verbose frame format
-          from <xref target="RFC7540"/> is used.
+          HTTP/1.1:
+
+          <list style="symbols">
+            <t>
+              <xref target="message_subscription">Subscribing for Push Messages</xref>
+            </t>
+            <t>
+              <xref target="send">Requesting Push Message Delivery</xref>
+            </t>
+            <t>
+              <xref target="replace">Replacing Push Messages</xref>
+            </t>
+            <t>
+              <xref target="acknowledge_message">Acknowledging Push Messages</xref>
+            </t>
+          </list>
+
+          When an example depends on HTTP/2 server push, the more verbose frame format
+          from <xref target="RFC7540"/> is used:
+
+          <list style="symbols">
+            <t>
+              <xref target="monitor-subscription">Receiving Push Messages for a Subscription</xref>
+            </t>
+            <t>
+              <xref target="monitor-set">Receiving Push Messages for a Subscription Set</xref>
+            </t>
+            <t>
+              <xref target="receive_receipt">Receiving Push Message Receipts</xref>
+            </t>
+          </list>
         </t>
         <t>
           Examples do not include specific methods for push message encryption
@@ -310,6 +339,7 @@
     </section>
     <section title="Connecting to the Push Service">
       <t>
+        The push service MUST use HTTP over TLS [RFC2818] following the recommendations in [RFC7525].
         The push service shares the same default port number (443/TCP) with HTTPS, but MAY
         also advertise the IANA allocated TCP System Port 1001 using HTTP alternative services
         <xref target="RFC7838"/>.
@@ -556,6 +586,13 @@ Location: https://push.example.net/message/qDIYHNcfAIPP_5ITvURr-d6BGt
           in seconds that suggests how long a push message is retained by the push service.
         </t>
         <figure>
+          <preamble>
+            The TTL rule specifies a non-negative integer, representing time in seconds.
+            A recipient parsing and converting a TTL value to binary form SHOULD use an
+            arithmetic type of at least 31 bits of non-negative integer range. If a recipient
+            receives a TTL value greater than the greatest integer it can represent, or if any
+            of its subsequent calculations overflows, it MUST consider the value to be 2147483648 (2^31).
+          </preamble>
           <artwork type="abnf"><![CDATA[
 TTL = 1*DIGIT
           ]]></artwork>
@@ -1067,11 +1104,13 @@ HEADERS      [stream 82] +END_STREAM
           in response to requests that include an entity body that is too large.
           Push services MUST NOT return a 413 status code in responses to an entity
           body that is 4096 bytes or less in size.
-          </t>
+        </t>
         <t>
-          To limit the number of stored push messages, the push service MAY either
-          expire messages prior to their advertised Time-To-Live or reduce their
-          advertised Time-To-Live.
+          To limit the number of stored push messages, the push service MAY respond with a shorter
+          Time-To-Live than proposed by the application server in its request for push message delivery
+          (<xref target="ttl"/>). Once a message has been accepted, the push service MAY later expire
+          the message prior to its advertised Time-To-Live. If the application server requested a
+          delivery receipt, the push service MUST return a failure response (<xref target="acknowledge_message"/>).
         </t>
       </section>
 
