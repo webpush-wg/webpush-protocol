@@ -1834,13 +1834,13 @@ HEADERS      [stream 82] +END_STREAM
     </references>
 
     <references title="Informative References">
-      <reference anchor="I-D.ietf-webpush-encryption" target="https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-03.pdf">
+      <reference anchor="I-D.ietf-webpush-encryption" target="https://tools.ietf.org/pdf/draft-ietf-webpush-encryption-04.pdf">
         <front>
           <title>Message Encryption for Web Push</title>
           <author initials="M." surname="Thomson" fullname="Martin Thomson" />
-          <date month="June" year="2016" />
+          <date month="October" year="2016" />
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-encryption-03"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-webpush-encryption-04"/>
       </reference>
       <reference anchor="I-D.ietf-webpush-vapid" target="https://tools.ietf.org/pdf/draft-ietf-webpush-vapid-01.pdf">
         <front>
@@ -1973,6 +1973,14 @@ HEADERS      [stream 82] +END_STREAM
       <section title="Since draft-ietf-webpush-protocol-09" anchor="changes.since.draft-ietf-webpush-protocol-09">
         <t>
           Updates for Area Director (Alissa Cooper) evaluation
+        </t>
+      </section>
+      <section title="Since draft-ietf-webpush-protocol-10" anchor="changes.since.draft-ietf-webpush-protocol-10">
+        <t>
+          Updates for TSV-ART review from Magnus Westerlund
+        </t>
+        <t>
+          Updated informative reference for Message Encryption
         </t>
       </section>
     </section>
