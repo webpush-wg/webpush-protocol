@@ -341,7 +341,7 @@
       <t>
         The push service MUST use HTTP over TLS [RFC2818] following the recommendations in [RFC7525].
         The push service shares the same default port number (443/TCP) with HTTPS, but MAY
-        also advertise the IANA allocated TCP System Port 1001 using HTTP alternative services
+        also advertise the IANA allocated TCP System Port (TBD) using HTTP alternative services
         <xref target="RFC7838"/>.
       </t>
       <t>
@@ -351,7 +351,7 @@
         radio communications to maintain the connection on battery-powered devices.
       </t>
       <t>
-        Advertising the alternate port (1001) allows middleboxes to optimize idle timeouts
+        Advertising the alternate port (TBD) allows middleboxes to optimize idle timeouts
         for connections specific to push scenarios with the expectation that data exchange will be
         infrequent.
       </t>
@@ -1505,10 +1505,11 @@ HEADERS      [stream 82] +END_STREAM
           target="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml"/>.
         </t>
         <t>
-          IANA is requested to assign the System Port number 1001 and the service name
-          "webpush" in accordance with <xref target="RFC6335"/>.
+          In accordance with <xref target="RFC6335"/>, it is requested that IANA assign
+          the suggested System Port number 1001 (or another port in the System range) and
+          the service name “webpush”.
 
-        <list style="hanging">
+          <list style="hanging">
             <t hangText="Service Name:">
               <vspace />
               webpush</t>
