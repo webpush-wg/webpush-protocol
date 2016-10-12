@@ -666,7 +666,7 @@ TTL = 1*DIGIT
         <figure>
           <artwork type="abnf">
             <![CDATA[
-Urgency = 1#(urgency-option)
+Urgency = urgency-option
 urgency-option = ("very-low" / "low" / "normal" / "high")
           ]]>
           </artwork>
