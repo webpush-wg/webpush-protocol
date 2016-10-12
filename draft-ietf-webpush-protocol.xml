@@ -924,13 +924,13 @@ PUSH_PROMISE [stream 7; promised stream 4] +END_HEADERS
   :method        = GET
   :path          = /message/qDIYHNcfAIPP_5ITvURr-d6BGt
   :authority     = push.example.net
-  link           = </push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
-                    rel="urn:ietf:params:push"
 
 HEADERS      [stream 4] +END_HEADERS
   :status        = 200
   date           = Thu, 11 Dec 2014 23:56:56 GMT
   last-modified  = Thu, 11 Dec 2014 23:56:55 GMT
+  link           = </push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV>;
+                    rel="urn:ietf:params:push"
   cache-control  = private
   content-type   = text/plain;charset=utf8
   content-length = 36
