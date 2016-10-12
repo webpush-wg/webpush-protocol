@@ -678,7 +678,7 @@ Internet-Draft                HTTP Web Push                 October 2016
    monitoring for messages.
 
 
-   Urgency = 1#(urgency-option)
+   Urgency = urgency-option
    urgency-option = ("very-low" / "low" / "normal" / "high")
 
 
