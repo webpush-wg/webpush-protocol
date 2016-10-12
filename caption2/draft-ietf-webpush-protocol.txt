@@ -251,8 +251,8 @@ Internet-Draft                HTTP Web Push                 October 2016
 
     +-------+           +--------------+       +-------------+
     |  UA   |           | Push Service |       | Application |
-    +-------+           +--------------+       +-------------+
-        |                      |                      |
+    +-------+           +--------------+       |   Server    |
+        |                      |               +-------------+
         |      Subscribe       |                      |
         |--------------------->|                      |
         |       Monitor        |                      |
@@ -1244,9 +1244,9 @@ Internet-Draft                HTTP Web Push                 October 2016
    This protocol MUST use HTTP over TLS [RFC2818] following the
    recommendations in [RFC7525].  This includes any communications
    between user agent and push service, plus communications between the
-   application and the push service.  All URIs therefore use the "https"
-   scheme.  This provides confidentiality and integrity protection for
-   subscriptions and push messages from external parties.
+   application server and the push service.  All URIs therefore use the
+   "https" scheme.  This provides confidentiality and integrity
+   protection for subscriptions and push messages from external parties.
 
    Applications using this protocol MUST use mechanisms that provide
    confidentiality, integrity and data origin authentication.  The

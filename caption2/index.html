@@ -510,8 +510,8 @@ li, p {
 <pre>
  +-------+           +--------------+       +-------------+
  |  UA   |           | Push Service |       | Application |
- +-------+           +--------------+       +-------------+
-     |                      |                      |
+ +-------+           +--------------+       |   Server    |
+     |                      |               +-------------+
      |      Subscribe       |                      |
      |---------------------&gt;|                      |
      |       Monitor        |                      |
@@ -892,7 +892,7 @@ HEADERS      [stream 82] +END_STREAM
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#sets-streams" id="sets-streams">Subscription Sets and Concurrent HTTP/2 streams</a></h1>
 <p id="rfc.section.7.5.p.1">If the push service requires that the user agent use push message subscription sets, then it MAY limit the number of concurrently active streams with the SETTINGS_MAX_CONCURRENT_STREAMS parameter within a HTTP/2 SETTINGS frame <a href="#RFC7540">[RFC7540]</a>.  The user agent MAY be limited to one concurrent stream to manage push message subscriptions and one concurrent stream for each subscription set returned by the push service.  This could force the user agent to serialize subscription requests to the push service.  </p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#security" id="security">Security Considerations</a></h1>
-<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite> following the recommendations in <a href="#RFC7525">[RFC7525]</a>.  This includes any communications between user agent and push service, plus communications between the application and the push service.  All URIs therefore use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
+<p id="rfc.section.8.p.1">This protocol MUST use <a href="#RFC2818">HTTP over TLS</a> <cite title="NONE">[RFC2818]</cite> following the recommendations in <a href="#RFC7525">[RFC7525]</a>.  This includes any communications between user agent and push service, plus communications between the application server and the push service.  All URIs therefore use the "https" scheme.  This provides confidentiality and integrity protection for subscriptions and push messages from external parties.  </p>
 <p id="rfc.section.8.p.2">Applications using this protocol MUST use mechanisms that provide confidentiality, integrity and data origin authentication. The application server sending the push message and the application on the user agent that receives it are frequently just different instances of the same application, so no standardized protocol is needed to establish a proper security context. The distribution of subscription information from the user agent to its application server also offers a convenient medium for key agreement.  </p>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> Confidentiality from Push Service Access</h1>
 <p id="rfc.section.8.1.p.1">The protection afforded by TLS does not protect content from the push service.  Without additional safeguards, a push service can inspect and modify the message content.  </p>
