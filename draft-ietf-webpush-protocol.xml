@@ -232,12 +232,12 @@
         A general model for push services includes three basic actors: a user
         agent, a push service, and an application (server).
       </t>
-      <figure>
+      <figure anchor="fig-arch" title="Webpush Architecture">
           <artwork><![CDATA[
  +-------+           +--------------+       +-------------+
  |  UA   |           | Push Service |       | Application |
- +-------+           +--------------+       +-------------+
-     |                      |                      |
+ +-------+           +--------------+       |   Server    |
+     |                      |               +-------------+
      |      Subscribe       |                      |
      |--------------------->|                      |
      |       Monitor        |                      |
@@ -1201,7 +1201,7 @@ HEADERS      [stream 82] +END_STREAM
         This protocol MUST use <xref target="RFC2818">HTTP over TLS</xref>
         following the recommendations in <xref target="RFC7525"/>.  This
         includes any communications between user agent and push service, plus
-        communications between the application and the push service.  All URIs
+        communications between the application server and the push service.  All URIs
         therefore use the "https" scheme.  This provides confidentiality and
         integrity protection for subscriptions and push messages from external
         parties.
