@@ -383,7 +383,7 @@ Internet-Draft                HTTP Web Push                 October 2016
    Host: push.example.net
 
 
-   A 201 (Created) response indicates that the a push subscription was
+   A 201 (Created) response indicates that the push subscription was
    created.  A URI for the push message subscription resource that was
 
 
@@ -1199,8 +1199,9 @@ Internet-Draft                HTTP Web Push                 October 2016
    A push service that does not support reliable delivery over
    intermittent network connections or failing applications on devices,
    forces the device to acknowledge receipt directly to the application
-   server, incurring additional power drain in order to establish
-   (usually secure) connections to the individual application servers.
+   server, incurring additional power drain in order to establish and
+   maintain (usually secure) connections to the individual application
+   servers.
 
    Push message reliability can be important if messages contain
    information critical to the state of an application.  Repairing state
@@ -1225,7 +1226,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    If the push service requires that the user agent use push message
    subscription sets, then it MAY limit the number of concurrently
    active streams with the SETTINGS_MAX_CONCURRENT_STREAMS parameter
-   within a HTTP/2 SETTINGS frame [RFC7540].  The user agent MAY be
 
 
 
@@ -1234,6 +1234,7 @@ Thomson, et al.          Expires April 16, 2017                [Page 22]
 Internet-Draft                HTTP Web Push                 October 2016
 
 
+   within a HTTP/2 SETTINGS frame [RFC7540].  The user agent MAY be
    limited to one concurrent stream to manage push message subscriptions
    and one concurrent stream for each subscription set returned by the
    push service.  This could force the user agent to serialize
@@ -1281,7 +1282,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    The URIs provided for push resources MUST NOT provide any basis to
    correlate communications for a given user agent.  It MUST NOT be
    possible to correlate any two push resource URIs based solely on
-   their contents.  This allows a user agent to control correlation
 
 
 
@@ -1290,6 +1290,7 @@ Thomson, et al.          Expires April 16, 2017                [Page 23]
 Internet-Draft                HTTP Web Push                 October 2016
 
 
+   their contents.  This allows a user agent to control correlation
    across different applications, or over time.  Of course, this does
    not prevent correlation using other information that a user agent
    might expose.
@@ -1337,7 +1338,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    client API" properties.  These make it possible to avoid relying on
    relationships between push services and application servers, with the
    protocols necessary to build and support those relationships.
-
 
 
 

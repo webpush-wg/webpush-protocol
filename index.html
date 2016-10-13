@@ -569,7 +569,7 @@ POST /subscribe HTTP/1.1
 Host: push.example.net
 
 </pre>
-<p id="rfc.section.4.p.2">A 201 (Created) response indicates that the a push subscription was created. A URI for the push message subscription resource that was created in response to the request MUST be returned in the Location header field.  </p>
+<p id="rfc.section.4.p.2">A 201 (Created) response indicates that the push subscription was created. A URI for the push message subscription resource that was created in response to the request MUST be returned in the Location header field.  </p>
 <p id="rfc.section.4.p.3">The push service MUST provide a URI for the push resource corresponding to the push message subscription in a link relation of type "urn:ietf:params:push".  </p>
 <p id="rfc.section.4.p.4">An application-specific method is used to distribute the push URI to the application server.  Confidentiality protection and application server authentication MUST be used to ensure that this URI is not disclosed to unauthorized recipients (<a href="#authorization">Section 8.3</a>).  </p>
 <pre>
@@ -885,7 +885,7 @@ HEADERS      [stream 82] +END_STREAM
 <p id="rfc.section.7.3.1.p.2">A user agent can request that a subscription set be removed by sending a DELETE request to the subscription set URI. This MUST also remove all push message subscriptions in the set.  </p>
 <p id="rfc.section.7.3.1.p.3">If a specific push message subscription that is a member of a subscription set is expired or removed, then it MUST also be removed from its subscription set.  </p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> Implications for Application Reliability</h1>
-<p id="rfc.section.7.4.p.1">A push service that does not support reliable delivery over intermittent network connections or failing applications on devices, forces the device to acknowledge receipt directly to the application server, incurring additional power drain in order to establish (usually secure) connections to the individual application servers.  </p>
+<p id="rfc.section.7.4.p.1">A push service that does not support reliable delivery over intermittent network connections or failing applications on devices, forces the device to acknowledge receipt directly to the application server, incurring additional power drain in order to establish and maintain (usually secure) connections to the individual application servers.  </p>
 <p id="rfc.section.7.4.p.2">Push message reliability can be important if messages contain information critical to the state of an application.  Repairing state can be expensive, particularly for devices with limited communications capacity.  Knowing that a push message has been correctly received avoids retransmissions, polling, and state resynchronization.  </p>
 <p id="rfc.section.7.4.p.3">The availability of push message delivery receipts ensures that the application developer is not tempted to create alternative mechanisms for message delivery in case the push service fails to deliver a critical message. Setting up a polling mechanism or a backup messaging channel in order to compensate for these shortcomings negates almost all of the advantages a push service provides.  </p>
 <p id="rfc.section.7.4.p.4">However, reliability might not be necessary for messages that are transient (e.g. an incoming call) or messages that are quickly superceded (e.g. the current number of unread emails).  </p>
