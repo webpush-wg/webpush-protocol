@@ -1322,7 +1322,8 @@ Internet-Draft                HTTP Web Push                 October 2016
    a user agent is permitted to create a subscription, or whether push
    messages can be delivered to the user agent.  A push service MAY
    choose to authorize requests based on any HTTP-compatible
-   authorization method available, of which there are numerous options.
+   authorization method available, of which there are multiple options
+   (including experimental options) with varying levels of security.
    The authorization process and any associated credentials are expected
    to be configured in the user agent along with the URI for the push
    service.
@@ -1336,7 +1337,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    client API" properties.  These make it possible to avoid relying on
    relationships between push services and application servers, with the
    protocols necessary to build and support those relationships.
-
 
 
 
