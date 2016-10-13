@@ -1287,9 +1287,10 @@ HEADERS      [stream 82] +END_STREAM
          user agent is permitted to create a subscription, or whether push
          messages can be delivered to the user agent.  A push service MAY choose
          to authorize requests based on any HTTP-compatible authorization method
-         available, of which there are numerous options.  The authorization
-         process and any associated credentials are expected to be configured in
-         the user agent along with the URI for the push service.
+         available, of which there are multiple options (including experimental
+         options) with varying levels of security considerations. The authorization
+         process and any associated credentials are expected to be configured in the
+         user agent along with the URI for the push service.
        </t>
        <t>
          Authorization is managed using capability URLs for the push message
