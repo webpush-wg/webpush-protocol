@@ -374,7 +374,7 @@ Host: push.example.net
 ]]></artwork>
       </figure>
       <t>
-        A 201 (Created) response indicates that the a push subscription was
+        A 201 (Created) response indicates that the push subscription was
         created. A URI for the push message subscription resource that was
         created in response to the request MUST be returned in the Location
         header field.
@@ -1159,7 +1159,7 @@ HEADERS      [stream 82] +END_STREAM
           A push service that does not support reliable delivery over
           intermittent network connections or failing applications on devices,
           forces the device to acknowledge receipt directly to the application
-          server, incurring additional power drain in order to establish
+          server, incurring additional power drain in order to establish and maintain
           (usually secure) connections to the individual application servers.
         </t>
         <t>
