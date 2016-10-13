@@ -1206,15 +1206,6 @@ HEADERS      [stream 82] +END_STREAM
         integrity protection for subscriptions and push messages from external
         parties.
       </t>
-      <t>
-        Applications using this protocol MUST use mechanisms that provide confidentiality,
-        integrity and data origin authentication. The application server sending the push
-        message and the application on the user agent that receives it are frequently just
-        different instances of the same application, so no standardized protocol is needed to
-        establish a proper security context. The distribution of subscription information
-        from the user agent to its application server also offers a convenient medium for
-        key agreement.
-      </t>
 
       <section title="Confidentiality from Push Service Access">
         <t>
@@ -1223,7 +1214,17 @@ HEADERS      [stream 82] +END_STREAM
           and modify the message content.
         </t>
         <t>
-          For its requirements, the <xref target="API">W3C Push API</xref> has adopted
+          Applications using this protocol MUST use mechanisms that provide
+          end-to-end confidentiality, integrity and data origin authentication.
+          The application server sending the push message and the application on
+          the user agent that receives it are frequently just different
+          instances of the same application, so no standardized protocol is
+          needed to establish a proper security context.  The distribution of
+          subscription information from the user agent to its application server
+          also offers a convenient medium for key agreement.
+        </t>
+        <t>
+          For this requirement, the <xref target="API">W3C Push API</xref> has adopted
           <xref target="I-D.ietf-webpush-encryption">Message Encryption for WebPush</xref>
           to secure the content of messages from the push service. Other scenarios can
           be addressed by similar policies.
