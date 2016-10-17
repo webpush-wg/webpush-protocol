@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: April 16, 2017                                   B. Raymor, Ed.
+Expires: April 20, 2017                                   B. Raymor, Ed.
                                                                Microsoft
-                                                        October 13, 2016
+                                                        October 17, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 16, 2017.
+   This Internet-Draft will expire on April 20, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.          Expires April 16, 2017                 [Page 1]
+Thomson, et al.          Expires April 20, 2017                 [Page 1]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -63,17 +63,17 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Conventions and Terminology . . . . . . . . . . . . . . .   4
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     2.1.  HTTP Resources  . . . . . . . . . . . . . . . . . . . . .   6
+     2.1.  HTTP Resources  . . . . . . . . . . . . . . . . . . . . .   7
    3.  Connecting to the Push Service  . . . . . . . . . . . . . . .   7
-   4.  Subscribing for Push Messages . . . . . . . . . . . . . . . .   7
-     4.1.  Collecting Subscriptions into Sets  . . . . . . . . . . .   8
-   5.  Requesting Push Message Delivery  . . . . . . . . . . . . . .   9
+   4.  Subscribing for Push Messages . . . . . . . . . . . . . . . .   8
+     4.1.  Collecting Subscriptions into Sets  . . . . . . . . . . .   9
+   5.  Requesting Push Message Delivery  . . . . . . . . . . . . . .  10
      5.1.  Requesting Push Message Receipts  . . . . . . . . . . . .  10
      5.2.  Push Message Time-To-Live . . . . . . . . . . . . . . . .  11
-     5.3.  Push Message Urgency  . . . . . . . . . . . . . . . . . .  12
-     5.4.  Replacing Push Messages . . . . . . . . . . . . . . . . .  13
+     5.3.  Push Message Urgency  . . . . . . . . . . . . . . . . . .  13
+     5.4.  Replacing Push Messages . . . . . . . . . . . . . . . . .  14
    6.  Receiving Push Messages for a Subscription  . . . . . . . . .  15
-     6.1.  Receiving Push Messages for a Subscription Set  . . . . .  16
+     6.1.  Receiving Push Messages for a Subscription Set  . . . . .  17
      6.2.  Acknowledging Push Messages . . . . . . . . . . . . . . .  18
      6.3.  Receiving Push Message Receipts . . . . . . . . . . . . .  19
    7.  Operational Considerations  . . . . . . . . . . . . . . . . .  20
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.          Expires April 16, 2017                 [Page 2]
+Thomson, et al.          Expires April 20, 2017                 [Page 2]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -165,7 +165,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                 [Page 3]
+Thomson, et al.          Expires April 20, 2017                 [Page 3]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                 [Page 4]
+Thomson, et al.          Expires April 20, 2017                 [Page 4]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -237,6 +237,16 @@ Internet-Draft                HTTP Web Push                 October 2016
 
    o  Receiving Push Message Receipts (Section 6.3)
 
+   All examples use HTTPS over the default port (443) rather than the
+   registered port (WEBPUSH-PORT).  A push service deployment might
+   prefer this configuration to maximize chances for user agents to
+   reach the service.  A push service might use HTTP alternative
+   services to redirect a user agent to the WEBPUSH-PORT to gain the
+   benefits of the standardized HTTPS port without sacrificing
+   reachability (see Section 3).  This would only be apparent in the
+   examples through the inclusion of the Alt-Used header field [RFC7838]
+   in requests from the user agent to the push service.
+
    Examples do not include specific methods for push message encryption
    or application server authentication because the protocol does not
    define a mandatory system.  The examples in Voluntary Application
@@ -248,6 +258,29 @@ Internet-Draft                HTTP Web Push                 October 2016
 
    A general model for push services includes three basic actors: a user
    agent, a push service, and an application (server).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                 [Page 5]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
 
     +-------+           +--------------+       +-------------+
     |  UA   |           | Push Service |       | Application |
@@ -274,14 +307,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    server.  This subscription is the basis of all future interactions
    between the actors.  A subscription is used by the application server
    to send messages to the push service for being delivered to the user
-
-
-
-Thomson, et al.          Expires April 16, 2017                 [Page 5]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    agent.  It is used by the user agent to monitor the push service for
    any incoming message.
 
@@ -304,6 +329,15 @@ Internet-Draft                HTTP Web Push                 October 2016
 
    Subscriptions have a limited lifetime.  They can also be terminated
    by either the push service or user agent at any time.  User agents
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                 [Page 6]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    and application servers must be prepared to manage changes in
    subscription state.
 
@@ -329,15 +363,6 @@ Internet-Draft                HTTP Web Push                 October 2016
       "urn:ietf:params:push:set" identifies a push message subscription
       set.
 
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                 [Page 6]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    push:  An application server requests the delivery (Section 5) of a
       push message using a push resource.  A link relation of type
       "urn:ietf:params:push" identifies a push resource.
@@ -359,6 +384,15 @@ Internet-Draft                HTTP Web Push                 October 2016
    default port number (443/TCP) with HTTPS, but MAY also advertise the
    IANA allocated TCP System Port (WEBPUSH-PORT) using HTTP alternative
    services [RFC7838].
+
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                 [Page 7]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
 
    While the default port (443) offers broad reachability
    characteristics, it is most often used for web browsing scenarios
@@ -385,15 +419,6 @@ Internet-Draft                HTTP Web Push                 October 2016
 
    A 201 (Created) response indicates that the push subscription was
    created.  A URI for the push message subscription resource that was
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                 [Page 7]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    created in response to the request MUST be returned in the Location
    header field.
 
@@ -414,6 +439,15 @@ Internet-Draft                HTTP Web Push                 October 2016
    Link: </subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
            rel="urn:ietf:params:push:set"
    Location: https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
+
+
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                 [Page 8]
+
+Internet-Draft                HTTP Web Push                 October 2016
 
 
 4.1.  Collecting Subscriptions into Sets
@@ -440,16 +474,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    Link: </subscription-set/4UXwi2Rd7jGS7gp5cuutF8ZldnEuvbOy>;
            rel="urn:ietf:params:push:set"
 
-
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                 [Page 8]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    The push service SHOULD return the same subscription set in its
    response, although it MAY return a new subscription set if it is
    unable to reuse the one provided by the user agent.
@@ -474,6 +498,14 @@ Internet-Draft                HTTP Web Push                 October 2016
    port.  Implementers are reminded that some heuristics can produce
    false positives and cause requests to be rejected incorrectly.
 
+
+
+
+Thomson, et al.          Expires April 20, 2017                 [Page 9]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
 5.  Requesting Push Message Delivery
 
    An application server requests the delivery of a push message by
@@ -489,22 +521,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    Content-Length: 36
 
    iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
-
-
-
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                 [Page 9]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
 
    A 201 (Created) response indicates that the push message was
    accepted.  A URI for the push message resource that was created in
@@ -535,6 +551,17 @@ Internet-Draft                HTTP Web Push                 October 2016
    iChYuI3jMzt3ir20P8r_jgRR-dSuN182x7iB
 
 
+
+
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 10]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    When the push service accepts the message for delivery with
    confirmation, it MUST return a 202 (Accepted) response.  A URI for
    the push message resource that was created in response to the request
@@ -554,14 +581,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    application server SHOULD include the returned receipt subscription
    in a link relation of type "urn:ietf:params:push:receipt".  This
    gives the push service an option to aggregate the receipts.  The push
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 10]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    service SHOULD return the same receipt subscription in its response,
    although it MAY return a new receipt subscription if it is unable to
    reuse the one provided by the application server.
@@ -591,6 +610,14 @@ Internet-Draft                HTTP Web Push                 October 2016
 
    Some push messages are not useful once a certain period of time
    elapses.  Delivery of messages after they have ceased to be relevant
+
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 11]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    is wasteful.  For example, if the push message contains a call
    notification, receiving a message after the caller has abandoned the
    call is of no value; the application at the user agent is forced to
@@ -610,13 +637,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    2147483648 (2^31).
 
    TTL = 1*DIGIT
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 11]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
 
    A push service MUST return a 400 (Bad Request) status code in
    response to requests that omit the TTL header field.
@@ -647,6 +667,13 @@ Internet-Draft                HTTP Web Push                 October 2016
    Consequently, an application server cannot rely on receiving
    acknowledgement receipts for zero TTL push messages.
 
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 12]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    If the user agent is unavailable, a push message with a zero TTL
    expires and is never delivered.
 
@@ -665,15 +692,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    An application server MAY include an Urgency header field in its
    request for push message delivery.  This header field indicates the
    message urgency.  The push service MUST NOT forward the Urgency
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 12]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    header field to the user agent.  A push message without the Urgency
    header field defaults to a value of "normal".
 
@@ -705,6 +723,13 @@ Internet-Draft                HTTP Web Push                 October 2016
 
                    Table 1: Illustrative Urgency Values
 
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 13]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    Multiple values for the Urgency header field MUST NOT be included in
    requests; otherwise, the push service MUST return a 400 (Bad Request)
    status code.
@@ -720,15 +745,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    Only push messages that have been assigned a topic can be replaced.
    A push message with a topic replaces any outstanding push message
    with an identical topic.
-
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 13]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
 
    A push message topic is a string carried in a Topic header field.  A
    topic is used to correlate push messages sent to the same
@@ -761,6 +777,15 @@ Internet-Draft                HTTP Web Push                 October 2016
    A push message with a topic that is not shared by an outstanding
    message to the same subscription is stored or delivered as normal.
 
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 14]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    For example, the following message could cause an existing message to
    be replaced:
 
@@ -772,19 +797,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    Content-Length: 36
 
    ZuHSZPKa2b1jtOKLGpWrcrn8cNqt0iVQyroF
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 14]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
 
    If the push service identifies an outstanding push message with a
    topic of "upd", then that message resource is deleted.  A 201
@@ -822,25 +834,20 @@ Internet-Draft                HTTP Web Push                 October 2016
    the most recent request sent to the push resource by the application
    server.
 
+
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 15]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
    The following example request is made over HTTP/2.
 
    HEADERS      [stream 7] +END_STREAM +END_HEADERS
      :method        = GET
      :path          = /subscription/LBhhw0OohO-Wl4Oi971UG
      :authority     = push.example.net
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 15]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
 
    The push service permits the request to remain outstanding.  When a
    push message is sent by an application server, a server push is
@@ -880,6 +887,17 @@ Internet-Draft                HTTP Web Push                 October 2016
    indicates that no messages are presently available.  This could be
    because push messages have expired.
 
+
+
+
+
+
+
+Thomson, et al.          Expires April 20, 2017                [Page 16]
+
+Internet-Draft                HTTP Web Push                 October 2016
+
+
 6.1.  Receiving Push Messages for a Subscription Set
 
    There are minor differences between receiving push messages for a
@@ -890,14 +908,6 @@ Internet-Draft                HTTP Web Push                 October 2016
    A user agent requests the delivery of new push messages for a
    collection of push message subscriptions by making a GET request to a
    push message subscription set resource.  The push service does not
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 16]
-
-Internet-Draft                HTTP Web Push                 October 2016
-
-
    respond to this request, it instead uses HTTP/2 server push [RFC7540]
    to send the contents of push messages as they are sent by application
    servers.
@@ -939,17 +949,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-Thomson, et al.          Expires April 16, 2017                [Page 17]
+Thomson, et al.          Expires April 20, 2017                [Page 17]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 18]
+Thomson, et al.          Expires April 20, 2017                [Page 18]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 19]
+Thomson, et al.          Expires April 20, 2017                [Page 19]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 20]
+Thomson, et al.          Expires April 20, 2017                [Page 20]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 21]
+Thomson, et al.          Expires April 20, 2017                [Page 21]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 22]
+Thomson, et al.          Expires April 20, 2017                [Page 22]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 23]
+Thomson, et al.          Expires April 20, 2017                [Page 23]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 24]
+Thomson, et al.          Expires April 20, 2017                [Page 24]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 25]
+Thomson, et al.          Expires April 20, 2017                [Page 25]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 26]
+Thomson, et al.          Expires April 20, 2017                [Page 26]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 27]
+Thomson, et al.          Expires April 20, 2017                [Page 27]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 28]
+Thomson, et al.          Expires April 20, 2017                [Page 28]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1621,7 +1621,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 29]
+Thomson, et al.          Expires April 20, 2017                [Page 29]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1677,7 +1677,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 30]
+Thomson, et al.          Expires April 20, 2017                [Page 30]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1733,7 +1733,7 @@ A.3.  Since draft-ietf-webpush-protocol-02
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 31]
+Thomson, et al.          Expires April 20, 2017                [Page 31]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1789,7 +1789,7 @@ A.11.  Since draft-ietf-webpush-protocol-10
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 32]
+Thomson, et al.          Expires April 20, 2017                [Page 32]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1845,4 +1845,4 @@ Authors' Addresses
 
 
 
-Thomson, et al.          Expires April 16, 2017                [Page 33]
+Thomson, et al.          Expires April 20, 2017                [Page 33]
