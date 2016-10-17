@@ -180,7 +180,6 @@
             </t>
           </list>
         </t>
-
         <t>
           Examples in this document use the <xref target="RFC7230">HTTP/1.1
           message format</xref>. Many of the exchanges can be completed using
@@ -215,6 +214,15 @@
               <xref target="receive_receipt">Receiving Push Message Receipts</xref>
             </t>
           </list>
+        </t>
+        <t>
+          All examples use HTTPS over the default port (443) rather than the registered port
+          (WEBPUSH-PORT). A push service deployment might prefer this configuration to maximize
+          chances for user agents to reach the service. A push service might use HTTP alternative
+          services to redirect a user agent to the WEBPUSH-PORT to gain the benefits of the
+          standardized HTTPS port without sacrificing reachability (see <xref target="connecting"/>).
+          This would only be apparent in the examples through the inclusion of the Alt-Used header
+          field <xref target="RFC7838"/> in requests from the user agent to the push service.
         </t>
         <t>
           Examples do not include specific methods for push message encryption
@@ -337,7 +345,7 @@
         </t>
       </section>
     </section>
-    <section title="Connecting to the Push Service">
+    <section anchor="connecting" title="Connecting to the Push Service">
       <t>
         The push service MUST use HTTP over TLS [RFC2818] following the recommendations in [RFC7525].
         The push service shares the same default port number (443/TCP) with HTTPS, but MAY
