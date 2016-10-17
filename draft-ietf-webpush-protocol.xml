@@ -216,11 +216,13 @@
           </list>
         </t>
         <t>
-          Examples do not demonstrate the use of HTTP alternative services (<xref target="connecting"/>),
-          which would minimally impact the example exchanges between the User Agent and the Push Service.
-          The one minor, visible change would be the addition of the Alt-Used header (<xref target="RFC7838"/>)
-          in requests from the User Agent to the Push Service. For simplicity, this header has been
-          omitted from examples.
+          All examples use HTTPS over the default port (443) rather than the registered port
+          (WEBPUSH-PORT). A push service deployment might prefer this configuration to maximize
+          chances for user agents to reach the service. If a push service uses HTTP alternative
+          services to redirect a user agent to the WEBPUSH-PORT to gain the benefits of the
+          standardized port without sacrificing reachability (<xref target="connecting"/>),
+          this would only be apparent in the examples through the inclusion of the Alt-Used header
+          (<xref target="RFC7838"/>) in requests from the user agent to the push service.
         </t>
         <t>
           Examples do not include specific methods for push message encryption
