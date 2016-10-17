@@ -180,7 +180,6 @@
             </t>
           </list>
         </t>
-
         <t>
           Examples in this document use the <xref target="RFC7230">HTTP/1.1
           message format</xref>. Many of the exchanges can be completed using
@@ -215,6 +214,13 @@
               <xref target="receive_receipt">Receiving Push Message Receipts</xref>
             </t>
           </list>
+        </t>
+        <t>
+          Examples do not demonstrate the use of HTTP alternative services (<xref target="connecting"/>),
+          which would minimally impact the example exchanges between the User Agent and the Push Service.
+          The one minor, visible change would be the addition of the Alt-Used header (<xref target="RFC7838"/>)
+          in requests from the User Agent to the Push Service. For simplicity, this header has been
+          omitted from examples.
         </t>
         <t>
           Examples do not include specific methods for push message encryption
@@ -337,7 +343,7 @@
         </t>
       </section>
     </section>
-    <section title="Connecting to the Push Service">
+    <section anchor="connecting" title="Connecting to the Push Service">
       <t>
         The push service MUST use HTTP over TLS [RFC2818] following the recommendations in [RFC7525].
         The push service shares the same default port number (443/TCP) with HTTPS, but MAY
