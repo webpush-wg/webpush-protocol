@@ -218,10 +218,10 @@
         <t>
           All examples use HTTPS over the default port (443) rather than the registered port
           (WEBPUSH-PORT). A push service deployment might prefer this configuration to maximize
-          chances for user agents to reach the service. If a push service uses HTTP alternative
+          chances for user agents to reach the service. A push service might use HTTP alternative
           services to redirect a user agent to the WEBPUSH-PORT to gain the benefits of the
-          standardized port without sacrificing reachability (see <xref target="connecting"/>),
-          this would only be apparent in the examples through the inclusion of the Alt-Used header
+          standardized HTTPS port without sacrificing reachability (see <xref target="connecting"/>).
+          This would only be apparent in the examples through the inclusion of the Alt-Used header
           field <xref target="RFC7838"/> in requests from the user agent to the push service.
         </t>
         <t>
