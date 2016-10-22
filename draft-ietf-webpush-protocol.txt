@@ -5,9 +5,9 @@
 WEBPUSH                                                       M. Thomson
 Internet-Draft                                                   Mozilla
 Intended status: Standards Track                             E. Damaggio
-Expires: April 20, 2017                                   B. Raymor, Ed.
+Expires: April 25, 2017                                   B. Raymor, Ed.
                                                                Microsoft
-                                                        October 17, 2016
+                                                        October 22, 2016
 
 
                  Generic Event Delivery Using HTTP Push
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 20, 2017.
+   This Internet-Draft will expire on April 25, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 1]
+Thomson, et al.          Expires April 25, 2017                 [Page 1]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 2]
+Thomson, et al.          Expires April 25, 2017                 [Page 2]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -117,6 +117,7 @@ Internet-Draft                HTTP Web Push                 October 2016
      A.9.  Since draft-ietf-webpush-protocol-08  . . . . . . . . . .  32
      A.10. Since draft-ietf-webpush-protocol-09  . . . . . . . . . .  32
      A.11. Since draft-ietf-webpush-protocol-10  . . . . . . . . . .  32
+     A.12. Since draft-ietf-webpush-protocol-11  . . . . . . . . . .  33
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  33
 
 1.  Introduction
@@ -160,15 +161,17 @@ Internet-Draft                HTTP Web Push                 October 2016
    the W3C Push API, where application servers might need to use
    multiple push services.  The subscription, management and monitoring
    functions are currently fulfilled by proprietary protocols; these are
-   adequate, but do not offer any of the advantages that standardization
-   affords.
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 3]
+
+Thomson, et al.          Expires April 25, 2017                 [Page 3]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
+
+   adequate, but do not offer any of the advantages that standardization
+   affords.
 
    This document intentionally does not describe how a push service is
    discovered.  Discovery of push services is left for future efforts,
@@ -215,16 +218,17 @@ Internet-Draft                HTTP Web Push                 October 2016
 
    o  Subscribing for Push Messages (Section 4)
 
-   o  Requesting Push Message Delivery (Section 5)
-
-   o  Replacing Push Messages (Section 5.4)
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 4]
+Thomson, et al.          Expires April 25, 2017                 [Page 4]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
+
+   o  Requesting Push Message Delivery (Section 5)
+
+   o  Replacing Push Messages (Section 5.4)
 
    o  Acknowledging Push Messages (Section 6.2)
 
@@ -241,11 +245,11 @@ Internet-Draft                HTTP Web Push                 October 2016
    registered port (WEBPUSH-PORT).  A push service deployment might
    prefer this configuration to maximize chances for user agents to
    reach the service.  A push service might use HTTP alternative
-   services to redirect a user agent to the WEBPUSH-PORT to gain the
-   benefits of the standardized HTTPS port without sacrificing
-   reachability (see Section 3).  This would only be apparent in the
-   examples through the inclusion of the Alt-Used header field [RFC7838]
-   in requests from the user agent to the push service.
+   services to redirect a user agent to the registered port (WEBPUSH-
+   PORT) to gain the benefits of the standardized HTTPS port without
+   sacrificing reachability (see Section 3).  This would only be
+   apparent in the examples through the inclusion of the Alt-Used header
+   field [RFC7838] in requests from the user agent to the push service.
 
    Examples do not include specific methods for push message encryption
    or application server authentication because the protocol does not
@@ -273,11 +277,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-
-
-
-
-Thomson, et al.          Expires April 20, 2017                 [Page 5]
+Thomson, et al.          Expires April 25, 2017                 [Page 5]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 6]
+Thomson, et al.          Expires April 25, 2017                 [Page 6]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 7]
+Thomson, et al.          Expires April 25, 2017                 [Page 7]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 8]
+Thomson, et al.          Expires April 25, 2017                 [Page 8]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                 [Page 9]
+Thomson, et al.          Expires April 25, 2017                 [Page 9]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 10]
+Thomson, et al.          Expires April 25, 2017                [Page 10]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -613,7 +613,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 11]
+Thomson, et al.          Expires April 25, 2017                [Page 11]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -669,7 +669,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 12]
+Thomson, et al.          Expires April 25, 2017                [Page 12]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -725,7 +725,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 13]
+Thomson, et al.          Expires April 25, 2017                [Page 13]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 14]
+Thomson, et al.          Expires April 25, 2017                [Page 14]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -837,7 +837,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 15]
+Thomson, et al.          Expires April 25, 2017                [Page 15]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -893,7 +893,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 16]
+Thomson, et al.          Expires April 25, 2017                [Page 16]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -949,7 +949,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 17]
+Thomson, et al.          Expires April 25, 2017                [Page 17]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 18]
+Thomson, et al.          Expires April 25, 2017                [Page 18]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 19]
+Thomson, et al.          Expires April 25, 2017                [Page 19]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 20]
+Thomson, et al.          Expires April 25, 2017                [Page 20]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 21]
+Thomson, et al.          Expires April 25, 2017                [Page 21]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 22]
+Thomson, et al.          Expires April 25, 2017                [Page 22]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 23]
+Thomson, et al.          Expires April 25, 2017                [Page 23]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 24]
+Thomson, et al.          Expires April 25, 2017                [Page 24]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 25]
+Thomson, et al.          Expires April 25, 2017                [Page 25]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 26]
+Thomson, et al.          Expires April 25, 2017                [Page 26]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 27]
+Thomson, et al.          Expires April 25, 2017                [Page 27]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 28]
+Thomson, et al.          Expires April 25, 2017                [Page 28]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1621,7 +1621,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 29]
+Thomson, et al.          Expires April 25, 2017                [Page 29]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1677,7 +1677,7 @@ Internet-Draft                HTTP Web Push                 October 2016
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 30]
+Thomson, et al.          Expires April 25, 2017                [Page 30]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1733,7 +1733,7 @@ A.3.  Since draft-ietf-webpush-protocol-02
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 31]
+Thomson, et al.          Expires April 25, 2017                [Page 31]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
@@ -1789,10 +1789,14 @@ A.11.  Since draft-ietf-webpush-protocol-10
 
 
 
-Thomson, et al.          Expires April 20, 2017                [Page 32]
+Thomson, et al.          Expires April 25, 2017                [Page 32]
 
 Internet-Draft                HTTP Web Push                 October 2016
 
+
+A.12.  Since draft-ietf-webpush-protocol-11
+
+   Updates from IESG Evaluation
 
 Authors' Addresses
 
@@ -1841,8 +1845,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-Thomson, et al.          Expires April 20, 2017                [Page 33]
+Thomson, et al.          Expires April 25, 2017                [Page 33]
