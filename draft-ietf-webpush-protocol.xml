@@ -1188,7 +1188,10 @@ HEADERS      [stream 82] +END_STREAM
         <t>
           However, reliability might not be necessary for messages that are
           transient (e.g. an incoming call) or messages that are quickly
-          superceded (e.g. the current number of unread emails).
+          superceded (e.g. the current number of unread emails).  Though a push
+          service is encouraged to provide negative acknowledgments (see <xref
+          target="receive_receipts"/>), push messages can be lost if the push
+          service becomes overloaded.
         </t>
       </section>
       <section anchor="sets-streams" title="Subscription Sets and Concurrent HTTP/2 streams">
